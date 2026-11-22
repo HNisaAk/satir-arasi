@@ -1,184 +1,123 @@
+const olustur = (id, metin, kaynak, kategori, kurucuSecimi = false, link = "") => ({
+  id: `def-${id}`,
+  metin,
+  kaynak,
+  kategori,
+  begeni: 0,
+  tepkiler: {},
+  yorumSayisi: 0,
+  kurucuSecimi,
+  link
+});
+
 export const varsayilanAlintilar = [
-  // Kitap
-  {
-    id: "def-1",
-    metin: "Bir gün bir kitap okudum ve bütün hayatım değişti.",
-    kaynak: "Orhan Pamuk, Yeni Hayat",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-2",
-    metin: "Tesadüf seni önüme çıkarmasaydı, gene aynı şekilde, fakat her şeyden habersiz, yaşayıp gidecektim.",
-    kaynak: "Sabahattin Ali, Kürk Mantolu Madonna",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-3",
-    metin: "Sevmek, bir insanı sevmekle başlar her şey. Burada her şey bir insanı sevmekle bitiyor.",
-    kaynak: "Sait Faik Abasıyanık, Alemdağ'da Var Bir Yılan",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-4",
-    metin: "Kelimeler, albayım, bazı anlamlara gelmiyor.",
-    kaynak: "Oğuz Atay, Tehlikeli Oyunlar",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-5",
-    metin: "Ben buradayım sevgili okuyucum, sen neredesin acaba?",
-    kaynak: "Oğuz Atay, Tutunamayanlar",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-6",
-    metin: "Çağımızda geçmiş yüzyılların bilmediği, kısa ömürlü bir yaratık yaşıyor. Sinemadan çıkmış insan.",
-    kaynak: "Yusuf Atılgan, Aylak Adam",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-7",
-    metin: "O iyi insanlar, o güzel atlara binip çekip gittiler.",
-    kaynak: "Yaşar Kemal, Demirciler Çarşısı Cinayeti",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-8",
-    metin: "İkimiz birden sevinebiliriz, göğe bakalım.",
-    kaynak: "Turgut Uyar, Göğe Bakma Durağı",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-9",
-    metin: "Hayat kısa, kuşlar uçuyor.",
-    kaynak: "Cemal Süreya",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-10",
-    metin: "İnsan ancak yüreğiyle baktığı zaman doğruyu görebilir. Gerçeğin mayası gözle görülmez.",
-    kaynak: "Antoine de Saint-Exupéry, Küçük Prens",
-    kategori: "Kitap",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
+  // --- KİTAP (35) ---
+  olustur(1, "Bir gün bir kitap okudum ve bütün hayatım değişti.", "Orhan Pamuk, Yeni Hayat", "Kitap", true),
+  olustur(2, "Tesadüf seni önüme çıkarmasaydı, gene aynı şekilde, fakat her şeyden habersiz, yaşayıp gidecektim.", "Sabahattin Ali, Kürk Mantolu Madonna", "Kitap", true),
+  olustur(3, "Sevmek, bir insanı sevmekle başlar her şey. Burada her şey bir insanı sevmekle bitiyor.", "Sait Faik Abasıyanık, Alemdağ'da Var Bir Yılan", "Kitap"),
+  olustur(4, "Kelimeler, albayım, bazı anlamlara gelmiyor.", "Oğuz Atay, Tehlikeli Oyunlar", "Kitap", true),
+  olustur(5, "Ben buradayım sevgili okuyucum, sen neredesin acaba?", "Oğuz Atay, Tutunamayanlar", "Kitap"),
+  olustur(6, "Çağımızda geçmiş yüzyılların bilmediği, kısa ömürlü bir yaratık yaşıyor. Sinemadan çıkmış insan.", "Yusuf Atılgan, Aylak Adam", "Kitap"),
+  olustur(7, "O iyi insanlar, o güzel atlara binip çekip gittiler.", "Yaşar Kemal, Demirciler Çarşısı Cinayeti", "Kitap"),
+  olustur(8, "İkimiz birden sevinebiliriz, göğe bakalım.", "Turgut Uyar, Göğe Bakma Durağı", "Kitap", true),
+  olustur(9, "Hayat kısa, kuşlar uçuyor.", "Cemal Süreya", "Kitap"),
+  olustur(10, "İnsan ancak yüreğiyle baktığı zaman doğruyu görebilir. Gerçeğin mayası gözle görülmez.", "Antoine de Saint-Exupéry, Küçük Prens", "Kitap", true),
+  olustur(11, "Yaşamak bir ağaç gibi tek ve hür ve bir orman gibi kardeşçesine.", "Nâzım Hikmet, Davet", "Kitap"),
+  olustur(12, "Beni bu güzel havalar mahvetti.", "Orhan Veli Kanık, Güzel Havalar", "Kitap"),
+  olustur(13, "Yalnızlık paylaşılmaz, paylaşılsa yalnızlık olmaz.", "Özdemir Asaf, Yalnızlık Paylaşılmaz", "Kitap"),
+  olustur(14, "Gökyüzü gibi bir şey bu çocukluk, hiçbir yere gitmiyor.", "Edip Cansever", "Kitap", true),
+  olustur(15, "Bütün mesele, bir tek günün içinde bütün bir ömrü yaşayabilmekti.", "Ahmet Hamdi Tanpınar, Huzur", "Kitap"),
+  olustur(16, "Ne içindeyim zamanın, ne de büsbütün dışında.", "Ahmet Hamdi Tanpınar, Ne İçindeyim Zamanın", "Kitap"),
+  olustur(17, "Dünyada sevilmiş ve seven nafile bekler; bilmez ki giden sevgililer dönmeyecekler.", "Yahya Kemal Beyatlı, Sessiz Gemi", "Kitap"),
+  olustur(18, "İnsanın ruhu bazen en kalabalık yerlerde bile yapayalnızdır.", "Sabahattin Ali, İçimizdeki Şeytan", "Kitap"),
+  olustur(19, "Bir insanın diğerine verebileceği en güzel şey, kendi zamanıdır.", "Stefan Zweig", "Kitap"),
+  olustur(20, "Kışın ortasında, içimde yenilmez bir yaz olduğunu öğrendim sonunda.", "Albert Camus", "Kitap", true),
+  olustur(21, "İnsan her şeye alışır, yeter ki yaşasın.", "Fyodor Dostoyevski, Suç ve Ceza", "Kitap"),
+  olustur(22, "Bir kitap, içimizdeki donmuş denizi parçalayacak bir balta olmalıdır.", "Franz Kafka", "Kitap"),
+  olustur(23, "Ağır ağır çıkacaksın bu merdivenlerden, eteklerinde güneş rengi bir yığın yaprak.", "Ahmet Haşim, Merdiven", "Kitap"),
+  olustur(24, "Ben sana mecburum bilemezsin, adını mıh gibi aklımda tutuyorum.", "Attilâ İlhan, Ben Sana Mecburum", "Kitap"),
+  olustur(25, "Umut, uyanık insanların rüyasıdır.", "Aristoteles", "Kitap"),
+  olustur(26, "Bütün mutlu aileler birbirine benzer; her mutsuz aileninse kendine özgü bir mutsuzluğu vardır.", "Lev Tolstoy, Anna Karenina", "Kitap"),
+  olustur(27, "Gülünü senin için bu kadar önemli kılan, ona harcadığın zamandır.", "Antoine de Saint-Exupéry, Küçük Prens", "Kitap"),
+  olustur(28, "Sevgi, insanın kendini bir başkasında yeniden bulmasıdır.", "Reşat Nuri Güntekin, Çalıkuşu", "Kitap"),
+  olustur(29, "Karanlıktan korkan bir çocuğu kolayca affedebiliriz; hayatın gerçek trajedisi aydınlıktan korkan yetişkinlerdir.", "Platon", "Kitap"),
+  olustur(30, "Her şeyin bir mevsimi vardır; sabır, o mevsimi bekleme sanatıdır.", "Peyami Safa", "Kitap"),
+  olustur(31, "İnsanlar seni yanlış anladığında üzülme; duydukları senin sesin, fakat aklından geçirdikleri kendi düşünceleridir.", "Mevlâna", "Kitap"),
+  olustur(32, "Büyük aşklar ya sonsuzdur, ya da o sonsuzluğun içindeki en güzel anı.", "Halide Edib Adıvar", "Kitap"),
+  olustur(33, "Geçmişi kontrol eden geleceği kontrol eder; bugünü kontrol eden geçmişi kontrol eder.", "George Orwell, 1984", "Kitap"),
+  olustur(34, "İnsan, düşündüğü kadar özgürdür.", "Victor Hugo, Sefiller", "Kitap"),
+  olustur(35, "Bir kenti gerçekten tanımak istiyorsan, akşamüstü sokaklarında amaçsızca yürü.", "Orhan Pamuk, İstanbul", "Kitap"),
 
-  // Film
-  {
-    id: "def-11",
-    metin: "Sevgi neydi? Sevgi iyilikti, dostluktu, sevgi emekti.",
-    kaynak: "Selvi Boylum Al Yazmalım (1977)",
-    kategori: "Film",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-12",
-    metin: "Okul sadece dört yanı duvarla çevrili, tepesinde dam olan yer değildir. Okul her yerdir.",
-    kaynak: "Hababam Sınıfı (1975)",
-    kategori: "Film",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-13",
-    metin: "Korkma, sadece toprağa gideceksin. Sonra toprak olacaksın.",
-    kaynak: "Eşkıya (1996)",
-    kategori: "Film",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-14",
-    metin: "Zeki Müren de bizi görecek mi?",
-    kaynak: "Vizontele (2001)",
-    kategori: "Film",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
+  // --- FİLM (20) ---
+  olustur(36, "Sevgi neydi? Sevgi iyilikti, dostluktu, sevgi emekti.", "Selvi Boylum Al Yazmalım (1977)", "Film", true),
+  olustur(37, "Okul sadece dört yanı duvarla çevrili, tepesinde dam olan yer değildir. Okul her yerdir.", "Hababam Sınıfı (1975)", "Film"),
+  olustur(38, "Korkma, sadece toprağa gideceksin. Sonra toprak olacaksın.", "Eşkıya (1996)", "Film"),
+  olustur(39, "Zeki Müren de bizi görecek mi?", "Vizontele (2001)", "Film"),
+  olustur(40, "Ona küçük sürprizler yapın.", "Neşeli Günler (1978)", "Film"),
+  olustur(41, "Ona bir oda ver baba, gidecek yeri yok.", "Babam ve Oğlum (2005)", "Film", true),
+  olustur(42, "İnsan bazen sadece gitmek ister, nereye olduğu önemli değildir.", "Issız Adam (2008)", "Film"),
+  olustur(43, "İyi insanlar daima kaybeder, çünkü adil dövüşürler.", "Kaybedenler Kulübü (2011)", "Film"),
+  olustur(44, "Kötülüğe karşı koymamak, kötülüğün işini kolaylaştırmaktır.", "Kış Uykusu (2014)", "Film"),
+  olustur(45, "Umut iyi bir şeydir, belki de en iyisi. Ve iyi şeyler asla ölmez.", "Esaretin Bedeli (1994)", "Film", true),
+  olustur(46, "Anı yaşa. Hayatınızı olağanüstü kılın.", "Ölü Ozanlar Derneği (1989)", "Film"),
+  olustur(47, "Hayat bir kutu çikolata gibidir, içinden ne çıkacağını asla bilemezsin.", "Forrest Gump (1994)", "Film"),
+  olustur(48, "Birini aklından silebilirsin ama kalbinden atmak bambaşka bir hikâyedir.", "Sil Baştan (2004)", "Film"),
+  olustur(49, "Bizi biz yapan yeteneklerimiz değil, seçimlerimizdir.", "Harry Potter ve Sırlar Odası (2002)", "Film"),
+  olustur(50, "Dün tarih oldu, yarın bir bilmece; ama bugün sana verilmiş bir hediyedir.", "Kung Fu Panda (2008)", "Film"),
+  olustur(51, "Gerçekten önemli olan tek şey, bize verilen zamanla ne yaptığımızdır.", "Yüzüklerin Efendisi (2001)", "Film"),
+  olustur(52, "Korku seni tutsak eder, umut ise özgür bırakır.", "Esaretin Bedeli (1994)", "Film"),
+  olustur(53, "İyi günler, iyi akşamlar ve iyi geceler!", "Truman Show (1998)", "Film"),
+  olustur(54, "Bazı insanlar için erimeye değer.", "Karlar Ülkesi (2013)", "Film"),
+  olustur(55, "Bazen en doğru yol, kimsenin yürümediği yoldur.", "Ayla (2017)", "Film"),
 
-  // Şarkı
-  {
-    id: "def-15",
-    metin: "Gidiyorum bütün aşklar yüreğimde, gidiyorum kokun hâlâ üzerimde.",
-    kaynak: "Sezen Aksu — Gidiyorum",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-16",
-    metin: "Sen gülünce güller açar Gülpembe, bülbüller seni söyler, biz dinlerdik Gülpembe.",
-    kaynak: "Barış Manço — Gülpembe",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-17",
-    metin: "Bir derdim var, artık tutamam içimde.",
-    kaynak: "Mor ve Ötesi — Bir Derdim Var",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-18",
-    metin: "Sil baştan başlamak gerek bazen, hayatı sıfırlamak.",
-    kaynak: "Şebnem Ferah — Sil Baştan",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-19",
-    metin: "Kimseyi görmedim ben, senden daha güzel.",
-    kaynak: "Duman — Senden Daha Güzel",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-20",
-    metin: "İki küçük kol düğmesi, bütün bir aşk hikâyesi.",
-    kaynak: "Barış Manço — Kol Düğmeleri",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-21",
-    metin: "Her şeyin bir çatlağı vardır; ışık içeri oradan sızar.",
-    kaynak: "Leonard Cohen — Anthem",
-    kategori: "Şarkı",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
+  // --- ŞARKI (25) ---
+  olustur(56, "Gidiyorum bütün aşklar yüreğimde, gidiyorum kokun hâlâ üzerimde.", "Sezen Aksu — Gidiyorum", "Şarkı", true),
+  olustur(57, "Sen gülünce güller açar Gülpembe, bülbüller seni söyler, biz dinlerdik Gülpembe.", "Barış Manço — Gülpembe", "Şarkı"),
+  olustur(58, "Bir derdim var, artık tutamam içimde.", "Mor ve Ötesi — Bir Derdim Var", "Şarkı"),
+  olustur(59, "Sil baştan başlamak gerek bazen, hayatı sıfırlamak.", "Şebnem Ferah — Sil Baştan", "Şarkı"),
+  olustur(60, "Kimseyi görmedim ben, senden daha güzel.", "Duman — Senden Daha Güzel", "Şarkı"),
+  olustur(61, "İki küçük kol düğmesi, bütün bir aşk hikâyesi.", "Barış Manço — Kol Düğmeleri", "Şarkı"),
+  olustur(62, "Her şeyin bir çatlağı vardır; ışık içeri oradan sızar.", "Leonard Cohen — Anthem", "Şarkı"),
+  olustur(63, "Aynı gökyüzüne bakıp farklı düşler kurduk.", "Teoman — İstanbul'da Sonbahar", "Şarkı"),
+  olustur(64, "Tamirci çırağıydım, aşık oldum bir güzele.", "Cem Karaca — Tamirci Çırağı", "Şarkı"),
+  olustur(65, "Bu kalp seni unutur mu?", "Fikret Kızılok — Bu Kalp Seni Unutur mu", "Şarkı", true),
+  olustur(66, "Affet, bu gece ölmek istedim.", "Müslüm Gürses — Affet", "Şarkı"),
+  olustur(67, "Benimle oynar mısın?", "Bülent Ortaçgil — Benimle Oynar mısın", "Şarkı"),
+  olustur(68, "Ele güne karşı yapayalnız, böyle de olmaz ki.", "MFÖ — Ele Güne Karşı", "Şarkı"),
+  olustur(69, "Seni kendime sakladım, hepsini ben hesapladım.", "Duman — Seni Kendime Sakladım", "Şarkı"),
+  olustur(70, "Hele bi gel, otur şöyle yanıma.", "Pinhani — Hele Bi Gel", "Şarkı"),
+  olustur(71, "Beni bırakıp gitme, bu şehir sensiz çekilmez.", "Sertab Erener — Zor Kadın", "Şarkı"),
+  olustur(72, "Kış güneşi gibiydin, ısıtmadan gittin.", "Tarkan — Kış Güneşi", "Şarkı"),
+  olustur(73, "Ne zaman gelirsin bilmem ama ben hep buradayım.", "Yüzyüzeyken Konuşuruz — Dinle Beni Bi'", "Şarkı"),
+  olustur(74, "Seni dert etmeler, geceleri uyuyamamalar.", "Madrigal — Seni Dert Etmeler", "Şarkı"),
+  olustur(75, "Koca yaşlı şişko dünya.", "Adamlar — Koca Yaşlı Şişko Dünya", "Şarkı"),
+  olustur(76, "Bana ellerini ver, hayat seni sevince güzel.", "Özdemir Erdoğan — Bana Ellerini Ver", "Şarkı", true),
+  olustur(77, "Sarı Laleler aldım sana çiçek pazarından.", "MFÖ — Sarı Laleler", "Şarkı"),
+  olustur(78, "Geceler kara tren, uzar gider raylarda.", "Sezen Aksu — Tükeneceğiz", "Şarkı"),
+  olustur(79, "Yıldızların altında, sessizce yürüdük.", "Kargo — Yıldızların Altında", "Şarkı"),
+  olustur(80, "Bir ihtimal daha var, o da ölmek mi dersin?", "Osman Nihat Akın — Bir İhtimal Daha Var", "Şarkı"),
 
-  // İlham & Senin Sözün
-  {
-    id: "def-22",
-    metin: "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.",
-    kaynak: "Satır Arası",
-    kategori: "Senin Sözün",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-23",
-    metin: "Bir hikâyeyi güzel yapan, kusursuz olması değil; sahici olmasıdır.",
-    kaynak: "N.A.",
-    kategori: "Senin Sözün",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true, link: ""
-  },
-  {
-    id: "def-24",
-    metin: "Bazı yollar ancak yürümeye başladığında görünür olur.",
-    kaynak: "Anonim",
-    kategori: "İlham",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  },
-  {
-    id: "def-25",
-    metin: "Yavaş gitmekten korkma, sadece durmaktan kork.",
-    kaynak: "Çin Atasözü",
-    kategori: "İlham",
-    begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, link: ""
-  }
+  // --- İLHAM (10) ---
+  olustur(81, "Bazı yollar ancak yürümeye başladığında görünür olur.", "Anonim", "İlham"),
+  olustur(82, "Yavaş gitmekten korkma, sadece durmaktan kork.", "Çin Atasözü", "İlham"),
+  olustur(83, "Dün akıllıydım, dünyayı değiştirmek istedim. Bugün bilgeyim, kendimi değiştiriyorum.", "Mevlâna", "İlham", true),
+  olustur(84, "İlim ilim bilmektir, ilim kendin bilmektir.", "Yunus Emre", "İlham"),
+  olustur(85, "Zorluklar, sıradan insanları olağanüstü kaderlere hazırlar.", "C.S. Lewis", "İlham"),
+  olustur(86, "Mutluluğunun kalitesi, düşüncelerinin kalitesine bağlıdır.", "Marcus Aurelius", "İlham"),
+  olustur(87, "Başlamak için mükemmel olmak zorunda değilsin; ama mükemmel olmak için başlamak zorundasın.", "Zig Ziglar", "İlham"),
+  olustur(88, "Rüzgârın yönünü değiştiremiyorsan, yelkenlerini ayarla.", "Seneca", "İlham"),
+  olustur(89, "Bin millik bir yolculuk, tek bir adımla başlar.", "Lao Tzu", "İlham"),
+  olustur(90, "Kendine inanmak, yolun yarısını geçmektir.", "Theodore Roosevelt", "İlham"),
+
+  // --- SENİN SÖZÜN (10) ---
+  olustur(91, "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.", "Satır Arası", "Senin Sözün"),
+  olustur(92, "Bir hikâyeyi güzel yapan, kusursuz olması değil; sahici olmasıdır.", "N.A.", "Senin Sözün", true),
+  olustur(93, "Bazı cümleler okunmak için değil, birinin içinden geçmek için yazılır.", "N.A.", "Senin Sözün", true),
+  olustur(94, "Gece yarısı aklına gelen her şey, gündüzleri ertelediğin hislerdir.", "Satır Arası", "Senin Sözün"),
+  olustur(95, "Bazen en uzun konuşma, iki kişinin yan yana susabilmesidir.", "Satır Arası", "Senin Sözün"),
+  olustur(96, "Kendi hızında büyüyen hiçbir şey geç kalmış sayılmaz.", "N.A.", "Senin Sözün"),
+  olustur(97, "Bir şarkıyı başa sarıp duruyorsan, dinlediğin melodi değil bir anıdır.", "Satır Arası", "Senin Sözün"),
+  olustur(98, "İçinde hâlâ merak taşıyan insan, hiçbir yaşta yaşlanmaz.", "Satır Arası", "Senin Sözün"),
+  olustur(99, "Kalabalıkta kaybolmamak için insanın kendine ait sessiz bir köşesi olmalı.", "N.A.", "Senin Sözün"),
+  olustur(100, "Her yeni gün, yarım bıraktığın sayfaya temiz bir başlangıç yapma şansıdır.", "Satır Arası", "Senin Sözün")
 ];
