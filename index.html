@@ -320,4 +320,56 @@
           <button type="button" class="picker-chip" data-set-theme="dark">Gece</button>
           <button type="button" class="picker-chip" data-set-theme="sepia">Eski Kâğıt</button>
           <button type="button" class="picker-chip" data-set-theme="sage">Adaçayı</button>
-          <button type="button" class="picker-chip" data-set-theme="midnight">
+          <button type="button" class="picker-chip" data-set-theme="midnight">Gece Mavisi</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Yazı Tipi</label>
+        <div class="picker-grid">
+          <button type="button" class="picker-chip" data-set-font="lora" style="font-family:'Lora',serif;">Klasik Kitap</button>
+          <button type="button" class="picker-chip" data-set-font="typewriter" style="font-family:'Courier Prime',monospace;">Daktilo</button>
+          <button type="button" class="picker-chip" data-set-font="modern" style="font-family:'Inter',sans-serif;">Modern Sade</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- İthaf Et Modalı -->
+  <div class="modal-overlay" id="giftModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Bu Satırı İthaf Et</h2>
+        <button class="close-x" data-close="giftModalOverlay">&times;</button>
+      </div>
+      <p class="info-note">Kısa bir not eklersen linke tıklayan kişi önce kapalı bir zarf görecek. Not bırakmazsan doğrudan bu kart açılır.</p>
+      <div class="form-group">
+        <label for="giftFromInput">Gönderen (İsteğe bağlı)</label>
+        <input type="text" id="giftFromInput" placeholder="Takma adın veya ismin">
+      </div>
+      <div class="form-group">
+        <label for="giftNoteInput">Kısa Notun (İsteğe bağlı)</label>
+        <textarea id="giftNoteInput" rows="2" placeholder="Bunu okuyunca aklıma sen geldin..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close="giftModalOverlay">Kapat</button>
+        <button type="button" class="btn-primary" id="copyGiftLinkBtn">Zarf Linkini Kopyala</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hediye Zarfı Açılış Modalı -->
+  <div class="modal-overlay" id="envelopeModalOverlay">
+    <div class="modal">
+      <div class="envelope-box">
+        <svg class="envelope-svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <h2 id="envelopeTitle">Sana bir satır bırakıldı</h2>
+        <p class="envelope-note" id="envelopeNotePreview"></p>
+        <button class="btn-primary" id="openEnvelopeBtn">Zarfı Aç</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
