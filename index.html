@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>İlham Kartı</title>
+  <title>Satır Arası</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -45,7 +45,6 @@
       width: 100%;
       box-shadow: 0 12px 32px rgba(43, 41, 39, 0.05);
       text-align: center;
-      transition: transform 0.2s ease;
     }
 
     .category {
@@ -91,19 +90,25 @@
     .actions {
       margin-top: 36px;
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     button {
       font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
       font-weight: 500;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
       border: none;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .btn-primary {
@@ -111,7 +116,7 @@
       color: #ffffff;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background-color: var(--accent-hover);
       transform: translateY(-1px);
     }
@@ -125,6 +130,77 @@
     .btn-secondary:hover {
       background-color: #f9f7f4;
       color: var(--text-main);
+    }
+
+    /* Alıntı Ekleme Penceresi (Modal) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 41, 39, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+      text-align: left;
+    }
+
+    .modal h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group textarea,
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background-color: #fbfaf8;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .form-group textarea:focus,
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
     }
 
     footer {
@@ -149,24 +225,71 @@
 <body>
 
   <main class="card">
-    <span class="category" id="category">Kitap</span>
+    <span class="category" id="category">Satır Arası</span>
     
     <div class="quote-wrapper" id="quoteWrapper">
-      <p class="quote-text" id="quoteText"></p>
+      <p class="quote-text" id="quoteText">Yükleniyor...</p>
       <p class="quote-author" id="quoteAuthor"></p>
     </div>
 
     <div class="actions">
       <button class="btn-primary" id="newQuoteBtn">Yeni Kart Çek</button>
       <button class="btn-secondary" id="copyBtn">Kopyala</button>
+      <button class="btn-secondary" id="openModalBtn">+ Alıntı Ekle</button>
     </div>
   </main>
 
-  <footer>Günün küçük bir duraklaması</footer>
+  <footer>Satır Arası</footer>
 
-  <script>
-    // Kendi cümlelerini, sevdiğin kitap veya film alıntılarını buraya ekleyebilirsin
-    const alintilar = [
+  <!-- Alıntı Ekleme Penceresi -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>Yeni Alıntı Ekle</h2>
+      <form id="quoteForm">
+        <div class="form-group">
+          <label for="inputText">Alıntı veya Notun</label>
+          <textarea id="inputText" rows="3" placeholder="Aklında kalan o cümleyi yaz..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="inputAuthor">Kaynak / Yazar</label>
+          <input type="text" id="inputAuthor" placeholder="Örn: Sabahattin Ali (Boş bırakılırsa Anonim)">
+        </div>
+        <div class="form-group">
+          <label for="inputCategory">Kategori</label>
+          <select id="inputCategory">
+            <option value="Kitap">Kitap</option>
+            <option value="Film">Film</option>
+            <option value="Not">Not</option>
+            <option value="İlham">İlham</option>
+            <option value="Söz">Söz</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="closeModalBtn">İptal</button>
+          <button type="submit" class="btn-primary" id="submitBtn">Ekle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXEbbuDgn4rLXLfai3XEGtKLAQh47Zu7U",
+      authDomain: "satir-arasi-43f37.firebaseapp.com",
+      projectId: "satir-arasi-43f37",
+      storageBucket: "satir-arasi-43f37.firebasestorage.app",
+      messagingSenderId: "754200203752",
+      appId: "1:754200203752:web:3650d82670ee234ffed45d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const alintilarRef = collection(db, "alintilar");
+
+    const varsayilanAlintilar = [
       {
         metin: "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.",
         kaynak: "Kendi Notum",
@@ -199,26 +322,23 @@
       }
     ];
 
+    let alintilar = [...varsayilanAlintilar];
+    let sonIndeks = -1;
+
     const quoteText = document.getElementById("quoteText");
     const quoteAuthor = document.getElementById("quoteAuthor");
     const categoryEl = document.getElementById("category");
     const quoteWrapper = document.getElementById("quoteWrapper");
     const newQuoteBtn = document.getElementById("newQuoteBtn");
     const copyBtn = document.getElementById("copyBtn");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const quoteForm = document.getElementById("quoteForm");
+    const submitBtn = document.getElementById("submitBtn");
 
-    let sonIndeks = -1;
-
-    function yeniAlintiGetir() {
-      let rastgeleIndeks;
-      do {
-        rastgeleIndeks = Math.floor(Math.random() * alintilar.length);
-      } while (rastgeleIndeks === sonIndeks && alintilar.length > 1);
-
-      sonIndeks = rastgeleIndeks;
-      const secilen = alintilar[rastgeleIndeks];
-
+    function kartiGoster(secilen) {
       quoteWrapper.classList.add("fade-out");
-
       setTimeout(() => {
         quoteText.textContent = `“${secilen.metin}”`;
         quoteAuthor.textContent = `— ${secilen.kaynak}`;
@@ -227,6 +347,37 @@
       }, 250);
     }
 
+    function yeniAlintiGetir() {
+      let rastgeleIndeks;
+      do {
+        rastgeleIndeks = Math.floor(Math.random() * alintilar.length);
+      } while (rastgeleIndeks === sonIndeks && alintilar.length > 1);
+
+      sonIndeks = rastgeleIndeks;
+      kartiGoster(alintilar[rastgeleIndeks]);
+    }
+
+    // Veritabanından kayıtlı tüm alıntıları çek
+    async function alintilariYukle() {
+      try {
+        const snapshot = await getDocs(alintilarRef);
+        snapshot.forEach((doc) => {
+          const veri = doc.data();
+          if (veri.metin) {
+            alintilar.push({
+              metin: veri.metin,
+              kaynak: veri.kaynak || "Anonim",
+              kategori: veri.kategori || "Not"
+            });
+          }
+        });
+      } catch (hata) {
+        console.error("Alıntılar yüklenirken hata oluştu:", hata);
+      }
+      yeniAlintiGetir();
+    }
+
+    // Kopyalama
     copyBtn.addEventListener("click", () => {
       const kopyalanacak = `${quoteText.textContent} ${quoteAuthor.textContent}`;
       navigator.clipboard.writeText(kopyalanacak).then(() => {
@@ -238,10 +389,53 @@
       });
     });
 
+    // Modal aç / kapat
+    openModalBtn.addEventListener("click", () => modalOverlay.classList.add("open"));
+    closeModalBtn.addEventListener("click", () => modalOverlay.classList.remove("open"));
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.remove("open");
+    });
+
+    // Yeni alıntıyı Firestore'a kaydet
+    quoteForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const metin = document.getElementById("inputText").value.trim();
+      const kaynak = document.getElementById("inputAuthor").value.trim() || "Anonim";
+      const kategori = document.getElementById("inputCategory").value;
+
+      if (!metin) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Ekleniyor...";
+
+      try {
+        await addDoc(alintilarRef, {
+          metin,
+          kaynak,
+          kategori,
+          tarih: serverTimestamp()
+        });
+
+        const yeniAlinti = { metin, kaynak, kategori };
+        alintilar.push(yeniAlinti);
+        sonIndeks = alintilar.length - 1;
+        kartiGoster(yeniAlinti);
+
+        quoteForm.reset();
+        modalOverlay.classList.remove("open");
+      } catch (hata) {
+        alert("Bir hata oluştu, lütfen tekrar dene.");
+        console.error(hata);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Ekle";
+      }
+    });
+
     newQuoteBtn.addEventListener("click", yeniAlintiGetir);
 
-    // Sayfa ilk açıldığında bir kart göster
-    yeniAlintiGetir();
+    // Başlat
+    alintilariYukle();
   </script>
 </body>
 </html>
