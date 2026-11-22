@@ -19,7 +19,7 @@
       --border-color: #e8e3dc;
       --input-bg: #fbfaf8;
       --heart-color: #c84b4b;
-      --shadow: 0 12px 32px rgba(43, 41, 39, 0.06);
+      --shadow: 0 12px 32px rgba(43, 41, 39, 0.05);
       --quote-font: 'Lora', Georgia, serif;
     }
 
@@ -92,19 +92,23 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 20px;
+      padding: 22px 18px;
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Üst Menü */
+    svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    /* Minimalist Üst Menü */
     .topbar {
       width: 100%;
       max-width: 720px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
       flex-wrap: wrap;
     }
 
@@ -114,45 +118,50 @@
       font-weight: 500;
       color: var(--text-main);
       cursor: pointer;
+      letter-spacing: 0.2px;
     }
 
-    .top-controls {
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       flex-wrap: wrap;
     }
 
-    .icon-btn {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 0.83rem;
+    .nav-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
       font-weight: 500;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      transition: all 0.2s ease;
+      gap: 6px;
+      transition: color 0.2s ease, background-color 0.2s ease;
     }
+    .nav-btn:hover { color: var(--text-main); background: var(--accent-soft); }
 
-    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-divider { width: 1px; height: 16px; background: var(--border-color); margin: 0 4px; }
 
-    .user-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+    .profile-trigger {
       background: var(--card-bg);
+      color: var(--text-main);
       border: 1px solid var(--border-color);
       border-radius: 999px;
-      padding: 4px 11px 4px 5px;
-      font-size: 0.8rem;
-      color: var(--text-main);
+      padding: 5px 12px;
+      font-size: 0.82rem;
+      font-weight: 500;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.2s ease;
     }
-    .user-pill img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+    .profile-trigger:hover { border-color: var(--accent); color: var(--accent); }
 
     /* Merkez Alan */
     .main-wrap {
@@ -166,7 +175,7 @@
 
     .filters {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
       justify-content: center;
       margin-bottom: 18px;
@@ -186,7 +195,6 @@
     .filter-btn:hover { color: var(--text-main); background: var(--card-bg); }
     .filter-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--border-color); }
 
-    /* İthaf Bannerı */
     .dedication-banner {
       display: none;
       width: 100%;
@@ -210,39 +218,26 @@
       width: 100%;
       box-shadow: var(--shadow);
       text-align: center;
-      position: relative;
       transition: background-color 0.25s ease, border-color 0.25s ease;
     }
 
-    /* Yönetici Çubuğu */
-    .admin-bar {
-      display: none;
-      justify-content: flex-end;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
+    .admin-bar { display: none; justify-content: flex-end; gap: 6px; margin-bottom: 14px; }
     .admin-bar.show { display: flex; }
 
     .admin-btn {
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 5px 10px;
-      border-radius: 8px;
+      font-size: 0.74rem;
+      padding: 4px 9px;
+      border-radius: 7px;
       cursor: pointer;
     }
     .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
     .admin-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
     .admin-btn.danger:hover { border-color: var(--heart-color); color: var(--heart-color); }
 
-    .badges {
-      display: flex;
-      justify-content: center;
-      gap: 7px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
+    .badges { display: flex; justify-content: center; gap: 7px; margin-bottom: 24px; flex-wrap: wrap; }
 
     .category {
       font-size: 0.72rem;
@@ -266,6 +261,7 @@
       border-radius: 999px;
     }
     .sub-badge.show { display: inline-block; }
+    .sub-badge.na-badge { color: var(--accent); border-color: var(--accent); letter-spacing: 0.8px; }
 
     .quote-wrapper {
       min-height: 120px;
@@ -292,18 +288,18 @@
       cursor: pointer;
       display: inline-block;
       margin: 0 auto;
-      transition: color 0.2s ease;
     }
     .quote-author:hover { color: var(--accent); text-decoration: underline; }
 
-    /* Tepkiler & Yorum */
-    .reactions-row {
+    /* Tepkiler Satırı */
+    .reactions-wrap {
       margin-top: 24px;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       flex-wrap: wrap;
+      position: relative;
     }
 
     .react-btn {
@@ -311,8 +307,8 @@
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       border-radius: 999px;
-      padding: 7px 13px;
-      font-size: 0.84rem;
+      padding: 6px 12px;
+      font-size: 0.83rem;
       font-weight: 500;
       cursor: pointer;
       display: inline-flex;
@@ -324,6 +320,43 @@
     .react-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
     .react-btn.liked { background: rgba(200, 75, 75, 0.1); border-color: var(--heart-color); color: var(--heart-color); }
 
+    .emoji-popover {
+      display: none;
+      position: absolute;
+      bottom: 44px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      z-index: 30;
+      width: 240px;
+    }
+    .emoji-popover.open { display: block; }
+    .emoji-quick { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .emoji-opt {
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    .emoji-opt:hover { background: var(--accent-soft); }
+    .emoji-custom-row { display: flex; gap: 6px; }
+    .emoji-custom-row input {
+      flex: 1;
+      padding: 5px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
     .actions {
       margin-top: 22px;
       display: flex;
@@ -334,11 +367,14 @@
 
     button.btn-primary, button.btn-secondary {
       font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 500;
-      padding: 10px 16px;
-      border-radius: 12px;
+      padding: 10px 15px;
+      border-radius: 11px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.2s ease;
       border: none;
     }
@@ -348,18 +384,96 @@
     .btn-secondary { background-color: transparent; color: var(--text-muted); border: 1px solid var(--border-color) !important; }
     .btn-secondary:hover { background-color: var(--input-bg); color: var(--text-main); }
 
-    footer {
-      margin-top: 20px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-align: center;
+    /* Kart Altı Inline Yorum Alanı */
+    .comments-drawer {
+      display: none;
+      width: 100%;
+      margin-top: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+      text-align: left;
     }
+    .comments-drawer.open { display: block; }
+
+    .comments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .comment-item {
+      padding: 11px 13px;
+      border: 1px solid var(--border-color);
+      border-radius: 11px;
+      margin-bottom: 8px;
+      background: var(--input-bg);
+    }
+    .comment-reply-tag {
+      font-size: 0.74rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .comment-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .comment-head strong { color: var(--text-main); font-weight: 600; }
+    .comment-actions { display: flex; gap: 8px; align-items: center; }
+    .text-link-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      cursor: pointer;
+    }
+    .text-link-btn:hover { color: var(--accent); }
+    .comment-body { font-size: 0.88rem; color: var(--text-main); line-height: 1.48; }
+
+    .replying-bar {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .replying-bar.show { display: flex; }
+
+    .comment-form-row { display: flex; gap: 8px; margin-top: 10px; }
+    .comment-form-row input {
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      padding: 9px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--input-bg);
+      color: var(--text-main);
+      outline: none;
+    }
+    .comment-form-row input:focus { border-color: var(--accent); }
+
+    footer { margin-top: 22px; font-size: 0.78rem; color: var(--text-muted); text-align: center; }
 
     /* Modallar */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 14, 13, 0.6);
+      background: rgba(15, 14, 13, 0.58);
       display: none;
       align-items: center;
       justify-content: center;
@@ -377,16 +491,11 @@
       width: 100%;
       max-height: 84vh;
       overflow-y: auto;
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
       text-align: left;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .modal h2 { font-family: 'Lora', serif; font-size: 1.2rem; color: var(--text-main); }
     .close-x { background: none; border: none; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; padding: 2px 6px; }
 
@@ -419,17 +528,19 @@
     .list-item-text { font-family: var(--quote-font); font-size: 0.94rem; line-height: 1.5; color: var(--text-main); margin-bottom: 6px; }
     .list-item-meta { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); gap: 8px; }
 
-    .comment-item {
-      padding: 11px 13px;
-      border: 1px solid var(--border-color);
-      border-radius: 11px;
-      margin-bottom: 8px;
-      background: var(--input-bg);
+    .tab-row { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
     }
-    .comment-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--text-muted); margin-bottom: 4px; }
-    .comment-body { font-size: 0.88rem; color: var(--text-main); line-height: 1.45; }
+    .tab-btn.active { background: var(--accent-soft); color: var(--accent); }
 
-    /* Görünüm Seçici */
     .picker-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .picker-chip {
       padding: 8px 13px;
@@ -442,15 +553,14 @@
     }
     .picker-chip.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 500; }
 
-    /* Hediye Zarfı Ekranı */
     .envelope-box { text-align: center; padding: 14px 8px; }
-    .envelope-icon { font-size: 3.4rem; margin-bottom: 12px; }
+    .envelope-svg { width: 52px; height: 52px; color: var(--accent); margin-bottom: 12px; }
     .envelope-note { font-family: 'Lora', serif; font-style: italic; font-size: 1.05rem; color: var(--text-main); margin: 14px 0 20px; }
 
-    .empty-msg { font-size: 0.88rem; color: var(--text-muted); text-align: center; padding: 18px 0; }
+    .empty-msg { font-size: 0.86rem; color: var(--text-muted); text-align: center; padding: 16px 0; }
     .info-note { font-size: 0.8rem; color: var(--text-muted); background: var(--accent-soft); padding: 9px 12px; border-radius: 10px; margin-bottom: 12px; }
 
-    @media (max-width: 540px) {
+    @media (max-width: 560px) {
       .card { padding: 28px 20px 24px; }
       .quote-text { font-size: 1.18rem; }
       .topbar { justify-content: center; }
@@ -459,78 +569,122 @@
 </head>
 <body data-theme="light" data-font="lora">
 
-  <!-- Üst Menü -->
+  <!-- Minimalist Üst Menü -->
   <header class="topbar">
     <div class="brand" id="brandHome">Satır Arası</div>
-    <div class="top-controls">
-      <button class="icon-btn" id="archiveBtn" title="Arşiv ve Arama">🔍 Arşiv</button>
-      <button class="icon-btn" id="popularBtn" title="En Çok Beğenilenler">🔥 Popüler</button>
-      <button class="icon-btn" id="favoritesBtn" title="Beğendiklerim">❤️ <span id="favCount">0</span></button>
-      <button class="icon-btn" id="appearanceBtn" title="Tema ve Yazı Tipi">🎨</button>
-      <button class="icon-btn" id="soundBtn" title="Ses Efekti">🔊</button>
-      <div id="authContainer">
-        <button class="icon-btn" id="loginBtn">Giriş Yap</button>
-      </div>
-    </div>
+    <nav class="nav-links">
+      <button class="nav-btn" id="archiveBtn" title="Arşiv ve Arama">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Arşiv
+      </button>
+      <button class="nav-btn" id="popularBtn" title="En Çok Beğenilenler">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Popüler
+      </button>
+      <span class="nav-divider"></span>
+      <button class="nav-btn" id="appearanceBtn" title="Tema ve Yazı Tipi">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+      </button>
+      <button class="nav-btn" id="soundBtn" title="Kâğıt Sesi"></button>
+      <button class="profile-trigger" id="profileBtn">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="profileBtnLabel">Profil</span>
+      </button>
+    </nav>
   </header>
 
   <!-- Ana İçerik -->
   <div class="main-wrap">
     <div class="filters" id="filters">
       <button class="filter-btn active" data-cat="Tümü">Tümü</button>
-      <button class="filter-btn" data-cat="Kurucu">✨ Kurucunun Seçimi</button>
+      <button class="filter-btn" data-cat="Kurucu">✦ N.A.</button>
       <button class="filter-btn" data-cat="Kitap">Kitap</button>
       <button class="filter-btn" data-cat="Film">Film</button>
-      <button class="filter-btn" data-cat="Not">Not</button>
+      <button class="filter-btn" data-cat="Şarkı">Şarkı</button>
       <button class="filter-btn" data-cat="İlham">İlham</button>
-      <button class="filter-btn" data-cat="Söz">Söz</button>
+      <button class="filter-btn" data-cat="Senin Sözün">Senin Sözün</button>
     </div>
 
     <div class="dedication-banner" id="dedicationBanner"></div>
 
     <main class="card">
-      <!-- Sadece Yöneticiye Görünen Çubuk -->
       <div class="admin-bar" id="adminBar">
-        <button class="admin-btn" id="adminFeaturedBtn" title="Kurucunun Seçimi olarak işaretle">✨ Seçim</button>
-        <button class="admin-btn" id="adminEditBtn">✏️ Düzenle</button>
-        <button class="admin-btn danger" id="adminDeleteBtn">🗑️ Sil</button>
+        <button class="admin-btn" id="adminFeaturedBtn">✦ N.A.</button>
+        <button class="admin-btn" id="adminEditBtn">Düzenle</button>
+        <button class="admin-btn danger" id="adminDeleteBtn">Sil</button>
       </div>
 
       <div class="badges">
         <span class="category" id="category">Satır Arası</span>
-        <span class="sub-badge" id="dailyBadge">📅 Günün Satırı</span>
-        <span class="sub-badge" id="featuredBadge">✨ Kurucunun Seçimi</span>
+        <span class="sub-badge" id="dailyBadge">Günün Satırı</span>
+        <span class="sub-badge na-badge" id="featuredBadge">✦ N.A.</span>
       </div>
 
       <div class="quote-wrapper" id="quoteWrapper">
         <p class="quote-text" id="quoteText">Yükleniyor...</p>
-        <p class="quote-author" id="quoteAuthor" title="Bu yazarın diğer satırlarını gör"></p>
+        <p class="quote-author" id="quoteAuthor" title="Bu kaynağın diğer satırlarını gör"></p>
       </div>
 
-      <!-- Tepkiler ve Yorum -->
-      <div class="reactions-row">
-        <button class="react-btn" id="likeBtn" title="Sevdim">
+      <!-- Tepkiler ve Yorum Açma -->
+      <div class="reactions-wrap">
+        <button class="react-btn" id="likeBtn" title="Favorilere ekle">
           <span id="heartIcon">♡</span> <span id="likeCount">0</span>
         </button>
-        <button class="react-btn" id="thoughtBtn" title="Düşündürdü">
-          💭 <span id="thoughtCount">0</span>
+        <div id="dynamicReactions" style="display:contents;"></div>
+        <button class="react-btn" id="addEmojiBtn" title="Emoji tepkisi bırak">+</button>
+        <button class="react-btn" id="toggleCommentsBtn" title="Yorumları aç/kapat">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span id="commentCount">0</span>
         </button>
-        <button class="react-btn" id="inspireBtn" title="İlham Verdi">
-          ✨ <span id="inspireCount">0</span>
-        </button>
-        <button class="react-btn" id="commentsBtn" title="Yorumlar">
-          💬 <span id="commentCount">0</span>
-        </button>
+
+        <!-- Emoji Seçici Popover -->
+        <div class="emoji-popover" id="emojiPopover">
+          <div class="emoji-quick">
+            <button type="button" class="emoji-opt" data-emoji="💭">💭</button>
+            <button type="button" class="emoji-opt" data-emoji="✨">✨</button>
+            <button type="button" class="emoji-opt" data-emoji="🥀">🥀</button>
+            <button type="button" class="emoji-opt" data-emoji="🌙">🌙</button>
+            <button type="button" class="emoji-opt" data-emoji="🤍">🤍</button>
+            <button type="button" class="emoji-opt" data-emoji="🍂">🍂</button>
+          </div>
+          <div class="emoji-custom-row">
+            <input type="text" id="customEmojiInput" placeholder="İstediğin emoji..." maxlength="4">
+            <button type="button" class="btn-primary" id="customEmojiSubmit" style="padding:5px 10px;font-size:0.78rem;">Ekle</button>
+          </div>
+        </div>
       </div>
 
       <div class="actions">
         <button class="btn-primary" id="newQuoteBtn">Yeni Kart Çek</button>
-        <button class="btn-secondary" id="storyBtn">Story İndir</button>
-        <button class="btn-secondary" id="giftBtn">🎁 İthaf Et</button>
+        <button class="btn-secondary" id="shareBtn">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Paylaş
+        </button>
+        <button class="btn-secondary" id="giftBtn">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          İthaf Et
+        </button>
         <button class="btn-secondary" id="copyBtn">Kopyala</button>
         <button class="btn-secondary" id="openModalBtn">+ Ekle</button>
       </div>
     </main>
+
+    <!-- Kartın Hemen Altında Açılan Yorum Bölümü -->
+    <section class="comments-drawer" id="commentsDrawer">
+      <div class="comments-header">
+        <span>Satır Altı Yorumlar</span>
+        <button class="text-link-btn" id="closeCommentsBtn">Kapat</button>
+      </div>
+      <div id="commentsList"></div>
+      <div class="replying-bar" id="replyingBar">
+        <span id="replyingText"></span>
+        <button type="button" class="text-link-btn" id="cancelReplyBtn">İptal</button>
+      </div>
+      <form id="commentForm" class="comment-form-row">
+        <input type="text" id="commentTextInput" placeholder="Bu satır sana ne hissettirdi?" required>
+        <button type="submit" class="btn-primary" id="commentSubmitBtn" style="padding:9px 14px;">Gönder</button>
+      </form>
+    </section>
   </div>
 
   <footer id="footerCounter">Satır Arası</footer>
@@ -539,28 +693,28 @@
   <div class="modal-overlay" id="addModalOverlay">
     <div class="modal">
       <div class="modal-header">
-        <h2 id="formModalTitle">Yeni Alıntı Ekle</h2>
+        <h2 id="formModalTitle">Yeni Satır Ekle</h2>
         <button class="close-x" data-close="addModalOverlay">&times;</button>
       </div>
       <form id="quoteForm">
         <input type="hidden" id="editId">
         <div class="form-group">
-          <label for="inputText">Alıntı veya Notun</label>
-          <textarea id="inputText" rows="3" placeholder="Aklında kalan o cümleyi yaz..." required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="inputAuthor">Kaynak / Yazar</label>
-          <input type="text" id="inputAuthor" placeholder="Örn: Sabahattin Ali (Boş bırakılırsa Anonim)">
-        </div>
-        <div class="form-group">
           <label for="inputCategory">Kategori</label>
           <select id="inputCategory">
             <option value="Kitap">Kitap</option>
             <option value="Film">Film</option>
-            <option value="Not">Not</option>
+            <option value="Şarkı">Şarkı</option>
             <option value="İlham">İlham</option>
-            <option value="Söz">Söz</option>
+            <option value="Senin Sözün">Senin Sözün (Kendi cümleni yaz)</option>
           </select>
+        </div>
+        <div class="form-group">
+          <label for="inputText">Alıntı veya Kendi Sözün</label>
+          <textarea id="inputText" rows="3" placeholder="Aklında kalan o cümleyi yaz..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="inputAuthor">Kaynak / Yazar / Sanatçı</label>
+          <input type="text" id="inputAuthor" placeholder="Boş bırakılırsa takma adın veya Anonim yazılır">
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" data-close="addModalOverlay">İptal</button>
@@ -570,25 +724,29 @@
     </div>
   </div>
 
-  <!-- Yorumlar Modalı -->
-  <div class="modal-overlay" id="commentsModalOverlay">
+  <!-- Kişisel Profil Modalı (Takma Ad + Beğendiklerim + Eklediklerim) -->
+  <div class="modal-overlay" id="profileModalOverlay">
     <div class="modal">
       <div class="modal-header">
-        <h2>Satır Altı Yorumlar</h2>
-        <button class="close-x" data-close="commentsModalOverlay">&times;</button>
+        <h2>Profilim</h2>
+        <button class="close-x" data-close="profileModalOverlay">&times;</button>
       </div>
-      <div id="commentsList" style="margin-bottom:14px;"></div>
-      <form id="commentForm">
-        <div class="form-group" id="commentNameGroup">
-          <input type="text" id="commentAuthorInput" placeholder="Adın (Boş bırakılırsa Anonim)">
+
+      <div class="form-group">
+        <label for="nicknameInput">Takma Adın (Yorumlarda ve eklediğin sözlerde görünür)</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="nicknameInput" placeholder="Örn: geceokuru">
+          <button type="button" class="btn-primary" id="saveNicknameBtn" style="padding:8px 14px;">Kaydet</button>
         </div>
-        <div class="form-group">
-          <textarea id="commentTextInput" rows="2" placeholder="Bu satır sana ne hissettirdi?" required></textarea>
-        </div>
-        <div class="modal-actions" style="margin-top:10px;">
-          <button type="submit" class="btn-primary" id="commentSubmitBtn">Yorum Bırak</button>
-        </div>
-      </form>
+      </div>
+
+      <div id="profileAuthArea" style="margin-bottom:16px;"></div>
+
+      <div class="tab-row">
+        <button type="button" class="tab-btn active" id="tabFavs">Beğendiklerim (<span id="profileFavCount">0</span>)</button>
+        <button type="button" class="tab-btn" id="tabMine">Eklediklerim (<span id="profileMineCount">0</span>)</button>
+      </div>
+      <div id="profileListContent"></div>
     </div>
   </div>
 
@@ -600,23 +758,9 @@
         <button class="close-x" data-close="archiveModalOverlay">&times;</button>
       </div>
       <div class="form-group">
-        <input type="text" id="archiveSearchInput" placeholder="Kelime, yazar veya kitap ara...">
+        <input type="text" id="archiveSearchInput" placeholder="Kelime, yazar, şarkı veya film ara...">
       </div>
       <div id="archiveList"></div>
-    </div>
-  </div>
-
-  <!-- Beğendiklerim Modalı -->
-  <div class="modal-overlay" id="favModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Beğendiklerim</h2>
-        <button class="close-x" data-close="favModalOverlay">&times;</button>
-      </div>
-      <div id="favNotice" class="info-note" style="display:none;">
-        Hesabına giriş yaparsan beğendiklerin tüm cihazlarında güvenle saklanır.
-      </div>
-      <div id="favList"></div>
     </div>
   </div>
 
@@ -640,7 +784,7 @@
       </div>
       <div class="form-group">
         <label>Renk Teması</label>
-        <div class="picker-grid" id="themePicker">
+        <div class="picker-grid">
           <button type="button" class="picker-chip" data-set-theme="light">Klasik Krem</button>
           <button type="button" class="picker-chip" data-set-theme="dark">Gece</button>
           <button type="button" class="picker-chip" data-set-theme="sepia">Eski Kâğıt</button>
@@ -650,7 +794,7 @@
       </div>
       <div class="form-group">
         <label>Yazı Tipi</label>
-        <div class="picker-grid" id="fontPicker">
+        <div class="picker-grid">
           <button type="button" class="picker-chip" data-set-font="lora" style="font-family:'Lora',serif;">Klasik Kitap</button>
           <button type="button" class="picker-chip" data-set-font="typewriter" style="font-family:'Courier Prime',monospace;">Daktilo</button>
           <button type="button" class="picker-chip" data-set-font="modern" style="font-family:'Inter',sans-serif;">Modern Sade</button>
@@ -659,17 +803,17 @@
     </div>
   </div>
 
-  <!-- İthaf Et / Link Paylaş Modalı -->
+  <!-- İthaf Et / Zarf Modalı -->
   <div class="modal-overlay" id="giftModalOverlay">
     <div class="modal">
       <div class="modal-header">
-        <h2>Bu Satırı Birine İthaf Et</h2>
+        <h2>Bu Satırı İthaf Et</h2>
         <button class="close-x" data-close="giftModalOverlay">&times;</button>
       </div>
-      <p class="info-note">İstersen kısa bir not ekle; linke tıklayan kişi önce kapalı bir zarf görecek. Not bırakmazsan doğrudan bu kart açılır.</p>
+      <p class="info-note">Kısa bir not eklersen linke tıklayan kişi önce kapalı bir zarf görecek. Not bırakmazsan doğrudan bu kart açılır.</p>
       <div class="form-group">
         <label for="giftFromInput">Gönderen (İsteğe bağlı)</label>
-        <input type="text" id="giftFromInput" placeholder="Örn: Nisa">
+        <input type="text" id="giftFromInput" placeholder="Takma adın veya ismin">
       </div>
       <div class="form-group">
         <label for="giftNoteInput">Kısa Notun (İsteğe bağlı)</label>
@@ -677,7 +821,7 @@
       </div>
       <div class="modal-actions">
         <button type="button" class="btn-secondary" data-close="giftModalOverlay">Kapat</button>
-        <button type="button" class="btn-primary" id="copyGiftLinkBtn">Özel Linki Kopyala</button>
+        <button type="button" class="btn-primary" id="copyGiftLinkBtn">Zarf Linkini Kopyala</button>
       </div>
     </div>
   </div>
@@ -686,7 +830,7 @@
   <div class="modal-overlay" id="envelopeModalOverlay">
     <div class="modal">
       <div class="envelope-box">
-        <div class="envelope-icon">✉️</div>
+        <svg class="envelope-svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         <h2 id="envelopeTitle">Sana bir satır bırakıldı</h2>
         <p class="envelope-note" id="envelopeNotePreview"></p>
         <button class="btn-primary" id="openEnvelopeBtn">Zarfı Aç</button>
@@ -699,7 +843,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
-      getFirestore, collection, getDocs, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc, increment, serverTimestamp, query, orderBy
+      getFirestore, collection, getDocs, addDoc, doc, setDoc, getDoc, deleteDoc, increment, serverTimestamp, query, orderBy
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import {
       getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
@@ -723,12 +867,12 @@
     const alintilarRef = collection(db, "alintilar");
 
     const varsayilanAlintilar = [
-      { id: "def-1", metin: "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.", kaynak: "Kendi Notum", kategori: "Not", begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: false },
-      { id: "def-2", metin: "Bazı yollar ancak yürümeye başladığında görünür olur.", kaynak: "Anonim", kategori: "İlham", begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: false },
-      { id: "def-3", metin: "İnsan ancak yüreğiyle baktığı zaman doğruyu görebilir. Gerçeğin mayası gözle görülmez.", kaynak: "Antoine de Saint-Exupéry, Küçük Prens", kategori: "Kitap", begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: true },
-      { id: "def-4", metin: "Her şeyin bir çatlağı vardır; ışık içeri oradan sızar.", kaynak: "Leonard Cohen", kategori: "Söz", begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: false },
-      { id: "def-5", metin: "Yavaş gitmekten korkma, sadece durmaktan kork.", kaynak: "Çin Atasözü", kategori: "İlham", begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: false },
-      { id: "def-6", metin: "Bir hikâyeyi güzel yapan, kusursuz olması değil; sahici olmasıdır.", kaynak: "Kendi Notum", kategori: "Not", begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: true }
+      { id: "def-1", metin: "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.", kaynak: "Satır Arası", kategori: "Senin Sözün", begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false },
+      { id: "def-2", metin: "Bazı yollar ancak yürümeye başladığında görünür olur.", kaynak: "Anonim", kategori: "İlham", begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false },
+      { id: "def-3", metin: "İnsan ancak yüreğiyle baktığı zaman doğruyu görebilir. Gerçeğin mayası gözle görülmez.", kaynak: "Antoine de Saint-Exupéry, Küçük Prens", kategori: "Kitap", begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true },
+      { id: "def-4", metin: "Her şeyin bir çatlağı vardır; ışık içeri oradan sızar.", kaynak: "Leonard Cohen", kategori: "Şarkı", begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false },
+      { id: "def-5", metin: "Yavaş gitmekten korkma, sadece durmaktan kork.", kaynak: "Çin Atasözü", kategori: "İlham", begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false },
+      { id: "def-6", metin: "Bir hikâyeyi güzel yapan, kusursuz olması değil; sahici olmasıdır.", kaynak: "N.A.", kategori: "Senin Sözün", begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: true }
     ];
 
     let alintilar = [];
@@ -737,10 +881,13 @@
     let gununKartiId = null;
     let mevcutKullanici = null;
     let yoneticiMi = false;
+    let yanitlananYazar = null;
+    let aktifProfilSekmesi = "favs";
 
+    let takmaAd = localStorage.getItem("satirArasiNickname") || "";
     let begenilenIdler = JSON.parse(localStorage.getItem("satirArasiBegeniler")) || [];
-    let dusundurucuIdler = JSON.parse(localStorage.getItem("satirArasiDusundurucu")) || [];
-    let ilhamIdler = JSON.parse(localStorage.getItem("satirArasiIlham")) || [];
+    let eklediklerimIdler = JSON.parse(localStorage.getItem("satirArasiEklediklerim")) || [];
+    let kullaniciTepkileri = JSON.parse(localStorage.getItem("satirArasiTepkiler")) || {}; // { kartId: ["🌙", ...] }
     let sesAcik = localStorage.getItem("satirArasiSes") !== "kapali";
 
     // DOM
@@ -753,19 +900,18 @@
     const adminBar = document.getElementById("adminBar");
     const adminFeaturedBtn = document.getElementById("adminFeaturedBtn");
     const dedicationBanner = document.getElementById("dedicationBanner");
-
     const likeBtn = document.getElementById("likeBtn");
     const heartIcon = document.getElementById("heartIcon");
     const likeCount = document.getElementById("likeCount");
-    const thoughtBtn = document.getElementById("thoughtBtn");
-    const thoughtCount = document.getElementById("thoughtCount");
-    const inspireBtn = document.getElementById("inspireBtn");
-    const inspireCount = document.getElementById("inspireCount");
+    const dynamicReactions = document.getElementById("dynamicReactions");
     const commentCount = document.getElementById("commentCount");
-    const favCount = document.getElementById("favCount");
+    const commentsDrawer = document.getElementById("commentsDrawer");
     const footerCounter = document.getElementById("footerCounter");
     const soundBtn = document.getElementById("soundBtn");
-    const authContainer = document.getElementById("authContainer");
+    const profileBtnLabel = document.getElementById("profileBtnLabel");
+
+    const ICON_SOUND_ON = `<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
+    const ICON_SOUND_OFF = `<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
 
     // --- Tema & Yazı Tipi ---
     function gorunumUygula(tema, font) {
@@ -776,24 +922,15 @@
       document.querySelectorAll("[data-set-theme]").forEach(b => b.classList.toggle("active", b.dataset.setTheme === tema));
       document.querySelectorAll("[data-set-font]").forEach(b => b.classList.toggle("active", b.dataset.setFont === font));
     }
-
-    gorunumUygula(
-      localStorage.getItem("satirArasiTema") || "light",
-      localStorage.getItem("satirArasiFont") || "lora"
-    );
-
-    document.querySelectorAll("[data-set-theme]").forEach(b => {
-      b.addEventListener("click", () => gorunumUygula(b.dataset.setTheme, document.body.getAttribute("data-font")));
-    });
-    document.querySelectorAll("[data-set-font]").forEach(b => {
-      b.addEventListener("click", () => gorunumUygula(document.body.getAttribute("data-theme"), b.dataset.setFont));
-    });
+    gorunumUygula(localStorage.getItem("satirArasiTema") || "light", localStorage.getItem("satirArasiFont") || "lora");
+    document.querySelectorAll("[data-set-theme]").forEach(b => b.addEventListener("click", () => gorunumUygula(b.dataset.setTheme, document.body.getAttribute("data-font"))));
+    document.querySelectorAll("[data-set-font]").forEach(b => b.addEventListener("click", () => gorunumUygula(document.body.getAttribute("data-theme"), b.dataset.setFont)));
 
     // --- Kâğıt Sesi ---
-    soundBtn.textContent = sesAcik ? "🔊" : "🔇";
+    soundBtn.innerHTML = sesAcik ? ICON_SOUND_ON : ICON_SOUND_OFF;
     soundBtn.addEventListener("click", () => {
       sesAcik = !sesAcik;
-      soundBtn.textContent = sesAcik ? "🔊" : "🔇";
+      soundBtn.innerHTML = sesAcik ? ICON_SOUND_ON : ICON_SOUND_OFF;
       localStorage.setItem("satirArasiSes", sesAcik ? "acik" : "kapali");
     });
 
@@ -806,9 +943,7 @@
         const bufferSize = audioCtx.sampleRate * duration;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.sin((i / bufferSize) * Math.PI) * 0.12;
-        }
+        for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.sin((i / bufferSize) * Math.PI) * 0.12;
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
         const filter = audioCtx.createBiquadFilter();
@@ -820,47 +955,109 @@
       } catch (e) {}
     }
 
-    // --- Google Auth ---
-    function authArayuzuGuncelle() {
-      if (mevcutKullanici) {
-        const isim = mevcutKullanici.displayName ? mevcutKullanici.displayName.split(" ")[0] : "Hesabım";
-        const foto = mevcutKullanici.photoURL || "";
-        authContainer.innerHTML = `
-          <button class="user-pill" id="logoutBtn" title="Çıkış yapmak için tıkla">
-            ${foto ? `<img src="${foto}" alt="">` : ""}
-            <span>${isim}${yoneticiMi ? " ★" : ""} · Çıkış</span>
-          </button>
-        `;
-        document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
-      } else {
-        authContainer.innerHTML = `<button class="icon-btn" id="loginBtn">Giriş Yap</button>`;
-        document.getElementById("loginBtn").addEventListener("click", async () => {
-          try { await signInWithPopup(auth, provider); }
-          catch (err) { alert("Giriş yapılamadı."); console.error(err); }
-        });
-      }
+    // --- Profil & Google Auth ---
+    function aktifIsimGetir() {
+      if (takmaAd.trim()) return takmaAd.trim();
+      if (mevcutKullanici && mevcutKullanici.displayName) return mevcutKullanici.displayName.split(" ")[0];
+      return "Anonim";
+    }
+
+    function profilButonuGuncelle() {
+      const etiket = takmaAd.trim() || (mevcutKullanici?.displayName?.split(" ")[0]) || "Profil";
+      profileBtnLabel.textContent = yoneticiMi ? `${etiket} ✦` : etiket;
       adminBar.classList.toggle("show", yoneticiMi && !!mevcutKart);
     }
 
     onAuthStateChanged(auth, async (user) => {
       mevcutKullanici = user;
       yoneticiMi = !!(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
-      authArayuzuGuncelle();
-
       if (user) {
         const userRef = doc(db, "kullanicilar", user.uid);
         const snap = await getDoc(userRef);
-        const bulut = snap.exists() ? (snap.data().begenilenler || []) : [];
-        begenilenIdler = Array.from(new Set([...bulut, ...begenilenIdler]));
-        await setDoc(userRef, { begenilenler: begenilenIdler }, { merge: true });
-      } else {
-        begenilenIdler = JSON.parse(localStorage.getItem("satirArasiBegeniler")) || [];
+        const veri = snap.exists() ? snap.data() : {};
+        if (veri.takmaAd) {
+          takmaAd = veri.takmaAd;
+          localStorage.setItem("satirArasiNickname", takmaAd);
+        }
+        begenilenIdler = Array.from(new Set([...(veri.begenilenler || []), ...begenilenIdler]));
+        await setDoc(userRef, { begenilenler: begenilenIdler, takmaAd: takmaAd || "" }, { merge: true });
       }
-      favCount.textContent = begenilenIdler.length;
-      if (mevcutKart) tepkiButonlariniGuncelle();
+      profilButonuGuncelle();
+      if (mevcutKart) tepkileriCiz();
     });
 
-    // --- Kart Gösterme ---
+    function profilModaliniDoldur() {
+      document.getElementById("nicknameInput").value = takmaAd;
+      const authArea = document.getElementById("profileAuthArea");
+      if (mevcutKullanici) {
+        authArea.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;background:var(--input-bg);padding:10px 12px;border-radius:10px;border:1px solid var(--border-color);font-size:0.83rem;">
+            <span>Google ile bağlı (${mevcutKullanici.email})</span>
+            <button type="button" class="text-link-btn" id="profileLogoutBtn" style="color:var(--heart-color);">Çıkış Yap</button>
+          </div>`;
+        document.getElementById("profileLogoutBtn").addEventListener("click", async () => {
+          await signOut(auth);
+          profilModaliniDoldur();
+        });
+      } else {
+        authArea.innerHTML = `
+          <div class="info-note" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <span>Giriş yaparsan beğendiklerin ve takma adın tüm cihazlarında saklanır.</span>
+            <button type="button" class="btn-primary" id="profileLoginBtn" style="padding:6px 12px;font-size:0.78rem;white-space:nowrap;">Google Giriş</button>
+          </div>`;
+        document.getElementById("profileLoginBtn").addEventListener("click", async () => {
+          try { await signInWithPopup(auth, provider); profilModaliniDoldur(); }
+          catch (err) { alert("Giriş yapılamadı."); }
+        });
+      }
+
+      const favoriler = alintilar.filter(a => begenilenIdler.includes(a.id));
+      const eklediklerim = alintilar.filter(a =>
+        (mevcutKullanici && a.ekleyenUid === mevcutKullanici.uid) || eklediklerimIdler.includes(a.id)
+      );
+      document.getElementById("profileFavCount").textContent = favoriler.length;
+      document.getElementById("profileMineCount").textContent = eklediklerim.length;
+
+      document.getElementById("tabFavs").classList.toggle("active", aktifProfilSekmesi === "favs");
+      document.getElementById("tabMine").classList.toggle("active", aktifProfilSekmesi === "mine");
+
+      const liste = aktifProfilSekmesi === "favs" ? favoriler : eklediklerim;
+      const container = document.getElementById("profileListContent");
+      if (!liste.length) {
+        container.innerHTML = `<p class="empty-msg">${aktifProfilSekmesi === "favs" ? "Henüz beğendiğin bir satır yok." : "Henüz bir satır eklemedin."}</p>`;
+        return;
+      }
+      container.innerHTML = liste.map(item => `
+        <div class="list-item" data-id="${item.id}">
+          <div class="list-item-text">“${item.metin}”</div>
+          <div class="list-item-meta"><span>— ${item.kaynak} · ${item.kategori}</span><span>♥ ${item.begeni || 0}</span></div>
+        </div>`).join("");
+      container.querySelectorAll(".list-item").forEach(el => {
+        el.addEventListener("click", () => {
+          const b = alintilar.find(a => a.id === el.dataset.id);
+          if (b) kartiGoster(b, true);
+          modalKapat("profileModalOverlay");
+        });
+      });
+    }
+
+    document.getElementById("profileBtn").addEventListener("click", () => { profilModaliniDoldur(); modalAc("profileModalOverlay"); });
+    document.getElementById("tabFavs").addEventListener("click", () => { aktifProfilSekmesi = "favs"; profilModaliniDoldur(); });
+    document.getElementById("tabMine").addEventListener("click", () => { aktifProfilSekmesi = "mine"; profilModaliniDoldur(); });
+
+    document.getElementById("saveNicknameBtn").addEventListener("click", async () => {
+      takmaAd = document.getElementById("nicknameInput").value.trim();
+      localStorage.setItem("satirArasiNickname", takmaAd);
+      if (mevcutKullanici) {
+        await setDoc(doc(db, "kullanicilar", mevcutKullanici.uid), { takmaAd }, { merge: true });
+      }
+      profilButonuGuncelle();
+      const btn = document.getElementById("saveNicknameBtn");
+      btn.textContent = "Kaydedildi";
+      setTimeout(() => btn.textContent = "Kaydet", 1200);
+    });
+
+    // --- Kart Gösterme & Tepkiler ---
     function gununKartiniHesapla() {
       if (!alintilar.length) return null;
       const sirali = [...alintilar].sort((a, b) => a.id.localeCompare(b.id));
@@ -870,28 +1067,99 @@
       return sirali[hash % sirali.length];
     }
 
-    function tepkiButonlariniGuncelle() {
+    function tepkileriCiz() {
       if (!mevcutKart) return;
       const id = mevcutKart.id;
       const begenildi = begenilenIdler.includes(id);
       likeBtn.classList.toggle("liked", begenildi);
       heartIcon.textContent = begenildi ? "♥" : "♡";
       likeCount.textContent = mevcutKart.begeni || 0;
-
-      thoughtBtn.classList.toggle("active", dusundurucuIdler.includes(id));
-      thoughtCount.textContent = mevcutKart.dusundurucu || 0;
-
-      inspireBtn.classList.toggle("active", ilhamIdler.includes(id));
-      inspireCount.textContent = mevcutKart.ilham || 0;
-
       commentCount.textContent = mevcutKart.yorumSayisi || 0;
       adminFeaturedBtn.classList.toggle("active", !!mevcutKart.kurucuSecimi);
+
+      // Dinamik emoji tepkileri
+      const tepkiMap = mevcutKart.tepkiler || {};
+      const benimTepkiler = kullaniciTepkileri[id] || [];
+      dynamicReactions.innerHTML = "";
+      Object.entries(tepkiMap)
+        .filter(([, sayi]) => sayi > 0)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([emoji, sayi]) => {
+          const btn = document.createElement("button");
+          btn.className = "react-btn" + (benimTepkiler.includes(emoji) ? " active" : "");
+          btn.textContent = `${emoji} ${sayi}`;
+          btn.addEventListener("click", () => emojiTepkiIsle(emoji));
+          dynamicReactions.appendChild(btn);
+        });
     }
+
+    async function emojiTepkiIsle(emoji) {
+      if (!mevcutKart || !emoji.trim()) return;
+      const temizEmoji = emoji.trim();
+      const id = mevcutKart.id;
+      if (!kullaniciTepkileri[id]) kullaniciTepkileri[id] = [];
+      if (!mevcutKart.tepkiler) mevcutKart.tepkiler = {};
+
+      const varMi = kullaniciTepkileri[id].includes(temizEmoji);
+      const artis = varMi ? -1 : 1;
+
+      if (varMi) kullaniciTepkileri[id] = kullaniciTepkileri[id].filter(e => e !== temizEmoji);
+      else kullaniciTepkileri[id].push(temizEmoji);
+
+      mevcutKart.tepkiler[temizEmoji] = Math.max(0, (mevcutKart.tepkiler[temizEmoji] || 0) + artis);
+      localStorage.setItem("satirArasiTepkiler", JSON.stringify(kullaniciTepkileri));
+      tepkileriCiz();
+
+      try {
+        await setDoc(doc(db, "alintilar", id), {
+          metin: mevcutKart.metin, kaynak: mevcutKart.kaynak, kategori: mevcutKart.kategori,
+          tepkiler: { [temizEmoji]: increment(artis) }
+        }, { merge: true });
+      } catch (e) { console.error(e); }
+    }
+
+    // Emoji Popover
+    const emojiPopover = document.getElementById("emojiPopover");
+    document.getElementById("addEmojiBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      emojiPopover.classList.toggle("open");
+    });
+    document.addEventListener("click", (e) => {
+      if (!emojiPopover.contains(e.target) && e.target.id !== "addEmojiBtn") emojiPopover.classList.remove("open");
+    });
+    document.querySelectorAll(".emoji-opt").forEach(b => {
+      b.addEventListener("click", () => { emojiTepkiIsle(b.dataset.emoji); emojiPopover.classList.remove("open"); });
+    });
+    document.getElementById("customEmojiSubmit").addEventListener("click", () => {
+      const val = document.getElementById("customEmojiInput").value.trim();
+      if (val) { emojiTepkiIsle(val); document.getElementById("customEmojiInput").value = ""; emojiPopover.classList.remove("open"); }
+    });
+
+    likeBtn.addEventListener("click", async () => {
+      if (!mevcutKart) return;
+      const id = mevcutKart.id;
+      const varMi = begenilenIdler.includes(id);
+      const artis = varMi ? -1 : 1;
+      if (varMi) begenilenIdler = begenilenIdler.filter(x => x !== id);
+      else begenilenIdler.push(id);
+      mevcutKart.begeni = Math.max(0, (mevcutKart.begeni || 0) + artis);
+      localStorage.setItem("satirArasiBegeniler", JSON.stringify(begenilenIdler));
+      tepkileriCiz();
+      try {
+        await setDoc(doc(db, "alintilar", id), {
+          metin: mevcutKart.metin, kaynak: mevcutKart.kaynak, kategori: mevcutKart.kategori,
+          begeni: increment(artis)
+        }, { merge: true });
+        if (mevcutKullanici) await setDoc(doc(db, "kullanicilar", mevcutKullanici.uid), { begenilenler: begenilenIdler }, { merge: true });
+      } catch (e) {}
+    });
 
     function kartiGoster(secilen, sesCal = false) {
       if (!secilen) return;
       if (sesCal) kagitSesiCal();
       mevcutKart = secilen;
+      yanitlananYazar = null;
+      document.getElementById("replyingBar").classList.remove("show");
       quoteWrapper.classList.add("fade-out");
       setTimeout(() => {
         quoteText.textContent = `“${secilen.metin}”`;
@@ -900,9 +1168,10 @@
         dailyBadge.classList.toggle("show", secilen.id === gununKartiId);
         featuredBadge.classList.toggle("show", !!secilen.kurucuSecimi);
         adminBar.classList.toggle("show", yoneticiMi);
-        tepkiButonlariniGuncelle();
+        tepkileriCiz();
         quoteWrapper.classList.remove("fade-out");
-      }, 180);
+        if (commentsDrawer.classList.contains("open")) yorumlariYukle();
+      }, 170);
     }
 
     function yeniAlintiGetir(sesCal = true) {
@@ -912,44 +1181,34 @@
       else if (aktifKategori !== "Tümü") havuz = alintilar.filter(a => a.kategori === aktifKategori);
 
       if (!havuz.length) {
-        quoteText.textContent = "Bu bölümde henüz bir satır yok.";
+        quoteText.textContent = "Bu kategoride henüz bir satır yok. İlkini sen eklemek ister misin?";
         quoteAuthor.textContent = "";
-        categoryEl.textContent = aktifKategori === "Kurucu" ? "Kurucunun Seçimi" : aktifKategori;
+        categoryEl.textContent = aktifKategori === "Kurucu" ? "✦ N.A." : aktifKategori;
         dailyBadge.classList.remove("show");
         featuredBadge.classList.remove("show");
         return;
       }
-
       let secilen;
       if (havuz.length === 1) secilen = havuz[0];
-      else {
-        do { secilen = havuz[Math.floor(Math.random() * havuz.length)]; }
-        while (mevcutKart && secilen.id === mevcutKart.id);
-      }
+      else { do { secilen = havuz[Math.floor(Math.random() * havuz.length)]; } while (mevcutKart && secilen.id === mevcutKart.id); }
       kartiGoster(secilen, sesCal);
     }
 
-    // --- Veritabanı Yükleme & URL Parametre Kontrolü ---
+    // --- Veritabanı Yükleme ---
     async function alintilariYukle() {
       const harita = new Map();
       varsayilanAlintilar.forEach(item => harita.set(item.id, { ...item }));
-
       try {
         const snapshot = await getDocs(alintilarRef);
         snapshot.forEach((d) => {
           const v = d.data();
           if (v.silindi) { harita.delete(d.id); return; }
           if (v.metin) {
+            const kat = (v.kategori === "Söz" || v.kategori === "Not") ? "Senin Sözün" : (v.kategori || "Senin Sözün");
             harita.set(d.id, {
-              id: d.id,
-              metin: v.metin,
-              kaynak: v.kaynak || "Anonim",
-              kategori: v.kategori || "Not",
-              begeni: v.begeni || 0,
-              dusundurucu: v.dusundurucu || 0,
-              ilham: v.ilham || 0,
-              yorumSayisi: v.yorumSayisi || 0,
-              kurucuSecimi: !!v.kurucuSecimi
+              id: d.id, metin: v.metin, kaynak: v.kaynak || "Anonim", kategori: kat,
+              begeni: v.begeni || 0, tepkiler: v.tepkiler || {}, yorumSayisi: v.yorumSayisi || 0,
+              kurucuSecimi: !!v.kurucuSecimi, ekleyenUid: v.ekleyenUid || null
             });
           }
         });
@@ -957,17 +1216,13 @@
 
       alintilar = Array.from(harita.values());
       footerCounter.textContent = `Satır Arası · Şu ana kadar ${alintilar.length} satır birikti`;
-      favCount.textContent = begenilenIdler.length;
-
       const gunun = gununKartiniHesapla();
       if (gunun) gununKartiId = gunun.id;
 
-      // URL'de özel kart veya ithaf var mı?
       const params = new URLSearchParams(window.location.search);
-      const hedefId = params.get("id");
+      const hedefKart = params.get("id") ? alintilar.find(a => a.id === params.get("id")) : null;
       const not = params.get("not");
       const kimden = params.get("kimden");
-      const hedefKart = hedefId ? alintilar.find(a => a.id === hedefId) : null;
 
       if (hedefKart) {
         kartiGoster(hedefKart, false);
@@ -982,45 +1237,95 @@
             dedicationBanner.classList.add("show");
           };
         }
-      } else if (gunun) {
-        kartiGoster(gunun, false);
-      } else {
-        yeniAlintiGetir(false);
-      }
+      } else if (gunun) kartiGoster(gunun, false);
+      else yeniAlintiGetir(false);
     }
 
-    // --- Tepki İşlemleri ---
-    async function tepkiIsle(alan, liste, storageKey, isLike = false) {
+    // --- Kart Altı Yorumlar & Yanıtlama ---
+    async function yorumlariYukle() {
       if (!mevcutKart) return;
-      const id = mevcutKart.id;
-      const varMi = liste.includes(id);
-      const artis = varMi ? -1 : 1;
-
-      if (varMi) liste.splice(liste.indexOf(id), 1);
-      else liste.push(id);
-
-      mevcutKart[alan] = Math.max(0, (mevcutKart[alan] || 0) + artis);
-      localStorage.setItem(storageKey, JSON.stringify(liste));
-      if (isLike) favCount.textContent = liste.length;
-      tepkiButonlariniGuncelle();
-
+      const listEl = document.getElementById("commentsList");
+      listEl.innerHTML = `<p class="empty-msg">Yükleniyor...</p>`;
       try {
-        await setDoc(doc(db, "alintilar", id), {
-          metin: mevcutKart.metin,
-          kaynak: mevcutKart.kaynak,
-          kategori: mevcutKart.kategori,
-          [alan]: increment(artis)
-        }, { merge: true });
-
-        if (isLike && mevcutKullanici) {
-          await setDoc(doc(db, "kullanicilar", mevcutKullanici.uid), { begenilenler: liste }, { merge: true });
+        const q = query(collection(db, "alintilar", mevcutKart.id, "yorumlar"), orderBy("tarih", "asc"));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+          listEl.innerHTML = `<p class="empty-msg">Henüz yorum yok. İlk notu sen bırak.</p>`;
+          return;
         }
-      } catch (e) { console.error(e); }
+        listEl.innerHTML = "";
+        snap.forEach(d => {
+          const y = d.data();
+          const div = document.createElement("div");
+          div.className = "comment-item";
+          div.innerHTML = `
+            ${y.yanitlanan ? `<div class="comment-reply-tag">↳ @${y.yanitlanan}'a yanıt</div>` : ""}
+            <div class="comment-head">
+              <strong>${y.yazar || "Anonim"}</strong>
+              <div class="comment-actions">
+                <button type="button" class="text-link-btn" data-reply-to="${y.yazar || "Anonim"}">Yanıtla</button>
+                ${yoneticiMi ? `<button type="button" class="text-link-btn" style="color:var(--heart-color);" data-del-comment="${d.id}">Sil</button>` : ""}
+              </div>
+            </div>
+            <div class="comment-body">${y.metin}</div>`;
+          listEl.appendChild(div);
+        });
+
+        listEl.querySelectorAll("[data-reply-to]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            yanitlananYazar = btn.dataset.replyTo;
+            document.getElementById("replyingText").textContent = `@${yanitlananYazar}'a yanıt yazıyorsun`;
+            document.getElementById("replyingBar").classList.add("show");
+            document.getElementById("commentTextInput").focus();
+          });
+        });
+
+        listEl.querySelectorAll("[data-del-comment]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            await deleteDoc(doc(db, "alintilar", mevcutKart.id, "yorumlar", btn.dataset.delComment));
+            mevcutKart.yorumSayisi = Math.max(0, (mevcutKart.yorumSayisi || 1) - 1);
+            await setDoc(doc(db, "alintilar", mevcutKart.id), { yorumSayisi: mevcutKart.yorumSayisi }, { merge: true });
+            tepkileriCiz();
+            yorumlariYukle();
+          });
+        });
+      } catch (e) { listEl.innerHTML = `<p class="empty-msg">Henüz yorum yok.</p>`; }
     }
 
-    likeBtn.addEventListener("click", () => tepkiIsle("begeni", begenilenIdler, "satirArasiBegeniler", true));
-    thoughtBtn.addEventListener("click", () => tepkiIsle("dusundurucu", dusundurucuIdler, "satirArasiDusundurucu"));
-    inspireBtn.addEventListener("click", () => tepkiIsle("ilham", ilhamIdler, "satirArasiIlham"));
+    document.getElementById("toggleCommentsBtn").addEventListener("click", () => {
+      commentsDrawer.classList.toggle("open");
+      if (commentsDrawer.classList.contains("open")) yorumlariYukle();
+    });
+    document.getElementById("closeCommentsBtn").addEventListener("click", () => commentsDrawer.classList.remove("open"));
+    document.getElementById("cancelReplyBtn").addEventListener("click", () => {
+      yanitlananYazar = null;
+      document.getElementById("replyingBar").classList.remove("show");
+    });
+
+    document.getElementById("commentForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!mevcutKart) return;
+      const metin = document.getElementById("commentTextInput").value.trim();
+      if (!metin) return;
+      const btn = document.getElementById("commentSubmitBtn");
+      btn.disabled = true;
+      try {
+        await addDoc(collection(db, "alintilar", mevcutKart.id, "yorumlar"), {
+          metin, yazar: aktifIsimGetir(), yanitlanan: yanitlananYazar || null, tarih: serverTimestamp()
+        });
+        mevcutKart.yorumSayisi = (mevcutKart.yorumSayisi || 0) + 1;
+        await setDoc(doc(db, "alintilar", mevcutKart.id), {
+          metin: mevcutKart.metin, kaynak: mevcutKart.kaynak, kategori: mevcutKart.kategori,
+          yorumSayisi: increment(1)
+        }, { merge: true });
+        document.getElementById("commentTextInput").value = "";
+        yanitlananYazar = null;
+        document.getElementById("replyingBar").classList.remove("show");
+        tepkileriCiz();
+        yorumlariYukle();
+      } catch (err) { alert("Yorum gönderilemedi."); }
+      finally { btn.disabled = false; }
+    });
 
     // --- Yönetici İşlemleri ---
     adminFeaturedBtn.addEventListener("click", async () => {
@@ -1036,7 +1341,7 @@
 
     document.getElementById("adminEditBtn").addEventListener("click", () => {
       if (!yoneticiMi || !mevcutKart) return;
-      document.getElementById("formModalTitle").textContent = "Alıntıyı Düzenle";
+      document.getElementById("formModalTitle").textContent = "Satırı Düzenle";
       document.getElementById("submitBtn").textContent = "Kaydet";
       document.getElementById("editId").value = mevcutKart.id;
       document.getElementById("inputText").value = mevcutKart.metin;
@@ -1046,201 +1351,42 @@
     });
 
     document.getElementById("adminDeleteBtn").addEventListener("click", async () => {
-      if (!yoneticiMi || !mevcutKart) return;
-      if (!confirm("Bu alıntıyı kalıcı olarak silmek istediğine emin misin?")) return;
+      if (!yoneticiMi || !mevcutKart || !confirm("Bu satırı kalıcı olarak silmek istediğine emin misin?")) return;
       const silinecekId = mevcutKart.id;
       try {
-        if (silinecekId.startsWith("def-")) {
-          await setDoc(doc(db, "alintilar", silinecekId), { silindi: true }, { merge: true });
-        } else {
-          await deleteDoc(doc(db, "alintilar", silinecekId));
-        }
+        if (silinecekId.startsWith("def-")) await setDoc(doc(db, "alintilar", silinecekId), { silindi: true }, { merge: true });
+        else await deleteDoc(doc(db, "alintilar", silinecekId));
         alintilar = alintilar.filter(a => a.id !== silinecekId);
         footerCounter.textContent = `Satır Arası · Şu ana kadar ${alintilar.length} satır birikti`;
         yeniAlintiGetir(true);
-      } catch (e) { alert("Silinemedi."); console.error(e); }
+      } catch (e) { alert("Silinemedi."); }
     });
 
-    // --- Yorumlar ---
-    async function yorumlariYukle() {
-      if (!mevcutKart) return;
-      const listEl = document.getElementById("commentsList");
-      listEl.innerHTML = `<p class="empty-msg">Yükleniyor...</p>`;
-      document.getElementById("commentNameGroup").style.display = mevcutKullanici ? "none" : "block";
-
-      try {
-        const q = query(collection(db, "alintilar", mevcutKart.id, "yorumlar"), orderBy("tarih", "desc"));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-          listEl.innerHTML = `<p class="empty-msg">Henüz yorum yok. İlk notu sen bırak.</p>`;
-          return;
-        }
-        listEl.innerHTML = "";
-        snap.forEach(d => {
-          const y = d.data();
-          const div = document.createElement("div");
-          div.className = "comment-item";
-          div.innerHTML = `
-            <div class="comment-head">
-              <strong>${y.yazar || "Anonim"}</strong>
-              ${yoneticiMi ? `<button class="admin-btn danger" data-del-comment="${d.id}">Sil</button>` : ""}
-            </div>
-            <div class="comment-body">${y.metin}</div>
-          `;
-          listEl.appendChild(div);
-        });
-
-        listEl.querySelectorAll("[data-del-comment]").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            await deleteDoc(doc(db, "alintilar", mevcutKart.id, "yorumlar", btn.dataset.delComment));
-            mevcutKart.yorumSayisi = Math.max(0, (mevcutKart.yorumSayisi || 1) - 1);
-            await setDoc(doc(db, "alintilar", mevcutKart.id), { yorumSayisi: mevcutKart.yorumSayisi }, { merge: true });
-            tepkiButonlariniGuncelle();
-            yorumlariYukle();
-          });
-        });
-      } catch (e) {
-        listEl.innerHTML = `<p class="empty-msg">Henüz yorum yok.</p>`;
-      }
-    }
-
-    document.getElementById("commentsBtn").addEventListener("click", () => {
-      modalAc("commentsModalOverlay");
-      yorumlariYukle();
-    });
-
-    document.getElementById("commentForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!mevcutKart) return;
-      const metin = document.getElementById("commentTextInput").value.trim();
-      if (!metin) return;
-      const yazar = mevcutKullanici
-        ? (mevcutKullanici.displayName || "Okur")
-        : (document.getElementById("commentAuthorInput").value.trim() || "Anonim");
-
-      const btn = document.getElementById("commentSubmitBtn");
-      btn.disabled = true;
-      try {
-        await addDoc(collection(db, "alintilar", mevcutKart.id, "yorumlar"), {
-          metin, yazar, tarih: serverTimestamp()
-        });
-        mevcutKart.yorumSayisi = (mevcutKart.yorumSayisi || 0) + 1;
-        await setDoc(doc(db, "alintilar", mevcutKart.id), {
-          metin: mevcutKart.metin, kaynak: mevcutKart.kaynak, kategori: mevcutKart.kategori,
-          yorumSayisi: increment(1)
-        }, { merge: true });
-        document.getElementById("commentTextInput").value = "";
-        tepkiButonlariniGuncelle();
-        yorumlariYukle();
-      } catch (err) { alert("Yorum eklenemedi."); console.error(err); }
-      finally { btn.disabled = false; }
-    });
-
-    // --- Arşiv & Yazar Filtreleme ---
-    function arsiviGoster(filtreMetni = "") {
-      const input = document.getElementById("archiveSearchInput");
-      input.value = filtreMetni;
-      const listEl = document.getElementById("archiveList");
-      const aranan = filtreMetni.trim().toLowerCase();
-
-      const sonuclar = alintilar.filter(a =>
-        a.metin.toLowerCase().includes(aranan) ||
-        a.kaynak.toLowerCase().includes(aranan) ||
-        a.kategori.toLowerCase().includes(aranan)
-      );
-
-      if (!sonuclar.length) {
-        listEl.innerHTML = `<p class="empty-msg">Eşleşen bir satır bulunamadı.</p>`;
-        return;
-      }
-
-      listEl.innerHTML = sonuclar.map(item => `
-        <div class="list-item" data-id="${item.id}">
-          <div class="list-item-text">“${item.metin}”</div>
-          <div class="list-item-meta">
-            <span>— ${item.kaynak} · ${item.kategori}</span>
-            <span>♥ ${item.begeni || 0}</span>
-          </div>
-        </div>
-      `).join("");
-
-      listEl.querySelectorAll(".list-item").forEach(el => {
-        el.addEventListener("click", () => {
-          const bulunan = alintilar.find(a => a.id === el.dataset.id);
-          if (bulunan) kartiGoster(bulunan, true);
-          modalKapat("archiveModalOverlay");
-        });
-      });
-    }
-
-    document.getElementById("archiveBtn").addEventListener("click", () => {
-      arsiviGoster("");
-      modalAc("archiveModalOverlay");
-    });
-    document.getElementById("archiveSearchInput").addEventListener("input", (e) => arsiviGoster(e.target.value));
-    quoteAuthor.addEventListener("click", () => {
-      if (!mevcutKart) return;
-      arsiviGoster(mevcutKart.kaynak.split(",")[0].trim());
-      modalAc("archiveModalOverlay");
-    });
-
-    // --- İthaf / Direkt Link ---
-    document.getElementById("giftBtn").addEventListener("click", () => {
-      if (mevcutKullanici && !document.getElementById("giftFromInput").value) {
-        document.getElementById("giftFromInput").value = mevcutKullanici.displayName?.split(" ")[0] || "";
-      }
-      modalAc("giftModalOverlay");
-    });
-
-    document.getElementById("copyGiftLinkBtn").addEventListener("click", () => {
-      if (!mevcutKart) return;
-      const base = window.location.origin + window.location.pathname;
-      const params = new URLSearchParams({ id: mevcutKart.id });
-      const kimden = document.getElementById("giftFromInput").value.trim();
-      const not = document.getElementById("giftNoteInput").value.trim();
-      if (kimden) params.set("kimden", kimden);
-      if (not) params.set("not", not);
-
-      const url = `${base}?${params.toString()}`;
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById("copyGiftLinkBtn");
-        btn.textContent = "Link Kopyalandı!";
-        setTimeout(() => { btn.textContent = "Özel Linki Kopyala"; modalKapat("giftModalOverlay"); }, 1200);
-      });
-    });
-
-    // --- Story İndir (Tema ve Font Uyumlu) ---
-    document.getElementById("storyBtn").addEventListener("click", () => {
+    // --- Akıllı Paylaşım (Mobil Yerel Paylaşım + Masaüstü PNG İndir) ---
+    document.getElementById("shareBtn").addEventListener("click", async () => {
       if (!mevcutKart) return;
       const canvas = document.getElementById("storyCanvas");
       const ctx = canvas.getContext("2d");
       const cs = getComputedStyle(document.body);
-      const bg = cs.getPropertyValue("--bg-color").trim();
-      const cardBg = cs.getPropertyValue("--card-bg").trim();
-      const border = cs.getPropertyValue("--border-color").trim();
-      const textMain = cs.getPropertyValue("--text-main").trim();
-      const textMuted = cs.getPropertyValue("--text-muted").trim();
-      const accent = cs.getPropertyValue("--accent").trim();
       const fontMap = { lora: "Lora, Georgia, serif", typewriter: "'Courier Prime', monospace", modern: "Inter, sans-serif" };
       const qFont = fontMap[document.body.getAttribute("data-font")] || "Lora, serif";
 
-      ctx.fillStyle = bg;
+      ctx.fillStyle = cs.getPropertyValue("--bg-color").trim();
       ctx.fillRect(0, 0, 1080, 1920);
-
-      ctx.fillStyle = cardBg;
-      ctx.strokeStyle = border;
+      ctx.fillStyle = cs.getPropertyValue("--card-bg").trim();
+      ctx.strokeStyle = cs.getPropertyValue("--border-color").trim();
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.roundRect(90, 420, 900, 1040, 44);
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = accent;
+      ctx.fillStyle = cs.getPropertyValue("--accent").trim();
       ctx.font = "600 28px Inter, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(mevcutKart.kategori.toUpperCase(), 540, 560);
 
-      ctx.fillStyle = textMain;
+      ctx.fillStyle = cs.getPropertyValue("--text-main").trim();
       ctx.font = `46px ${qFont}`;
       const kelimeler = `“${mevcutKart.metin}”`.split(" ");
       let satir = "";
@@ -1257,35 +1403,137 @@
       let startY = 920 - totalH / 2;
       satirlar.forEach((s, i) => ctx.fillText(s, 540, startY + i * lh));
 
-      ctx.fillStyle = textMuted;
+      ctx.fillStyle = cs.getPropertyValue("--text-muted").trim();
       ctx.font = `italic 32px ${qFont}`;
       ctx.fillText(`— ${mevcutKart.kaynak}`, 540, startY + totalH + 60);
-
       ctx.font = "500 26px Inter, sans-serif";
       ctx.fillText("SATIR ARASI", 540, 1680);
       ctx.font = "400 22px Inter, sans-serif";
       ctx.fillText("hnisaak.github.io/satir-arasi", 540, 1720);
 
-      const link = document.createElement("a");
-      link.download = "satir-arasi-story.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], "satir-arasi.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: "Satır Arası", text: `“${mevcutKart.metin}” — ${mevcutKart.kaynak}` });
+            return;
+          } catch (e) {}
+        }
+        const link = document.createElement("a");
+        link.download = "satir-arasi.png";
+        link.href = URL.createObjectURL(blob);
+        link.click();
+      }, "image/png");
     });
 
-    // --- Diğer Butonlar & Modallar ---
+    // --- Arşiv, Popüler, İthaf ve Ekleme ---
+    function arsiviGoster(filtre = "") {
+      document.getElementById("archiveSearchInput").value = filtre;
+      const aranan = filtre.trim().toLowerCase();
+      const sonuclar = alintilar.filter(a => a.metin.toLowerCase().includes(aranan) || a.kaynak.toLowerCase().includes(aranan) || a.kategori.toLowerCase().includes(aranan));
+      const listEl = document.getElementById("archiveList");
+      listEl.innerHTML = sonuclar.length
+        ? sonuclar.map(i => `<div class="list-item" data-id="${i.id}"><div class="list-item-text">“${i.metin}”</div><div class="list-item-meta"><span>— ${i.kaynak} · ${i.kategori}</span><span>♥ ${i.begeni || 0}</span></div></div>`).join("")
+        : `<p class="empty-msg">Eşleşen bir satır bulunamadı.</p>`;
+      listEl.querySelectorAll(".list-item").forEach(el => el.addEventListener("click", () => {
+        const b = alintilar.find(a => a.id === el.dataset.id);
+        if (b) kartiGoster(b, true);
+        modalKapat("archiveModalOverlay");
+      }));
+    }
+
+    document.getElementById("archiveBtn").addEventListener("click", () => { arsiviGoster(""); modalAc("archiveModalOverlay"); });
+    document.getElementById("archiveSearchInput").addEventListener("input", (e) => arsiviGoster(e.target.value));
+    quoteAuthor.addEventListener("click", () => { if (mevcutKart) { arsiviGoster(mevcutKart.kaynak.split(",")[0].trim()); modalAc("archiveModalOverlay"); } });
+
+    document.getElementById("popularBtn").addEventListener("click", () => {
+      const listEl = document.getElementById("popList");
+      const sirali = [...alintilar].sort((a, b) => (b.begeni || 0) - (a.begeni || 0)).slice(0, 10);
+      listEl.innerHTML = sirali.map((i, idx) => `<div class="list-item" data-id="${i.id}"><div class="list-item-text">${idx + 1}. “${i.metin}”</div><div class="list-item-meta"><span>— ${i.kaynak} · ${i.kategori}</span><span>♥ ${i.begeni || 0}</span></div></div>`).join("");
+      listEl.querySelectorAll(".list-item").forEach(el => el.addEventListener("click", () => {
+        const b = alintilar.find(a => a.id === el.dataset.id);
+        if (b) kartiGoster(b, true);
+        modalKapat("popModalOverlay");
+      }));
+      modalAc("popModalOverlay");
+    });
+
+    document.getElementById("giftBtn").addEventListener("click", () => {
+      if (!document.getElementById("giftFromInput").value) document.getElementById("giftFromInput").value = takmaAd || mevcutKullanici?.displayName?.split(" ")[0] || "";
+      modalAc("giftModalOverlay");
+    });
+
+    document.getElementById("copyGiftLinkBtn").addEventListener("click", () => {
+      if (!mevcutKart) return;
+      const params = new URLSearchParams({ id: mevcutKart.id });
+      const kimden = document.getElementById("giftFromInput").value.trim();
+      const not = document.getElementById("giftNoteInput").value.trim();
+      if (kimden) params.set("kimden", kimden);
+      if (not) params.set("not", not);
+      navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?${params.toString()}`).then(() => {
+        const btn = document.getElementById("copyGiftLinkBtn");
+        btn.textContent = "Kopyalandı!";
+        setTimeout(() => { btn.textContent = "Zarf Linkini Kopyala"; modalKapat("giftModalOverlay"); }, 1100);
+      });
+    });
+
+    document.getElementById("openModalBtn").addEventListener("click", () => {
+      document.getElementById("formModalTitle").textContent = "Yeni Satır Ekle";
+      document.getElementById("submitBtn").textContent = "Ekle";
+      document.getElementById("editId").value = "";
+      document.getElementById("quoteForm").reset();
+      modalAc("addModalOverlay");
+    });
+
+    document.getElementById("quoteForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById("editId").value;
+      const metin = document.getElementById("inputText").value.trim();
+      const kategori = document.getElementById("inputCategory").value;
+      const kaynakInput = document.getElementById("inputAuthor").value.trim();
+      const kaynak = kaynakInput || (kategori === "Senin Sözün" ? aktifIsimGetir() : "Anonim");
+      if (!metin) return;
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      try {
+        if (editId && yoneticiMi) {
+          await setDoc(doc(db, "alintilar", editId), { metin, kaynak, kategori }, { merge: true });
+          const hedef = alintilar.find(a => a.id === editId);
+          if (hedef) { hedef.metin = metin; hedef.kaynak = kaynak; hedef.kategori = kategori; kartiGoster(hedef, false); }
+        } else {
+          const docRef = await addDoc(alintilarRef, {
+            metin, kaynak, kategori, begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false,
+            ekleyenUid: mevcutKullanici ? mevcutKullanici.uid : null,
+            tarih: serverTimestamp()
+          });
+          const yeni = { id: docRef.id, metin, kaynak, kategori, begeni: 0, tepkiler: {}, yorumSayisi: 0, kurucuSecimi: false, ekleyenUid: mevcutKullanici ? mevcutKullanici.uid : null };
+          alintilar.push(yeni);
+          eklediklerimIdler.push(docRef.id);
+          localStorage.setItem("satirArasiEklediklerim", JSON.stringify(eklediklerimIdler));
+          footerCounter.textContent = `Satır Arası · Şu ana kadar ${alintilar.length} satır birikti`;
+          kartiGoster(yeni, true);
+        }
+        document.getElementById("quoteForm").reset();
+        modalKapat("addModalOverlay");
+      } catch (hata) { alert("Bir hata oluştu."); }
+      finally { submitBtn.disabled = false; }
+    });
+
+    // Genel Modallar ve Butonlar
     function modalAc(id) { document.getElementById(id).classList.add("open"); }
     function modalKapat(id) { document.getElementById(id).classList.remove("open"); }
-
     document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => modalKapat(b.dataset.close)));
-    document.querySelectorAll(".modal-overlay").forEach(ov => {
-      ov.addEventListener("click", (e) => { if (e.target === ov && ov.id !== "envelopeModalOverlay") ov.classList.remove("open"); });
-    });
+    document.querySelectorAll(".modal-overlay").forEach(ov => ov.addEventListener("click", (e) => { if (e.target === ov && ov.id !== "envelopeModalOverlay") ov.classList.remove("open"); }));
 
     document.getElementById("appearanceBtn").addEventListener("click", () => modalAc("appearanceModalOverlay"));
-    document.getElementById("brandHome").addEventListener("click", () => {
-      window.history.replaceState({}, "", window.location.pathname);
-      dedicationBanner.classList.remove("show");
-      yeniAlintiGetir(true);
+    document.getElementById("brandHome").addEventListener("click", () => { window.history.replaceState({}, "", window.location.pathname); dedicationBanner.classList.remove("show"); yeniAlintiGetir(true); });
+    document.getElementById("newQuoteBtn").addEventListener("click", () => yeniAlintiGetir(true));
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      if (!mevcutKart) return;
+      navigator.clipboard.writeText(`“${mevcutKart.metin}” — ${mevcutKart.kaynak}`).then(() => {
+        const b = document.getElementById("copyBtn"); b.textContent = "Kopyalandı!"; setTimeout(() => b.textContent = "Kopyala", 1300);
+      });
     });
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
@@ -1297,98 +1545,7 @@
       });
     });
 
-    const copyBtn = document.getElementById("copyBtn");
-    copyBtn.addEventListener("click", () => {
-      if (!mevcutKart) return;
-      navigator.clipboard.writeText(`“${mevcutKart.metin}” — ${mevcutKart.kaynak}`).then(() => {
-        copyBtn.textContent = "Kopyalandı!";
-        setTimeout(() => copyBtn.textContent = "Kopyala", 1400);
-      });
-    });
-
-    document.getElementById("favoritesBtn").addEventListener("click", () => {
-      const listEl = document.getElementById("favList");
-      document.getElementById("favNotice").style.display = mevcutKullanici ? "none" : "block";
-      const favoriler = alintilar.filter(a => begenilenIdler.includes(a.id));
-      listEl.innerHTML = favoriler.length
-        ? favoriler.map(item => `
-            <div class="list-item" data-id="${item.id}">
-              <div class="list-item-text">“${item.metin}”</div>
-              <div class="list-item-meta"><span>— ${item.kaynak}</span><span>♥ ${item.begeni || 0}</span></div>
-            </div>`).join("")
-        : `<p class="empty-msg">Henüz beğendiğin bir satır yok.</p>`;
-      listEl.querySelectorAll(".list-item").forEach(el => {
-        el.addEventListener("click", () => {
-          const b = alintilar.find(a => a.id === el.dataset.id);
-          if (b) kartiGoster(b, true);
-          modalKapat("favModalOverlay");
-        });
-      });
-      modalAc("favModalOverlay");
-    });
-
-    document.getElementById("popularBtn").addEventListener("click", () => {
-      const listEl = document.getElementById("popList");
-      const sirali = [...alintilar].sort((a, b) => (b.begeni || 0) - (a.begeni || 0)).slice(0, 10);
-      listEl.innerHTML = sirali.map((item, idx) => `
-        <div class="list-item" data-id="${item.id}">
-          <div class="list-item-text">${idx + 1}. “${item.metin}”</div>
-          <div class="list-item-meta"><span>— ${item.kaynak} · ${item.kategori}</span><span>♥ ${item.begeni || 0}</span></div>
-        </div>`).join("");
-      listEl.querySelectorAll(".list-item").forEach(el => {
-        el.addEventListener("click", () => {
-          const b = alintilar.find(a => a.id === el.dataset.id);
-          if (b) kartiGoster(b, true);
-          modalKapat("popModalOverlay");
-        });
-      });
-      modalAc("popModalOverlay");
-    });
-
-    // Yeni Ekle / Düzenle Formu
-    document.getElementById("openModalBtn").addEventListener("click", () => {
-      document.getElementById("formModalTitle").textContent = "Yeni Alıntı Ekle";
-      document.getElementById("submitBtn").textContent = "Ekle";
-      document.getElementById("editId").value = "";
-      document.getElementById("quoteForm").reset();
-      modalAc("addModalOverlay");
-    });
-
-    document.getElementById("quoteForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const editId = document.getElementById("editId").value;
-      const metin = document.getElementById("inputText").value.trim();
-      const kaynak = document.getElementById("inputAuthor").value.trim() || "Anonim";
-      const kategori = document.getElementById("inputCategory").value;
-      if (!metin) return;
-
-      const submitBtn = document.getElementById("submitBtn");
-      submitBtn.disabled = true;
-
-      try {
-        if (editId && yoneticiMi) {
-          await setDoc(doc(db, "alintilar", editId), { metin, kaynak, kategori }, { merge: true });
-          const hedef = alintilar.find(a => a.id === editId);
-          if (hedef) { hedef.metin = metin; hedef.kaynak = kaynak; hedef.kategori = kategori; kartiGoster(hedef, false); }
-        } else {
-          const docRef = await addDoc(alintilarRef, {
-            metin, kaynak, kategori, begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: false,
-            ekleyenUid: mevcutKullanici ? mevcutKullanici.uid : null,
-            tarih: serverTimestamp()
-          });
-          const yeni = { id: docRef.id, metin, kaynak, kategori, begeni: 0, dusundurucu: 0, ilham: 0, yorumSayisi: 0, kurucuSecimi: false };
-          alintilar.push(yeni);
-          footerCounter.textContent = `Satır Arası · Şu ana kadar ${alintilar.length} satır birikti`;
-          kartiGoster(yeni, true);
-        }
-        document.getElementById("quoteForm").reset();
-        modalKapat("addModalOverlay");
-      } catch (hata) { alert("Bir hata oluştu."); console.error(hata); }
-      finally { submitBtn.disabled = false; }
-    });
-
-    document.getElementById("newQuoteBtn").addEventListener("click", () => yeniAlintiGetir(true));
-
+    profilButonuGuncelle();
     alintilariYukle();
   </script>
 </body>
