@@ -6,7 +6,7 @@
   <title>Satır Arası</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #f6f4f0;
@@ -14,8 +14,26 @@
       --text-main: #2b2927;
       --text-muted: #78736e;
       --accent: #8c5e58;
+      --accent-soft: #f4ecea;
       --accent-hover: #734b46;
       --border-color: #e8e3dc;
+      --input-bg: #fbfaf8;
+      --heart-color: #c84b4b;
+      --shadow: 0 12px 32px rgba(43, 41, 39, 0.05);
+    }
+
+    body.dark {
+      --bg-color: #181615;
+      --card-bg: #221f1d;
+      --text-main: #f0ece6;
+      --text-muted: #a69e96;
+      --accent: #c48a82;
+      --accent-soft: #312523;
+      --accent-hover: #d49c94;
+      --border-color: #342f2c;
+      --input-bg: #1c1a18;
+      --heart-color: #e06363;
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -32,40 +50,174 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       padding: 20px;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
+    /* Üst Menü */
+    .topbar {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--text-main);
+      letter-spacing: 0.3px;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      padding: 4px 12px 4px 5px;
+      font-size: 0.82rem;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .user-pill img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Merkez Alan */
+    .main-wrap {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: auto 0;
+    }
+
+    /* Kategori Filtreleri */
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-main);
+      background: var(--card-bg);
+    }
+
+    .filter-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--border-color);
+    }
+
+    /* Ana Kart */
     .card {
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 48px 40px;
-      max-width: 560px;
+      border-radius: 22px;
+      padding: 42px 36px 34px;
       width: 100%;
-      box-shadow: 0 12px 32px rgba(43, 41, 39, 0.05);
+      box-shadow: var(--shadow);
       text-align: center;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
     }
 
     .category {
       display: inline-block;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.4px;
       color: var(--accent);
-      background-color: #f4ecea;
+      background-color: var(--accent-soft);
       padding: 6px 14px;
       border-radius: 999px;
-      margin-bottom: 28px;
+    }
+
+    .daily-badge {
+      display: none;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+
+    .daily-badge.show {
+      display: inline-block;
     }
 
     .quote-wrapper {
-      min-height: 120px;
+      min-height: 125px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .fade-out {
@@ -74,10 +226,10 @@
 
     .quote-text {
       font-family: 'Lora', serif;
-      font-size: 1.45rem;
+      font-size: 1.42rem;
       line-height: 1.65;
       color: var(--text-main);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .quote-author {
@@ -87,19 +239,55 @@
       font-family: 'Lora', serif;
     }
 
-    .actions {
-      margin-top: 36px;
+    /* Kart Altı Etkileşim */
+    .card-meta {
+      margin-top: 26px;
       display: flex;
+      justify-content: center;
+      align-items: center;
       gap: 10px;
+    }
+
+    .like-btn {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .like-btn:hover {
+      border-color: var(--heart-color);
+      color: var(--heart-color);
+    }
+
+    .like-btn.liked {
+      background: rgba(200, 75, 75, 0.1);
+      border-color: var(--heart-color);
+      color: var(--heart-color);
+    }
+
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 8px;
       justify-content: center;
       flex-wrap: wrap;
     }
 
-    button {
+    button.btn-primary,
+    button.btn-secondary {
       font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 500;
-      padding: 12px 20px;
+      padding: 11px 18px;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -124,19 +312,27 @@
     .btn-secondary {
       background-color: transparent;
       color: var(--text-muted);
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border-color) !important;
     }
 
     .btn-secondary:hover {
-      background-color: #f9f7f4;
+      background-color: var(--input-bg);
       color: var(--text-main);
     }
 
-    /* Alıntı Ekleme Penceresi (Modal) */
+    /* Alt Bilgi */
+    footer {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modallar */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(43, 41, 39, 0.45);
+      background: rgba(15, 14, 13, 0.55);
       display: none;
       align-items: center;
       justify-content: center;
@@ -150,28 +346,46 @@
 
     .modal {
       background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 20px;
-      padding: 32px;
-      max-width: 440px;
+      padding: 28px;
+      max-width: 480px;
       width: 100%;
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+      max-height: 82vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
       text-align: left;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
     }
 
     .modal h2 {
       font-family: 'Lora', serif;
-      font-size: 1.3rem;
-      margin-bottom: 20px;
+      font-size: 1.25rem;
       color: var(--text-main);
     }
 
+    .close-x {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .form-group label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       color: var(--text-muted);
       margin-bottom: 6px;
     }
@@ -181,11 +395,11 @@
     .form-group select {
       width: 100%;
       font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       padding: 10px 12px;
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      background-color: #fbfaf8;
+      background-color: var(--input-bg);
       color: var(--text-main);
       outline: none;
     }
@@ -200,51 +414,131 @@
       display: flex;
       justify-content: flex-end;
       gap: 10px;
-      margin-top: 24px;
+      margin-top: 20px;
     }
 
-    footer {
-      margin-top: 24px;
-      font-size: 0.8rem;
+    .list-item {
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: var(--input-bg);
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .list-item:hover {
+      border-color: var(--accent);
+    }
+
+    .list-item-text {
+      font-family: 'Lora', serif;
+      font-size: 0.96rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .list-item-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
-    @media (max-width: 480px) {
+    .empty-msg {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .info-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 520px) {
       .card {
-        padding: 36px 24px;
+        padding: 32px 22px 26px;
       }
       .quote-text {
-        font-size: 1.25rem;
+        font-size: 1.22rem;
       }
-      .actions {
-        flex-direction: column;
+      .topbar {
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
 
-  <main class="card">
-    <span class="category" id="category">Satır Arası</span>
-    
-    <div class="quote-wrapper" id="quoteWrapper">
-      <p class="quote-text" id="quoteText">Yükleniyor...</p>
-      <p class="quote-author" id="quoteAuthor"></p>
+  <!-- Üst Menü -->
+  <header class="topbar">
+    <div class="brand">Satır Arası</div>
+    <div class="top-controls">
+      <button class="icon-btn" id="popularBtn" title="En Çok Beğenilenler">🔥 Popüler</button>
+      <button class="icon-btn" id="favoritesBtn" title="Beğendiklerim">❤️ <span id="favCount">0</span></button>
+      <button class="icon-btn" id="soundBtn" title="Ses Efekti">🔊</button>
+      <button class="icon-btn" id="themeBtn" title="Gece / Gündüz Modu">🌙</button>
+      <div id="authContainer">
+        <button class="icon-btn" id="loginBtn">Giriş Yap</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ana İçerik -->
+  <div class="main-wrap">
+    <!-- Kategori Filtresi -->
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-cat="Tümü">Tümü</button>
+      <button class="filter-btn" data-cat="Kitap">Kitap</button>
+      <button class="filter-btn" data-cat="Film">Film</button>
+      <button class="filter-btn" data-cat="Not">Not</button>
+      <button class="filter-btn" data-cat="İlham">İlham</button>
+      <button class="filter-btn" data-cat="Söz">Söz</button>
     </div>
 
-    <div class="actions">
-      <button class="btn-primary" id="newQuoteBtn">Yeni Kart Çek</button>
-      <button class="btn-secondary" id="copyBtn">Kopyala</button>
-      <button class="btn-secondary" id="openModalBtn">+ Alıntı Ekle</button>
-    </div>
-  </main>
+    <main class="card">
+      <div class="badges">
+        <span class="category" id="category">Satır Arası</span>
+        <span class="daily-badge" id="dailyBadge">✨ Günün Satırı</span>
+      </div>
 
-  <footer>Satır Arası</footer>
+      <div class="quote-wrapper" id="quoteWrapper">
+        <p class="quote-text" id="quoteText">Yükleniyor...</p>
+        <p class="quote-author" id="quoteAuthor"></p>
+      </div>
 
-  <!-- Alıntı Ekleme Penceresi -->
-  <div class="modal-overlay" id="modalOverlay">
+      <div class="card-meta">
+        <button class="like-btn" id="likeBtn">
+          <span id="heartIcon">♡</span>
+          <span id="likeCount">0</span>
+        </button>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" id="newQuoteBtn">Yeni Kart Çek</button>
+        <button class="btn-secondary" id="storyBtn">Story İndir</button>
+        <button class="btn-secondary" id="copyBtn">Kopyala</button>
+        <button class="btn-secondary" id="openModalBtn">+ Ekle</button>
+      </div>
+    </main>
+  </div>
+
+  <footer id="footerCounter">Satır Arası</footer>
+
+  <!-- Alıntı Ekleme Modalı -->
+  <div class="modal-overlay" id="addModalOverlay">
     <div class="modal">
-      <h2>Yeni Alıntı Ekle</h2>
+      <div class="modal-header">
+        <h2>Yeni Alıntı Ekle</h2>
+        <button class="close-x" data-close="addModalOverlay">&times;</button>
+      </div>
       <form id="quoteForm">
         <div class="form-group">
           <label for="inputText">Alıntı veya Notun</label>
@@ -265,16 +559,49 @@
           </select>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn-secondary" id="closeModalBtn">İptal</button>
+          <button type="button" class="btn-secondary" data-close="addModalOverlay">İptal</button>
           <button type="submit" class="btn-primary" id="submitBtn">Ekle</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Beğendiklerim Modalı -->
+  <div class="modal-overlay" id="favModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Beğendiklerim</h2>
+        <button class="close-x" data-close="favModalOverlay">&times;</button>
+      </div>
+      <div id="favNotice" class="info-note" style="display:none;">
+        Hesabına giriş yaparsan beğendiklerin tüm cihazlarında güvenle saklanır.
+      </div>
+      <div id="favList"></div>
+    </div>
+  </div>
+
+  <!-- Popüler Satırlar Modalı -->
+  <div class="modal-overlay" id="popModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>En Çok Beğenilenler</h2>
+        <button class="close-x" data-close="popModalOverlay">&times;</button>
+      </div>
+      <div id="popList"></div>
+    </div>
+  </div>
+
+  <!-- Story görseli üretmek için gizli tuval -->
+  <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+      getFirestore, collection, getDocs, addDoc, doc, setDoc, getDoc, updateDoc, increment, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAXEbbuDgn4rLXLfai3XEGtKLAQh47Zu7U",
@@ -287,142 +614,455 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
     const alintilarRef = collection(db, "alintilar");
 
     const varsayilanAlintilar = [
-      {
-        metin: "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.",
-        kaynak: "Kendi Notum",
-        kategori: "Not"
-      },
-      {
-        metin: "Bazı yollar ancak yürümeye başladığında görünür olur.",
-        kaynak: "Anonim",
-        kategori: "İlham"
-      },
-      {
-        metin: "İnsan ancak yüreğiyle baktığı zaman doğruyu görebilir. Gerçeğin mayası gözle görülmez.",
-        kaynak: "Antoine de Saint-Exupéry, Küçük Prens",
-        kategori: "Kitap"
-      },
-      {
-        metin: "Her şeyin bir çatlağı vardır; ışık içeri oradan sızar.",
-        kaynak: "Leonard Cohen",
-        kategori: "Söz"
-      },
-      {
-        metin: "Yavaş gitmekten korkma, sadece durmaktan kork.",
-        kaynak: "Çin Atasözü",
-        kategori: "İlham"
-      },
-      {
-        metin: "Bir hikâyeyi güzel yapan, kusursuz olması değil; sahici olmasıdır.",
-        kaynak: "Kendi Notum",
-        kategori: "Not"
-      }
+      { id: "def-1", metin: "İnsan, ne kadar uzağa giderse gitsin, kendi içindeki mevsimi yanında taşır.", kaynak: "Kendi Notum", kategori: "Not", begeni: 0 },
+      { id: "def-2", metin: "Bazı yollar ancak yürümeye başladığında görünür olur.", kaynak: "Anonim", kategori: "İlham", begeni: 0 },
+      { id: "def-3", metin: "İnsan ancak yüreğiyle baktığı zaman doğruyu görebilir. Gerçeğin mayası gözle görülmez.", kaynak: "Antoine de Saint-Exupéry, Küçük Prens", kategori: "Kitap", begeni: 0 },
+      { id: "def-4", metin: "Her şeyin bir çatlağı vardır; ışık içeri oradan sızar.", kaynak: "Leonard Cohen", kategori: "Söz", begeni: 0 },
+      { id: "def-5", metin: "Yavaş gitmekten korkma, sadece durmaktan kork.", kaynak: "Çin Atasözü", kategori: "İlham", begeni: 0 },
+      { id: "def-6", metin: "Bir hikâyeyi güzel yapan, kusursuz olması değil; sahici olmasıdır.", kaynak: "Kendi Notum", kategori: "Not", begeni: 0 }
     ];
 
-    let alintilar = [...varsayilanAlintilar];
-    let sonIndeks = -1;
+    let alintilar = [];
+    let aktifKategori = "Tümü";
+    let mevcutKart = null;
+    let gununKartiId = null;
+    let mevcutKullanici = null;
+    let begenilenIdler = JSON.parse(localStorage.getItem("satirArasiBegeniler")) || [];
+    let sesAcik = localStorage.getItem("satirArasiSes") !== "kapali";
 
+    // DOM Elemanları
     const quoteText = document.getElementById("quoteText");
     const quoteAuthor = document.getElementById("quoteAuthor");
     const categoryEl = document.getElementById("category");
+    const dailyBadge = document.getElementById("dailyBadge");
     const quoteWrapper = document.getElementById("quoteWrapper");
-    const newQuoteBtn = document.getElementById("newQuoteBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const modalOverlay = document.getElementById("modalOverlay");
-    const openModalBtn = document.getElementById("openModalBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const quoteForm = document.getElementById("quoteForm");
-    const submitBtn = document.getElementById("submitBtn");
+    const likeBtn = document.getElementById("likeBtn");
+    const heartIcon = document.getElementById("heartIcon");
+    const likeCount = document.getElementById("likeCount");
+    const favCount = document.getElementById("favCount");
+    const footerCounter = document.getElementById("footerCounter");
+    const soundBtn = document.getElementById("soundBtn");
+    const themeBtn = document.getElementById("themeBtn");
+    const authContainer = document.getElementById("authContainer");
 
-    function kartiGoster(secilen) {
+    // --- Tema (Gece / Gündüz) ---
+    if (localStorage.getItem("satirArasiTema") === "dark") {
+      document.body.classList.add("dark");
+      themeBtn.textContent = "☀️";
+    }
+    themeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      themeBtn.textContent = isDark ? "☀️" : "🌙";
+      localStorage.setItem("satirArasiTema", isDark ? "dark" : "light");
+    });
+
+    // --- Kâğıt Çevirme Sesi (Web Audio API) ---
+    soundBtn.textContent = sesAcik ? "🔊" : "🔇";
+    soundBtn.addEventListener("click", () => {
+      sesAcik = !sesAcik;
+      soundBtn.textContent = sesAcik ? "🔊" : "🔇";
+      localStorage.setItem("satirArasiSes", sesAcik ? "acik" : "kapali");
+    });
+
+    let audioCtx = null;
+    function kagitSesiCal() {
+      if (!sesAcik) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const duration = 0.14;
+        const bufferSize = audioCtx.sampleRate * duration;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          const env = Math.sin((i / bufferSize) * Math.PI);
+          data[i] = (Math.random() * 2 - 1) * env * 0.12;
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.value = 1800;
+        filter.Q.value = 1.2;
+
+        noise.connect(filter);
+        filter.connect(audioCtx.destination);
+        noise.start();
+      } catch (e) {}
+    }
+
+    // --- Google ile Giriş / Çıkış ---
+    function authArayuzuGuncelle() {
+      if (mevcutKullanici) {
+        const isim = mevcutKullanici.displayName ? mevcutKullanici.displayName.split(" ")[0] : "Hesabım";
+        const foto = mevcutKullanici.photoURL || "";
+        authContainer.innerHTML = `
+          <button class="user-pill" id="logoutBtn" title="Çıkış yapmak için tıkla">
+            ${foto ? `<img src="${foto}" alt="">` : ""}
+            <span>${isim} · Çıkış</span>
+          </button>
+        `;
+        document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
+      } else {
+        authContainer.innerHTML = `<button class="icon-btn" id="loginBtn">Giriş Yap</button>`;
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+          try {
+            await signInWithPopup(auth, provider);
+          } catch (err) {
+            alert("Giriş yapılamadı. Firebase'de Google girişi ve yetkili alan adı ayarını kontrol et.");
+            console.error(err);
+          }
+        });
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      mevcutKullanici = user;
+      authArayuzuGuncelle();
+      if (user) {
+        const userRef = doc(db, "kullanicilar", user.uid);
+        const snap = await getDoc(userRef);
+        const bulutBegeniler = snap.exists() ? (snap.data().begenilenler || []) : [];
+        // Misafirken beğenilenleri hesapla birleştir
+        const birlesik = Array.from(new Set([...bulutBegeniler, ...begenilenIdler]));
+        begenilenIdler = birlesik;
+        await setDoc(userRef, { begenilenler: birlesik }, { merge: true });
+      } else {
+        begenilenIdler = JSON.parse(localStorage.getItem("satirArasiBegeniler")) || [];
+      }
+      favCount.textContent = begenilenIdler.length;
+      if (mevcutKart) begeniButonuGuncelle();
+    });
+
+    // --- Kart Gösterme ve Günün Satırı ---
+    function gununKartiniHesapla() {
+      if (!alintilar.length) return null;
+      const sirali = [...alintilar].sort((a, b) => a.id.localeCompare(b.id));
+      const bugun = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      let hash = 0;
+      for (let i = 0; i < bugun.length; i++) {
+        hash = (hash * 31 + bugun.charCodeAt(i)) % 100000;
+      }
+      return sirali[hash % sirali.length];
+    }
+
+    function begeniButonuGuncelle() {
+      if (!mevcutKart) return;
+      const begenildi = begenilenIdler.includes(mevcutKart.id);
+      likeBtn.classList.toggle("liked", begenildi);
+      heartIcon.textContent = begenildi ? "♥" : "♡";
+      likeCount.textContent = mevcutKart.begeni || 0;
+    }
+
+    function kartiGoster(secilen, sesCal = false) {
+      if (!secilen) return;
+      if (sesCal) kagitSesiCal();
+      mevcutKart = secilen;
       quoteWrapper.classList.add("fade-out");
       setTimeout(() => {
         quoteText.textContent = `“${secilen.metin}”`;
         quoteAuthor.textContent = `— ${secilen.kaynak}`;
         categoryEl.textContent = secilen.kategori;
+        dailyBadge.classList.toggle("show", secilen.id === gununKartiId);
+        begeniButonuGuncelle();
         quoteWrapper.classList.remove("fade-out");
-      }, 250);
+      }, 200);
     }
 
-    function yeniAlintiGetir() {
-      let rastgeleIndeks;
-      do {
-        rastgeleIndeks = Math.floor(Math.random() * alintilar.length);
-      } while (rastgeleIndeks === sonIndeks && alintilar.length > 1);
+    function yeniAlintiGetir(sesCal = true) {
+      const havuz = aktifKategori === "Tümü"
+        ? alintilar
+        : alintilar.filter(a => a.kategori === aktifKategori);
 
-      sonIndeks = rastgeleIndeks;
-      kartiGoster(alintilar[rastgeleIndeks]);
+      if (!havuz.length) {
+        quoteText.textContent = "Bu kategoride henüz bir satır yok. İlkini sen eklemek ister misin?";
+        quoteAuthor.textContent = "";
+        categoryEl.textContent = aktifKategori;
+        dailyBadge.classList.remove("show");
+        return;
+      }
+
+      let secilen;
+      if (havuz.length === 1) {
+        secilen = havuz[0];
+      } else {
+        do {
+          secilen = havuz[Math.floor(Math.random() * havuz.length)];
+        } while (mevcutKart && secilen.id === mevcutKart.id);
+      }
+      kartiGoster(secilen, sesCal);
     }
 
-    // Veritabanından kayıtlı tüm alıntıları çek
+    // --- Veritabanından Yükleme ---
     async function alintilariYukle() {
+      const harita = new Map();
+      varsayilanAlintilar.forEach(item => harita.set(item.id, { ...item }));
+
       try {
         const snapshot = await getDocs(alintilarRef);
-        snapshot.forEach((doc) => {
-          const veri = doc.data();
-          if (veri.metin) {
-            alintilar.push({
-              metin: veri.metin,
-              kaynak: veri.kaynak || "Anonim",
-              kategori: veri.kategori || "Not"
+        snapshot.forEach((d) => {
+          const v = d.data();
+          if (v.metin) {
+            harita.set(d.id, {
+              id: d.id,
+              metin: v.metin,
+              kaynak: v.kaynak || "Anonim",
+              kategori: v.kategori || "Not",
+              begeni: v.begeni || 0
             });
           }
         });
       } catch (hata) {
-        console.error("Alıntılar yüklenirken hata oluştu:", hata);
+        console.error("Veriler alınamadı:", hata);
       }
-      yeniAlintiGetir();
+
+      alintilar = Array.from(harita.values());
+      footerCounter.textContent = `Satır Arası · Şu ana kadar ${alintilar.length} satır birikti`;
+      favCount.textContent = begenilenIdler.length;
+
+      const gunun = gununKartiniHesapla();
+      if (gunun) {
+        gununKartiId = gunun.id;
+        kartiGoster(gunun, false);
+      } else {
+        yeniAlintiGetir(false);
+      }
     }
 
-    // Kopyalama
-    copyBtn.addEventListener("click", () => {
-      const kopyalanacak = `${quoteText.textContent} ${quoteAuthor.textContent}`;
-      navigator.clipboard.writeText(kopyalanacak).then(() => {
-        const eskiYazi = copyBtn.textContent;
-        copyBtn.textContent = "Kopyalandı!";
-        setTimeout(() => {
-          copyBtn.textContent = eskiYazi;
-        }, 1500);
+    // --- Beğeni İşlemi ---
+    likeBtn.addEventListener("click", async () => {
+      if (!mevcutKart) return;
+      const id = mevcutKart.id;
+      const zatenBegendi = begenilenIdler.includes(id);
+      const artis = zatenBegendi ? -1 : 1;
+
+      if (zatenBegendi) {
+        begenilenIdler = begenilenIdler.filter(x => x !== id);
+      } else {
+        begenilenIdler.push(id);
+      }
+
+      mevcutKart.begeni = Math.max(0, (mevcutKart.begeni || 0) + artis);
+      begeniButonuGuncelle();
+      favCount.textContent = begenilenIdler.length;
+      localStorage.setItem("satirArasiBegeniler", JSON.stringify(begenilenIdler));
+
+      try {
+        const kartRef = doc(db, "alintilar", id);
+        await setDoc(kartRef, {
+          metin: mevcutKart.metin,
+          kaynak: mevcutKart.kaynak,
+          kategori: mevcutKart.kategori,
+          begeni: increment(artis)
+        }, { merge: true });
+
+        if (mevcutKullanici) {
+          await setDoc(doc(db, "kullanicilar", mevcutKullanici.uid), {
+            begenilenler: begenilenIdler
+          }, { merge: true });
+        }
+      } catch (e) {
+        console.error("Beğeni kaydedilemedi:", e);
+      }
+    });
+
+    // --- Kategori Filtreleri ---
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        aktifKategori = btn.dataset.cat;
+        yeniAlintiGetir(true);
       });
     });
 
-    // Modal aç / kapat
-    openModalBtn.addEventListener("click", () => modalOverlay.classList.add("open"));
-    closeModalBtn.addEventListener("click", () => modalOverlay.classList.remove("open"));
-    modalOverlay.addEventListener("click", (e) => {
-      if (e.target === modalOverlay) modalOverlay.classList.remove("open");
+    // --- Kopyala ---
+    const copyBtn = document.getElementById("copyBtn");
+    copyBtn.addEventListener("click", () => {
+      if (!mevcutKart) return;
+      navigator.clipboard.writeText(`“${mevcutKart.metin}” — ${mevcutKart.kaynak}`).then(() => {
+        copyBtn.textContent = "Kopyalandı!";
+        setTimeout(() => copyBtn.textContent = "Kopyala", 1500);
+      });
     });
 
-    // Yeni alıntıyı Firestore'a kaydet
+    // --- Instagram Story Görseli İndir (1080x1920 PNG) ---
+    document.getElementById("storyBtn").addEventListener("click", () => {
+      if (!mevcutKart) return;
+      const canvas = document.getElementById("storyCanvas");
+      const ctx = canvas.getContext("2d");
+      const isDark = document.body.classList.contains("dark");
+
+      // Arka plan
+      ctx.fillStyle = isDark ? "#181615" : "#f6f4f0";
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // İç Kart
+      ctx.fillStyle = isDark ? "#221f1d" : "#ffffff";
+      ctx.strokeStyle = isDark ? "#342f2c" : "#e8e3dc";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.roundRect(90, 420, 900, 1040, 44);
+      ctx.fill();
+      ctx.stroke();
+
+      // Kategori
+      ctx.fillStyle = isDark ? "#c48a82" : "#8c5e58";
+      ctx.font = "600 28px Inter, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(mevcutKart.kategori.toUpperCase(), 540, 560);
+
+      // Alıntı Metni (Satır sarma)
+      ctx.fillStyle = isDark ? "#f0ece6" : "#2b2927";
+      ctx.font = "48px Lora, Georgia, serif";
+      const kelimeler = `“${mevcutKart.metin}”`.split(" ");
+      let satir = "";
+      const satirlar = [];
+      const maxGenislik = 740;
+
+      for (const kelime of kelimeler) {
+        const test = satir + kelime + " ";
+        if (ctx.measureText(test).width > maxGenislik && satir !== "") {
+          satirlar.push(satir.trim());
+          satir = kelime + " ";
+        } else {
+          satir = test;
+        }
+      }
+      if (satir) satirlar.push(satir.trim());
+
+      const satirYuksekligi = 74;
+      const toplamYukseklik = satirlar.length * satirYuksekligi;
+      let baslangicY = 920 - toplamYukseklik / 2;
+
+      satirlar.forEach((s, idx) => {
+        ctx.fillText(s, 540, baslangicY + idx * satirYuksekligi);
+      });
+
+      // Yazar
+      ctx.fillStyle = isDark ? "#a69e96" : "#78736e";
+      ctx.font = "italic 34px Lora, Georgia, serif";
+      ctx.fillText(`— ${mevcutKart.kaynak}`, 540, baslangicY + toplamYukseklik + 60);
+
+      // Alt İmza
+      ctx.fillStyle = isDark ? "#78736e" : "#9c958e";
+      ctx.font = "500 26px Inter, sans-serif";
+      ctx.fillText("SATIR ARASI", 540, 1680);
+      ctx.font = "400 22px Inter, sans-serif";
+      ctx.fillText("hnisaak.github.io/satir-arasi", 540, 1720);
+
+      const link = document.createElement("a");
+      link.download = "satir-arasi-story.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+
+    // --- Modallar (Aç/Kapat) ---
+    function modalAc(id) { document.getElementById(id).classList.add("open"); }
+    function modalKapat(id) { document.getElementById(id).classList.remove("open"); }
+
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => modalKapat(btn.dataset.close));
+    });
+    document.querySelectorAll(".modal-overlay").forEach(ov => {
+      ov.addEventListener("click", (e) => {
+        if (e.target === ov) ov.classList.remove("open");
+      });
+    });
+
+    document.getElementById("openModalBtn").addEventListener("click", () => modalAc("addModalOverlay"));
+
+    // Beğendiklerim Listesi
+    document.getElementById("favoritesBtn").addEventListener("click", () => {
+      const listEl = document.getElementById("favList");
+      const notice = document.getElementById("favNotice");
+      notice.style.display = mevcutKullanici ? "none" : "block";
+
+      const favoriler = alintilar.filter(a => begenilenIdler.includes(a.id));
+      if (!favoriler.length) {
+        listEl.innerHTML = `<p class="empty-msg">Henüz beğendiğin bir satır yok.</p>`;
+      } else {
+        listEl.innerHTML = favoriler.map(item => `
+          <div class="list-item" data-id="${item.id}">
+            <div class="list-item-text">“${item.metin}”</div>
+            <div class="list-item-meta">
+              <span>— ${item.kaynak}</span>
+              <span>♥ ${item.begeni || 0}</span>
+            </div>
+          </div>
+        `).join("");
+
+        listEl.querySelectorAll(".list-item").forEach(el => {
+          el.addEventListener("click", () => {
+            const bulunan = alintilar.find(a => a.id === el.dataset.id);
+            if (bulunan) kartiGoster(bulunan, true);
+            modalKapat("favModalOverlay");
+          });
+        });
+      }
+      modalAc("favModalOverlay");
+    });
+
+    // Popüler Satırlar Listesi
+    document.getElementById("popularBtn").addEventListener("click", () => {
+      const listEl = document.getElementById("popList");
+      const sirali = [...alintilar].sort((a, b) => (b.begeni || 0) - (a.begeni || 0)).slice(0, 10);
+
+      listEl.innerHTML = sirali.map((item, idx) => `
+        <div class="list-item" data-id="${item.id}">
+          <div class="list-item-text">${idx + 1}. “${item.metin}”</div>
+          <div class="list-item-meta">
+            <span>— ${item.kaynak} · ${item.kategori}</span>
+            <span>♥ ${item.begeni || 0}</span>
+          </div>
+        </div>
+      `).join("");
+
+      listEl.querySelectorAll(".list-item").forEach(el => {
+        el.addEventListener("click", () => {
+          const bulunan = alintilar.find(a => a.id === el.dataset.id);
+          if (bulunan) kartiGoster(bulunan, true);
+          modalKapat("popModalOverlay");
+        });
+      });
+      modalAc("popModalOverlay");
+    });
+
+    // Yeni Alıntı Ekleme
+    const quoteForm = document.getElementById("quoteForm");
+    const submitBtn = document.getElementById("submitBtn");
     quoteForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const metin = document.getElementById("inputText").value.trim();
       const kaynak = document.getElementById("inputAuthor").value.trim() || "Anonim";
       const kategori = document.getElementById("inputCategory").value;
-
       if (!metin) return;
 
       submitBtn.disabled = true;
       submitBtn.textContent = "Ekleniyor...";
 
       try {
-        await addDoc(alintilarRef, {
+        const docRef = await addDoc(alintilarRef, {
           metin,
           kaynak,
           kategori,
+          begeni: 0,
+          ekleyenUid: mevcutKullanici ? mevcutKullanici.uid : null,
           tarih: serverTimestamp()
         });
 
-        const yeniAlinti = { metin, kaynak, kategori };
-        alintilar.push(yeniAlinti);
-        sonIndeks = alintilar.length - 1;
-        kartiGoster(yeniAlinti);
-
+        const yeni = { id: docRef.id, metin, kaynak, kategori, begeni: 0 };
+        alintilar.push(yeni);
+        footerCounter.textContent = `Satır Arası · Şu ana kadar ${alintilar.length} satır birikti`;
+        kartiGoster(yeni, true);
         quoteForm.reset();
-        modalOverlay.classList.remove("open");
+        modalKapat("addModalOverlay");
       } catch (hata) {
         alert("Bir hata oluştu, lütfen tekrar dene.");
         console.error(hata);
@@ -432,7 +1072,7 @@
       }
     });
 
-    newQuoteBtn.addEventListener("click", yeniAlintiGetir);
+    document.getElementById("newQuoteBtn").addEventListener("click", () => yeniAlintiGetir(true));
 
     // Başlat
     alintilariYukle();
