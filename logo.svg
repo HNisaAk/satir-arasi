@@ -1,13 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  
-  <rect width="512" height="512" fill="#f6e7e4" />
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>S.A. Logo PNG İndirici</title>
+  <style>
+    body { font-family: sans-serif; background: #f6e7e4; color: #3b2826; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 16px; margin: 0; }
+    button { background: #a85d56; color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-size: 15px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <canvas id="c" width="512" height="512" style="width:220px;height:220px;border-radius:24px;box-shadow:0 10px 25px rgba(0,0,0,0.08);"></canvas>
+  <button id="dlBtn">logo.png Olarak İndir</button>
 
-  
-  <path d="M 118 228 Q 130 250 152 256 Q 130 262 118 284 Q 112 262 90 256 Q 112 250 118 228 Z" fill="#3b2826" />
+  <script>
+    const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+      <rect width="512" height="512" fill="#f6e7e4"/>
+      <path d="M 70 210 Q 86 242 120 252 Q 86 262 70 294 Q 60 262 26 252 Q 60 242 70 210 Z" fill="#3b2826"/>
+      <path d="M 134 122 Q 142 142 162 150 Q 142 158 134 178 Q 126 158 106 150 Q 126 142 134 122 Z" fill="#3b2826"/>
+      <text x="296" y="314" text-anchor="middle" fill="#3b2826" font-family="Lora, Georgia, 'Times New Roman', serif" font-size="184" font-weight="600" letter-spacing="-2">S.A.</text>
+    </svg>`;
 
-  
-  <path d="M 244 176 Q 250 190 264 194 Q 250 198 244 212 Q 240 198 226 194 Q 240 190 244 176 Z" fill="#3b2826" />
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => ctx.drawImage(img, 0, 0, 512, 512);
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
 
-  
-  <text x="276" y="295" text-anchor="middle" fill="#3b2826" font-family="Lora, Georgia, &#39;Times New Roman&#39;, serif" font-size="112" font-weight="500" letter-spacing="4">S.A.</text>
-</svg>
+    document.getElementById("dlBtn").addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.download = "logo.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    });
+  </script>
+</body>
+</html>
