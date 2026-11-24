@@ -215,18 +215,29 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => applyFilter(btn.dataset.cat));
 });
 
-function extractMusicLink(text) {
-  if (!text) return null;
-  const match = text.match(/https?:\/\/[^\s]+/i);
-  if (!match) return null;
-  const url = match[0];
-  const lower = url.toLowerCase();
-  if (lower.includes("spotify.com") || lower.includes("youtube.com") || lower.includes("youtu.be")) {
-    const cleanText = text.replace(url, "").trim();
-    const label = lower.includes("spotify.com") ? "♪ Spotify'da Dinle" : "♪ YouTube'da Dinle";
-    return { url, cleanText, label };
+function getSongListenLabel(url) {
+  if (!url || !/^https?:\/\//i.test(url.trim())) return null;
+  const lower = url.trim().toLowerCase();
+  if (lower.includes("spotify.com") || lower.includes("spotify:")) return "♪ Spotify'da Dinle";
+  if (lower.includes("youtube.com") || lower.includes("youtu.be") || lower.includes("music.youtube.com")) return "♪ YouTube'da Dinle";
+  return "♪ Şarkıyı Dinle";
+}
+
+function renderSongBadge(q) {
+  if (!els.quoteWrapper) return;
+  let box = $("songListenBox");
+  const label = getSongListenLabel(q.sarkiUrl);
+  if (!label) {
+    if (box) box.remove();
+    return;
   }
-  return null;
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "songListenBox";
+    box.style.marginTop = "10px";
+    els.quoteWrapper.appendChild(box);
+  }
+  box.innerHTML = `<a href="${q.sarkiUrl.trim()}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:6px 12px;font-size:0.8rem;">${label}</a>`;
 }
 
 function renderQuote(q, pushHistory = true) {
@@ -243,27 +254,10 @@ function renderQuote(q, pushHistory = true) {
 
   els.quoteWrapper?.classList.add("fade-out");
   setTimeout(() => {
-    const musicInfo = extractMusicLink(q.metin) || extractMusicLink(q.kaynak);
-
     if (els.category) els.category.textContent = q.kategori;
-    if (els.quoteText) {
-      const displayText = (extractMusicLink(q.metin)?.cleanText) || q.metin;
-      els.quoteText.textContent = `“${displayText}”`;
-    }
-    if (els.quoteAuthor) {
-      const cleanAuthor = (extractMusicLink(q.kaynak)?.cleanText) || (q.kaynak || "Anonim");
-      els.quoteAuthor.innerHTML = "";
-      els.quoteAuthor.append(`— ${cleanAuthor}`);
-      if (musicInfo) {
-        const link = document.createElement("a");
-        link.href = musicInfo.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.textContent = ` · ${musicInfo.label}`;
-        link.style.marginLeft = "6px";
-        els.quoteAuthor.appendChild(link);
-      }
-    }
+    if (els.quoteText) els.quoteText.textContent = `“${q.metin}”`;
+    if (els.quoteAuthor) els.quoteAuthor.textContent = `— ${q.kaynak || "Anonim"}`;
+    renderSongBadge(q);
 
     els.dailyBadge?.classList.toggle("show", q.id === getDailyQuoteId());
     els.featuredBadge?.classList.toggle("show", !!q.kurucuSecimi);
@@ -757,9 +751,7 @@ $("sendAnonForm")?.addEventListener("submit", async (e) => {
 function createQuoteListItem(q, modalToClose) {
   const div = document.createElement("div");
   div.className = "list-item";
-  const cleanText = (extractMusicLink(q.metin)?.cleanText) || q.metin;
-  const cleanAuthor = (extractMusicLink(q.kaynak)?.cleanText) || (q.kaynak || "Anonim");
-  div.innerHTML = `<div class="list-item-text">“${cleanText}”</div><div class="list-item-meta"><span>${cleanAuthor}</span><span>${q.kategori}</span></div>`;
+  div.innerHTML = `<div class="list-item-text">“${q.metin}”</div><div class="list-item-meta"><span>${q.kaynak || "Anonim"}</span><span>${q.kategori}</span></div>`;
   div.addEventListener("click", () => { renderQuote(q, true); closeModal(modalToClose); });
   return div;
 }
@@ -895,6 +887,7 @@ $("openModalBtn")?.addEventListener("click", () => {
   if ($("editId")) $("editId").value = "";
   if ($("formModalTitle")) $("formModalTitle").textContent = "Yeni Satır Ekle";
   $("quoteForm")?.reset();
+  if ($("inputSongUrl")) $("inputSongUrl").value = "";
   openModal("addModalOverlay");
 });
 
@@ -903,20 +896,21 @@ $("quoteForm")?.addEventListener("submit", async (e) => {
   const metin = $("inputText")?.value.trim();
   const kategori = $("inputCategory")?.value || "Kitap";
   const kaynak = $("inputAuthor")?.value.trim() || userProfile.nickname || "Anonim";
+  const sarkiUrl = $("inputSongUrl")?.value.trim() || "";
   const editId = $("editId")?.value || "";
   if (!metin) return;
 
   try {
     if (editId && !editId.startsWith("def-")) {
-      await updateDoc(doc(db, "alintilar", editId), { metin, kategori, kaynak });
+      await updateDoc(doc(db, "alintilar", editId), { metin, kategori, kaynak, sarkiUrl });
       const target = allQuotes.find(q => q.id === editId);
-      if (target) { target.metin = metin; target.kategori = kategori; target.kaynak = kaynak; renderQuote(target, false); }
+      if (target) { target.metin = metin; target.kategori = kategori; target.kaynak = kaynak; target.sarkiUrl = sarkiUrl; renderQuote(target, false); }
     } else {
       const ref = await addDoc(collection(db, "alintilar"), {
-        metin, kategori, kaynak, begeni: 0, tepkiler: {}, yorumSayisi: 0,
+        metin, kategori, kaynak, sarkiUrl, begeni: 0, tepkiler: {}, yorumSayisi: 0,
         kurucuSecimi: false, ekleyen: userProfile.nickname || "", tarih: serverTimestamp()
       });
-      const yeni = { id: ref.id, metin, kategori, kaynak, begeni: 0, tepkiler: {}, yorumSayisi: 0, ekleyen: userProfile.nickname || "" };
+      const yeni = { id: ref.id, metin, kategori, kaynak, sarkiUrl, begeni: 0, tepkiler: {}, yorumSayisi: 0, ekleyen: userProfile.nickname || "" };
       allQuotes.unshift(yeni);
       filteredQuotes.unshift(yeni);
       renderQuote(yeni, true);
@@ -1064,6 +1058,7 @@ els.adminEditBtn?.addEventListener("click", () => {
   if ($("inputCategory")) $("inputCategory").value = currentQuote.kategori;
   if ($("inputText")) $("inputText").value = currentQuote.metin;
   if ($("inputAuthor")) $("inputAuthor").value = currentQuote.kaynak || "";
+  if ($("inputSongUrl")) $("inputSongUrl").value = currentQuote.sarkiUrl || "";
   openModal("addModalOverlay");
 });
 
