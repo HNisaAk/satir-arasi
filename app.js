@@ -191,103 +191,62 @@ function updateGreetingAndStreak() {
 // ======================================================
 // 5. KART GÖSTERİMİ, FİLTRE VE SWIPE (KAYDIRMA)
 // ======================================================
-function getDailyQuoteId() {
-  const d = new Date();
-  const seed = d.getFullYear() * 1000 + (d.getMonth() + 1) * 40 + d.getDate();
-  return allQuotes[seed % allQuotes.length]?.id;
-}
+// Kaydırmalı (Swipe) Kart Geçişi (Mobil + Masaüstü)
+let swipeStartX = 0;
+let swipeDeltaX = 0;
+let swipeActive = false;
 
-function applyFilter(cat) {
-  activeCategory = cat;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
-  if (cat === "Tümü") filteredQuotes = [...allQuotes];
-  else if (cat === "Kurucu") filteredQuotes = allQuotes.filter(q => q.kurucuSecimi);
-  else filteredQuotes = allQuotes.filter(q => q.kategori === cat);
-  if (!filteredQuotes.length) filteredQuotes = [...allQuotes];
-  showRandomQuote();
-}
-
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => applyFilter(btn.dataset.cat));
-});
-
-function renderQuote(q, pushHistory = true) {
-  if (!q) return;
-  if (pushHistory && currentQuote && currentQuote.id !== q.id) {
-    historyStack.push(currentQuote);
-    els.prevQuoteBtn.disabled = false;
-  }
-  currentQuote = q;
-
-  // İstatistik güncelle
-  stats.readCount = (stats.readCount || 0) + 1;
-  stats.catCounts[q.kategori] = (stats.catCounts[q.kategori] || 0) + 1;
-  ls.set("sa_stats", stats);
-
-  els.quoteWrapper.classList.add("fade-out");
-  setTimeout(() => {
-    els.category.textContent = q.kategori;
-    els.quoteText.textContent = `“${q.metin}”`;
-    els.quoteAuthor.textContent = `— ${q.kaynak || "Anonim"}`;
-    els.dailyBadge.classList.toggle("show", q.id === getDailyQuoteId());
-    els.featuredBadge.classList.toggle("show", !!q.kurucuSecimi);
-    els.adminBar.classList.toggle("show", isAdmin);
-    els.adminFeaturedBtn.classList.toggle("active", !!q.kurucuSecimi);
-
-    const isFav = favIds.includes(q.id);
-    els.likeBtn.classList.toggle("liked", isFav);
-    els.heartIcon.textContent = isFav ? "♥" : "♡";
-    els.likeCount.textContent = q.begeni || 0;
-    els.commentCount.textContent = q.yorumSayisi || 0;
-
-    renderReactions(q);
-    els.quoteWrapper.classList.remove("fade-out");
-    els.footerCounter.textContent = `Satır Arası · ${allQuotes.length} satır birikti`;
-    if (els.commentsDrawer.classList.contains("open")) loadComments(q.id);
-  }, 160);
-}
-
-function showRandomQuote() {
-  playPaperSound();
-  const pool = filteredQuotes.length > 1 ? filteredQuotes.filter(q => q.id !== currentQuote?.id) : filteredQuotes;
-  const pick = pool[Math.floor(Math.random() * pool.length)];
-  renderQuote(pick, true);
-}
-
-els.newQuoteBtn.addEventListener("click", showRandomQuote);
-els.prevQuoteBtn.addEventListener("click", () => {
-  if (!historyStack.length) return;
-  const prev = historyStack.pop();
-  els.prevQuoteBtn.disabled = historyStack.length === 0;
-  playPaperSound();
-  renderQuote(prev, false);
-});
-
-// Kaydırmalı (Swipe) Kart Geçişi
-let swipeStartX = 0, swipeCurrentX = 0, isSwiping = false;
-els.mainCard.addEventListener("pointerdown", (e) => {
+function startSwipe(x, target) {
   if (document.body.dataset.navMode !== "swipe") return;
-  if (e.target.closest("button, input, textarea")) return;
-  isSwiping = true;
-  swipeStartX = e.clientX;
-  swipeCurrentX = 0;
+  if (target && target.closest("button, input, textarea, select, a")) return;
+  swipeActive = true;
+  swipeStartX = x;
+  swipeDeltaX = 0;
   els.mainCard.classList.add("swiping");
-});
-window.addEventListener("pointermove", (e) => {
-  if (!isSwiping) return;
-  swipeCurrentX = e.clientX - swipeStartX;
-  els.mainCard.style.transform = `translateX(${swipeCurrentX * 0.45}px) rotate(${swipeCurrentX * 0.02}deg)`;
-});
-window.addEventListener("pointerup", () => {
-  if (!isSwiping) return;
-  isSwiping = false;
+}
+
+function moveSwipe(x) {
+  if (!swipeActive) return;
+  swipeDeltaX = x - swipeStartX;
+  els.mainCard.style.transform = `translateX(${swipeDeltaX * 0.45}px) rotate(${swipeDeltaX * 0.02}deg)`;
+}
+
+function endSwipe() {
+  if (!swipeActive) return;
+  swipeActive = false;
   els.mainCard.classList.remove("swiping");
   els.mainCard.style.transform = "";
-  if (Math.abs(swipeCurrentX) > 75) {
-    if (swipeCurrentX < 0) showRandomQuote();
-    else if (historyStack.length) els.prevQuoteBtn.click();
-    else showRandomQuote();
+
+  if (swipeDeltaX < -70) {
+    showRandomQuote();
+  } else if (swipeDeltaX > 70) {
+    if (historyStack.length > 0) {
+      els.prevQuoteBtn.click();
+    } else {
+      showRandomQuote();
+    }
   }
+  swipeDeltaX = 0;
+}
+
+els.mainCard.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1) startSwipe(e.touches[0].clientX, e.target);
+}, { passive: true });
+
+els.mainCard.addEventListener("touchmove", (e) => {
+  if (e.touches.length === 1) moveSwipe(e.touches[0].clientX);
+}, { passive: true });
+
+els.mainCard.addEventListener("touchend", endSwipe);
+
+els.mainCard.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "mouse") startSwipe(e.clientX, e.target);
+});
+window.addEventListener("pointermove", (e) => {
+  if (e.pointerType === "mouse" && swipeActive) moveSwipe(e.clientX);
+});
+window.addEventListener("pointerup", (e) => {
+  if (e.pointerType === "mouse" && swipeActive) endSwipe();
 });
 
 // ======================================================
