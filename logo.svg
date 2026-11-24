@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  
+  <rect width="512" height="512" fill="#f6e7e4" />
+
+  
+  <path d="M 118 228 Q 130 250 152 256 Q 130 262 118 284 Q 112 262 90 256 Q 112 250 118 228 Z" fill="#3b2826" />
+
+  
+  <path d="M 244 176 Q 250 190 264 194 Q 250 198 244 212 Q 240 198 226 194 Q 240 190 244 176 Z" fill="#3b2826" />
+
+  
+  <text x="276" y="295" text-anchor="middle" fill="#3b2826" font-family="Lora, Georgia, &#39;Times New Roman&#39;, serif" font-size="112" font-weight="500" letter-spacing="4">S.A.</text>
+</svg>
