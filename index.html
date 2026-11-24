@@ -8,29 +8,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a1a1a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Satır Arası">
-<link rel="apple-touch-icon" href="icon.png">
 </head>
-<body data-theme="light" data-font="lora">
+<body data-theme="light" data-font="lora" data-nav-mode="classic">
 
-  <!-- Minimalist Üst Menü -->
+  <!-- Üst Menü -->
   <header class="topbar">
     <div class="brand-group">
-      <div class="brand" id="brandHome">Satır Arası</div>
+      <div class="brand" id="brandHome">✦ Satır Arası</div>
       <div class="greeting-line" id="greetingLine"></div>
     </div>
     <nav class="nav-links">
+      <button class="nav-btn" id="duelBtn" title="Günün Düellosu">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Düello
+      </button>
       <button class="nav-btn" id="weeklyBtn" title="Haftanın Sorusu">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Haftanın Sorusu
+        Soru
       </button>
-      <button class="nav-btn" id="archiveBtn" title="Arşiv ve Arama">
+      <button class="nav-btn" id="archiveBtn" title="Alıntı ve Okur Ara">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Arşiv
+        Ara
       </button>
       <button class="nav-btn" id="popularBtn" title="En Çok Beğenilenler">
         <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
@@ -41,12 +39,13 @@
         <span id="reportsCount">0</span>
       </button>
       <span class="nav-divider"></span>
-      <button class="nav-btn" id="appearanceBtn" title="Tema ve Yazı Tipi">
+      <button class="nav-btn" id="appearanceBtn" title="Tema, Yazı Tipi ve Geçiş Ayarları">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
       </button>
       <button class="nav-btn" id="soundBtn" title="Kâğıt Sesi"></button>
       <button class="profile-trigger" id="profileBtn">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <img id="navAvatar" class="nav-avatar" alt="">
+        <svg id="navAvatarIcon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span id="profileBtnLabel">Profil</span>
       </button>
     </nav>
@@ -66,7 +65,7 @@
 
     <div class="dedication-banner" id="dedicationBanner"></div>
 
-    <main class="card">
+    <main class="card" id="mainCard">
       <div class="card-top-row">
         <div style="display:flex;gap:6px;align-items:center;">
           <button class="subtle-icon-btn" id="saveToColBtn" title="Koleksiyona Kaydet">
@@ -92,13 +91,8 @@
       <div class="quote-wrapper" id="quoteWrapper">
         <p class="quote-text" id="quoteText">Yükleniyor...</p>
         <p class="quote-author" id="quoteAuthor" title="Bu kaynağın diğer satırlarını gör"></p>
-        <a class="listen-link" id="listenLink" href="#" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" style="width:13px;height:13px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Şarkıyı Dinle
-        </a>
       </div>
 
-      <!-- Tepkiler ve Yorum -->
       <div class="reactions-wrap">
         <button class="react-btn" id="likeBtn" title="Favorilere ekle">
           <span id="heartIcon">♡</span> <span id="likeCount">0</span>
@@ -140,6 +134,7 @@
         <button class="btn-secondary" id="copyBtn">Kopyala</button>
         <button class="btn-secondary" id="openModalBtn">+ Ekle</button>
       </div>
+      <div class="swipe-hint">← Yeni kart için sağa veya sola kaydır →</div>
     </main>
 
     <!-- Kart Altı Yorum Bölümü -->
@@ -192,10 +187,6 @@
           <label for="inputAuthor">Kaynak / Yazar / Sanatçı</label>
           <input type="text" id="inputAuthor" placeholder="Boş bırakılırsa takma adın veya Anonim yazılır">
         </div>
-        <div class="form-group" id="linkFormGroup">
-          <label for="inputLink">Spotify / YouTube Linki (İsteğe bağlı)</label>
-          <input type="url" id="inputLink" placeholder="https://open.spotify.com/...">
-        </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" data-close="addModalOverlay">İptal</button>
           <button type="submit" class="btn-primary" id="submitBtn">Ekle</button>
@@ -204,7 +195,7 @@
     </div>
   </div>
 
-  <!-- Kişisel Profil Modalı (Takma Ad + Rozetler + Beğendiklerim + Eklediklerim + Koleksiyonlar) -->
+  <!-- Kendi Profilim Modalı -->
   <div class="modal-overlay" id="profileModalOverlay">
     <div class="modal">
       <div class="modal-header">
@@ -212,27 +203,123 @@
         <button class="close-x" data-close="profileModalOverlay">&times;</button>
       </div>
 
-      <div class="form-group">
-        <label for="nicknameInput">Takma Adın</label>
-        <div style="display:flex;gap:8px;">
-          <input type="text" id="nicknameInput" placeholder="Örn: geceokuru">
-          <button type="button" class="btn-primary" id="saveNicknameBtn" style="padding:8px 14px;">Kaydet</button>
+      <!-- 13 Aralık Yıl Sonu Özeti Banner'ı -->
+      <div class="wrapped-banner" id="wrappedBanner">
+        <span>✦ 13 Aralık Yıl Sonu Özetin Hazır!</span>
+        <button type="button" class="btn-secondary" id="openWrappedBtn" style="background:#fff;color:#2b2927;border:none !important;padding:6px 12px;font-size:0.78rem;">Görüntüle</button>
+      </div>
+
+      <div class="profile-top-box">
+        <label class="avatar-circle" id="avatarPreview" title="Profil fotoğrafı seç">
+          <span id="avatarInitial">?</span>
+          <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+        </label>
+        <div style="flex:1;">
+          <input type="text" id="nicknameInput" placeholder="Takma adın (Örn: geceokuru)" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:9px;background:var(--input-bg);color:var(--text-main);font-size:0.88rem;margin-bottom:6px;">
+          <input type="text" id="bioInput" placeholder="Kısa hakkımda notu..." maxlength="120" style="width:100%;padding:7px 10px;border:1px solid var(--border-color);border-radius:9px;background:var(--input-bg);color:var(--text-main);font-size:0.8rem;">
         </div>
+      </div>
+
+      <div class="profile-share-row">
+        <button type="button" class="btn-primary" id="saveProfileBtn" style="padding:7px 13px;font-size:0.8rem;">Profili Kaydet</button>
+        <button type="button" class="btn-secondary" id="copyProfileLinkBtn" style="padding:7px 13px;font-size:0.8rem;">Profil Linkini Kopyala</button>
       </div>
 
       <div id="profileAuthArea" style="margin-bottom:14px;"></div>
 
       <div class="form-group">
-        <label>Okur Rozetlerin</label>
+        <label>Seviyeli Okur Rozetlerin</label>
         <div class="badges-grid" id="badgesGrid"></div>
       </div>
 
       <div class="tab-row">
         <button type="button" class="tab-btn active" id="tabFavs">Beğendiklerim (<span id="profileFavCount">0</span>)</button>
         <button type="button" class="tab-btn" id="tabMine">Eklediklerim (<span id="profileMineCount">0</span>)</button>
-        <button type="button" class="tab-btn" id="tabCols">Koleksiyonlar (<span id="profileColCount">0</span>)</button>
+        <button type="button" class="tab-btn" id="tabCols">Koleksiyon (<span id="profileColCount">0</span>)</button>
+        <button type="button" class="tab-btn" id="tabInbox">Gelen Kutusu (<span id="profileInboxCount">0</span>)</button>
       </div>
       <div id="profileListContent"></div>
+    </div>
+  </div>
+
+  <!-- Başkasının Paylaşılabilir Okur Profili Modalı -->
+  <div class="modal-overlay" id="publicProfileModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="pubProfileTitle">Okur Profili</h2>
+        <button class="close-x" data-close="publicProfileModalOverlay">&times;</button>
+      </div>
+      <div class="profile-top-box">
+        <div class="avatar-circle" id="pubAvatar" style="cursor:default;"></div>
+        <div style="flex:1;">
+          <div id="pubName" style="font-weight:600;font-size:1.02rem;margin-bottom:4px;"></div>
+          <div id="pubBio" style="font-size:0.84rem;color:var(--text-muted);line-height:1.4;"></div>
+        </div>
+      </div>
+
+      <div class="badges-grid" id="pubBadgesGrid"></div>
+
+      <!-- Anonim Satır Bırakma Kutusu -->
+      <div id="pubAnonBox" style="margin-bottom:16px;padding:14px;border-radius:14px;border:1px solid var(--border-color);background:var(--accent-soft);">
+        <div style="font-size:0.84rem;font-weight:600;margin-bottom:8px;">✦ Ona Anonim Bir Satır Bırak</div>
+        <form id="sendAnonForm">
+          <textarea id="anonMsgInput" rows="2" maxlength="280" placeholder="Bir şarkı sözü, film repliği veya kısa bir not bırak..." style="width:100%;padding:9px 11px;border:1px solid var(--border-color);border-radius:10px;background:var(--card-bg);color:var(--text-main);font-size:0.86rem;margin-bottom:8px;" required></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="safety-note" style="margin:0;">Saygılı ol; mesaj sadece profil sahibine görünür.</span>
+            <button type="submit" class="btn-primary" id="sendAnonBtn" style="padding:7px 14px;font-size:0.8rem;">Gönder</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="form-group">
+        <label>Paylaştığı Satırlar</label>
+        <div id="pubQuotesList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gelişmiş Arama Modalı (Alıntılar + Okurlar) -->
+  <div class="modal-overlay" id="archiveModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Arşiv ve Okur Ara</h2>
+        <button class="close-x" data-close="archiveModalOverlay">&times;</button>
+      </div>
+      <div class="tab-row">
+        <button type="button" class="tab-btn active" id="searchTabQuotes">Alıntılar</button>
+        <button type="button" class="tab-btn" id="searchTabReaders">Okurlar</button>
+      </div>
+      <div class="form-group">
+        <input type="text" id="archiveSearchInput" placeholder="Kelime, yazar, şarkı veya okur adı ara...">
+      </div>
+      <div id="archiveList"></div>
+    </div>
+  </div>
+
+  <!-- Günün Düellosu Modalı -->
+  <div class="modal-overlay" id="duelModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Günün Düellosu</h2>
+        <button class="close-x" data-close="duelModalOverlay">&times;</button>
+      </div>
+      <p class="info-note">Bugünün ruh halini en çok hangi satır anlatıyor? Oyunu ver, sonuçları gör.</p>
+      <div id="duelContainer"></div>
+    </div>
+  </div>
+
+  <!-- 13 Aralık Yıl Sonu Özeti Modalı -->
+  <div class="modal-overlay" id="wrappedModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>13 Aralık · Yıl Sonu Özeti</h2>
+        <button class="close-x" data-close="wrappedModalOverlay">&times;</button>
+      </div>
+      <div class="wrapped-card" id="wrappedContent"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close="wrappedModalOverlay">Kapat</button>
+        <button type="button" class="btn-primary" id="shareWrappedBtn">Özet Kartını İndir</button>
+      </div>
     </div>
   </div>
 
@@ -259,15 +346,12 @@
         <button class="close-x" data-close="weeklyModalOverlay">&times;</button>
       </div>
       <div class="weekly-q-box" id="weeklyQuestionText">Yükleniyor...</div>
-
-      <!-- Sadece Yöneticiye Görünen Soru Değiştirme Alanı -->
       <div id="adminWeeklyEdit" style="display:none;margin-bottom:14px;">
         <div style="display:flex;gap:8px;">
           <input type="text" id="weeklyQuestionInput" placeholder="Yeni haftanın sorusunu yaz..." style="flex:1;padding:8px 11px;border:1px solid var(--border-color);border-radius:10px;background:var(--input-bg);color:var(--text-main);font-size:0.85rem;">
           <button type="button" class="btn-primary" id="saveWeeklyQBtn" style="padding:8px 12px;font-size:0.8rem;">Güncelle</button>
         </div>
       </div>
-
       <form id="weeklyAnswerForm" class="comment-form-row" style="margin-bottom:16px;">
         <input type="text" id="weeklyAnswerInput" placeholder="Tek satırlık cevabını bırak..." required>
         <button type="submit" class="btn-primary" style="padding:9px 14px;">Gönder</button>
@@ -287,20 +371,6 @@
     </div>
   </div>
 
-  <!-- Arşiv & Arama Modalı -->
-  <div class="modal-overlay" id="archiveModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Arşiv ve Arama</h2>
-        <button class="close-x" data-close="archiveModalOverlay">&times;</button>
-      </div>
-      <div class="form-group">
-        <input type="text" id="archiveSearchInput" placeholder="Kelime, yazar, şarkı veya film ara...">
-      </div>
-      <div id="archiveList"></div>
-    </div>
-  </div>
-
   <!-- Popüler Satırlar Modalı -->
   <div class="modal-overlay" id="popModalOverlay">
     <div class="modal">
@@ -312,17 +382,18 @@
     </div>
   </div>
 
-  <!-- Görünüm Modalı -->
+  <!-- Görünüm & Geçiş Ayarları Modalı -->
   <div class="modal-overlay" id="appearanceModalOverlay">
     <div class="modal">
       <div class="modal-header">
-        <h2>Görünüm Ayarları</h2>
+        <h2>Görünüm ve Ayarlar</h2>
         <button class="close-x" data-close="appearanceModalOverlay">&times;</button>
       </div>
       <div class="form-group">
         <label>Renk Teması</label>
         <div class="picker-grid">
           <button type="button" class="picker-chip" data-set-theme="light">Klasik Krem</button>
+          <button type="button" class="picker-chip" data-set-theme="pink">Toz Pembe</button>
           <button type="button" class="picker-chip" data-set-theme="dark">Gece</button>
           <button type="button" class="picker-chip" data-set-theme="sepia">Eski Kâğıt</button>
           <button type="button" class="picker-chip" data-set-theme="sage">Adaçayı</button>
@@ -335,6 +406,13 @@
           <button type="button" class="picker-chip" data-set-font="lora" style="font-family:'Lora',serif;">Klasik Kitap</button>
           <button type="button" class="picker-chip" data-set-font="typewriter" style="font-family:'Courier Prime',monospace;">Daktilo</button>
           <button type="button" class="picker-chip" data-set-font="modern" style="font-family:'Inter',sans-serif;">Modern Sade</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Kart Geçiş Tarzı</label>
+        <div class="picker-grid">
+          <button type="button" class="picker-chip" data-set-nav="classic">Klasik (Butonla)</button>
+          <button type="button" class="picker-chip" data-set-nav="swipe">Kaydırmalı (Swipe)</button>
         </div>
       </div>
     </div>
@@ -376,11 +454,6 @@
   </div>
 
   <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
-  <script type="module" src="app.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
-  }
-</script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>
