@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <link rel="icon" type="image/svg+xml" href="logo.svg">
-<link rel="apple-touch-icon" href="logo.png?v=3">
+  <link rel="apple-touch-icon" href="logo.png?v=10">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Satır Arası</title>
@@ -188,6 +188,10 @@
         <div class="form-group">
           <label for="inputAuthor">Kaynak / Yazar / Sanatçı</label>
           <input type="text" id="inputAuthor" placeholder="Boş bırakılırsa takma adın veya Anonim yazılır">
+        </div>
+        <div class="form-group" id="songUrlGroup">
+          <label for="inputSongUrl">Spotify veya YouTube Linki</label>
+          <input type="url" id="inputSongUrl" placeholder="https://open.spotify.com/... veya https://youtu.be/...">
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" data-close="addModalOverlay">İptal</button>
@@ -456,6 +460,6 @@
   </div>
 
   <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
-  <script type="module" src="app.js?v=4"></script>
+  <script type="module" src="app.js?v=10"></script>
 </body>
 </html>
