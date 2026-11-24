@@ -1,461 +1,1141 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <link rel="icon" type="image/svg+xml" href="logo.svg">
-<link rel="apple-touch-icon" href="logo.png?v=3">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Satır Arası</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body data-theme="light" data-font="lora" data-nav-mode="classic">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc,
+  query, where, orderBy, limit, serverTimestamp, increment
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { varsayilanAlintilar } from "./alintilar.js";
 
-  <!-- Üst Menü -->
-  <header class="topbar">
-    <div class="brand-group">
-      <div class="brand" id="brandHome">✦ Satır Arası</div>
-      <div class="greeting-line" id="greetingLine"></div>
-    </div>
-    <nav class="nav-links">
-      <button class="nav-btn" id="duelBtn" title="Günün Düellosu">
-        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Düello
-      </button>
-      <button class="nav-btn" id="weeklyBtn" title="Haftanın Sorusu">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Soru
-      </button>
-      <button class="nav-btn" id="archiveBtn" title="Alıntı ve Okur Ara">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Ara
-      </button>
-      <button class="nav-btn" id="popularBtn" title="En Çok Beğenilenler">
-        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Popüler
-      </button>
-      <button class="nav-btn" id="reportsBtn" style="display:none;" title="Bildirilen İçerikler">
-        <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-        <span id="reportsCount">0</span>
-      </button>
-      <span class="nav-divider"></span>
-      <button class="nav-btn" id="appearanceBtn" title="Tema, Yazı Tipi ve Geçiş Ayarları">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
-      </button>
-      <button class="nav-btn" id="soundBtn" title="Kâğıt Sesi"></button>
-      <button class="profile-trigger" id="profileBtn">
-        <img id="navAvatar" class="nav-avatar" alt="">
-        <svg id="navAvatarIcon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span id="profileBtnLabel">Profil</span>
-      </button>
-    </nav>
-  </header>
+const firebaseConfig = {
+  apiKey: "AIzaSyAXEbbuDgn4rLXLfai3XEGtKLAQh47Zu7U",
+  authDomain: "satir-arasi-43f37.firebaseapp.com",
+  projectId: "satir-arasi-43f37",
+  storageBucket: "satir-arasi-43f37.firebasestorage.app",
+  messagingSenderId: "754200203752",
+  appId: "1:754200203752:web:3650d82670ee234ffed45d"
+};
 
-  <!-- Ana İçerik -->
-  <div class="main-wrap">
-    <div class="filters" id="filters">
-      <button class="filter-btn active" data-cat="Tümü">Tümü</button>
-      <button class="filter-btn" data-cat="Kurucu">✦ N.A.</button>
-      <button class="filter-btn" data-cat="Kitap">Kitap</button>
-      <button class="filter-btn" data-cat="Film">Film</button>
-      <button class="filter-btn" data-cat="Şarkı">Şarkı</button>
-      <button class="filter-btn" data-cat="İlham">İlham</button>
-      <button class="filter-btn" data-cat="Senin Sözün">Senin Sözün</button>
-    </div>
+const ADMIN_EMAIL = "haticenisaak00@gmail.com";
 
-    <div class="dedication-banner" id="dedicationBanner"></div>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-    <main class="card" id="mainCard">
-      <div class="card-top-row">
-        <div style="display:flex;gap:6px;align-items:center;">
-          <button class="subtle-icon-btn" id="saveToColBtn" title="Koleksiyona Kaydet">
-            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-          </button>
-          <button class="subtle-icon-btn" id="reportCardBtn" title="Uygunsuz içeriği bildir">
-            <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-          </button>
-        </div>
-        <div class="admin-bar" id="adminBar">
-          <button class="admin-btn" id="adminFeaturedBtn">✦ N.A.</button>
-          <button class="admin-btn" id="adminEditBtn">Düzenle</button>
-          <button class="admin-btn danger" id="adminDeleteBtn">Sil</button>
-        </div>
-      </div>
+// ======================================================
+// 2. DURUM (STATE) VE YEREL VERİLER
+// ======================================================
+let allQuotes = [...varsayilanAlintilar];
+let filteredQuotes = [...allQuotes];
+let currentQuote = null;
+let historyStack = [];
+let activeCategory = "Tümü";
+let currentUser = null;
+let isAdmin = false;
+let replyingTo = null;
+let activeProfileTab = "favs";
+let activeSearchTab = "quotes";
+let activePublicProfile = null;
 
-      <div class="badges">
-        <span class="category" id="category">Satır Arası</span>
-        <span class="sub-badge" id="dailyBadge">Günün Satırı</span>
-        <span class="sub-badge na-badge" id="featuredBadge">✦ N.A.</span>
-      </div>
+const ls = {
+  get: (k, def) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch { return def; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
 
-      <div class="quote-wrapper" id="quoteWrapper">
-        <p class="quote-text" id="quoteText">Yükleniyor...</p>
-        <p class="quote-author" id="quoteAuthor" title="Bu kaynağın diğer satırlarını gör"></p>
-      </div>
+let userProfile = ls.get("sa_profile", {
+  nickname: "",
+  bio: "",
+  avatar: "",
+  anonOpen: true
+});
+let favIds = ls.get("sa_favs", []);
+let myCollections = ls.get("sa_cols", [{ id: "col-1", name: "Favori Satırlarım", items: [] }]);
+let stats = ls.get("sa_stats", { readCount: 0, catCounts: {}, streak: 1, lastDay: "", commentCount: 0, giftCount: 0 });
+let soundEnabled = ls.get("sa_sound", true);
 
-      <div class="reactions-wrap">
-        <button class="react-btn" id="likeBtn" title="Favorilere ekle">
-          <span id="heartIcon">♡</span> <span id="likeCount">0</span>
-        </button>
-        <div id="dynamicReactions" style="display:contents;"></div>
-        <button class="react-btn" id="addEmojiBtn" title="Emoji tepkisi bırak">+</button>
-        <button class="react-btn" id="toggleCommentsBtn" title="Yorumları aç/kapat">
-          <svg viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span id="commentCount">0</span>
-        </button>
+// Basit güvenlik filtresi (Anonim kutu için)
+const BAD_WORDS = ["salak", "aptal", "gerizekalı", "mal", "orospu", "piç", "siktir", "amk", "aq", "yavşak", "şerefsiz"];
+const containsProfanity = (txt) => BAD_WORDS.some(w => txt.toLowerCase().includes(w));
 
-        <div class="emoji-popover" id="emojiPopover">
-          <div class="emoji-quick">
-            <button type="button" class="emoji-opt" data-emoji="💭">💭</button>
-            <button type="button" class="emoji-opt" data-emoji="✨">✨</button>
-            <button type="button" class="emoji-opt" data-emoji="🥀">🥀</button>
-            <button type="button" class="emoji-opt" data-emoji="🌙">🌙</button>
-            <button type="button" class="emoji-opt" data-emoji="🤍">🤍</button>
-            <button type="button" class="emoji-opt" data-emoji="🍂">🍂</button>
+// ======================================================
+// 3. DOM ELEMENTLERİ
+// ======================================================
+const $ = (id) => document.getElementById(id);
+
+const els = {
+  greetingLine: $("greetingLine"),
+  brandHome: $("brandHome"),
+  mainCard: $("mainCard"),
+  quoteWrapper: $("quoteWrapper"),
+  category: $("category"),
+  dailyBadge: $("dailyBadge"),
+  featuredBadge: $("featuredBadge"),
+  quoteText: $("quoteText"),
+  quoteAuthor: $("quoteAuthor"),
+  songLinkWrap: $("songLinkWrap"),
+  songLinkBtn: $("songLinkBtn"),
+  likeBtn: $("likeBtn"),
+  heartIcon: $("heartIcon"),
+  likeCount: $("likeCount"),
+  dynamicReactions: $("dynamicReactions"),
+  addEmojiBtn: $("addEmojiBtn"),
+  emojiPopover: $("emojiPopover"),
+  customEmojiInput: $("customEmojiInput"),
+  customEmojiSubmit: $("customEmojiSubmit"),
+  toggleCommentsBtn: $("toggleCommentsBtn"),
+  commentCount: $("commentCount"),
+  commentsDrawer: $("commentsDrawer"),
+  closeCommentsBtn: $("closeCommentsBtn"),
+  commentsList: $("commentsList"),
+  replyingBar: $("replyingBar"),
+  replyingText: $("replyingText"),
+  cancelReplyBtn: $("cancelReplyBtn"),
+  commentForm: $("commentForm"),
+  commentTextInput: $("commentTextInput"),
+  prevQuoteBtn: $("prevQuoteBtn"),
+  newQuoteBtn: $("newQuoteBtn"),
+  shareBtn: $("shareBtn"),
+  giftBtn: $("giftBtn"),
+  copyBtn: $("copyBtn"),
+  openModalBtn: $("openModalBtn"),
+  footerCounter: $("footerCounter"),
+  streakCounter: $("streakCounter"),
+  adminBar: $("adminBar"),
+  adminFeaturedBtn: $("adminFeaturedBtn"),
+  adminEditBtn: $("adminEditBtn"),
+  adminDeleteBtn: $("adminDeleteBtn"),
+  reportsBtn: $("reportsBtn"),
+  reportsCount: $("reportsCount"),
+  soundBtn: $("soundBtn"),
+  navAvatar: $("navAvatar"),
+  navAvatarIcon: $("navAvatarIcon"),
+  profileBtnLabel: $("profileBtnLabel"),
+  dedicationBanner: $("dedicationBanner")
+};
+
+// ======================================================
+// 4. YARDIMCI FONKSİYONLAR (SES, MODAL, TARİH, TEMA)
+// ======================================================
+function openModal(id) { $(id)?.classList.add("open"); }
+function closeModal(id) { $(id)?.classList.remove("open"); }
+
+document.querySelectorAll("[data-close]").forEach(btn => {
+  btn.addEventListener("click", () => closeModal(btn.dataset.close));
+});
+document.querySelectorAll(".modal-overlay").forEach(ov => {
+  ov.addEventListener("click", (e) => { if (e.target === ov) ov.classList.remove("open"); });
+});
+
+function playPaperSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(320, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.06);
+  } catch {}
+}
+
+function updateSoundIcon() {
+  els.soundBtn.innerHTML = soundEnabled
+    ? `<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
+    : `<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+}
+els.soundBtn.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  ls.set("sa_sound", soundEnabled);
+  updateSoundIcon();
+});
+
+function applyAppearance() {
+  const theme = ls.get("sa_theme", "light");
+  const font = ls.get("sa_font", "lora");
+  const navMode = ls.get("sa_nav_mode", "classic");
+  document.body.dataset.theme = theme;
+  document.body.dataset.font = font;
+  document.body.dataset.navMode = navMode;
+
+  document.querySelectorAll("[data-set-theme]").forEach(b => b.classList.toggle("active", b.dataset.setTheme === theme));
+  document.querySelectorAll("[data-set-font]").forEach(b => b.classList.toggle("active", b.dataset.setFont === font));
+  document.querySelectorAll("[data-set-nav]").forEach(b => b.classList.toggle("active", b.dataset.setNav === navMode));
+}
+
+$("appearanceBtn").addEventListener("click", () => openModal("appearanceModalOverlay"));
+document.querySelectorAll("[data-set-theme]").forEach(b => b.addEventListener("click", () => { ls.set("sa_theme", b.dataset.setTheme); applyAppearance(); }));
+document.querySelectorAll("[data-set-font]").forEach(b => b.addEventListener("click", () => { ls.set("sa_font", b.dataset.setFont); applyAppearance(); }));
+document.querySelectorAll("[data-set-nav]").forEach(b => b.addEventListener("click", () => { ls.set("sa_nav_mode", b.dataset.setNav); applyAppearance(); }));
+
+function updateGreetingAndStreak() {
+  const h = new Date().getHours();
+  const greet = h < 6 ? "Gece okuru hoş geldin" : h < 12 ? "Günaydın" : h < 18 ? "İyi günler" : "İyi akşamlar";
+  els.greetingLine.textContent = userProfile.nickname ? `${greet}, ${userProfile.nickname}` : greet;
+
+  const today = new Date().toISOString().slice(0, 10);
+  if (stats.lastDay !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    stats.streak = stats.lastDay === yesterday ? (stats.streak || 0) + 1 : 1;
+    stats.lastDay = today;
+    ls.set("sa_stats", stats);
+  }
+  els.streakCounter.textContent = `${stats.streak} günlük okuma serisi`;
+}
+
+// ======================================================
+// 5. KART GÖSTERİMİ, FİLTRE, ŞARKI BAĞLANTISI VE SWIPE
+// ======================================================
+function getDailyQuoteId() {
+  const d = new Date();
+  const seed = d.getFullYear() * 1000 + (d.getMonth() + 1) * 40 + d.getDate();
+  return allQuotes[seed % allQuotes.length]?.id;
+}
+
+function applyFilter(cat) {
+  activeCategory = cat;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
+  if (cat === "Tümü") filteredQuotes = [...allQuotes];
+  else if (cat === "Kurucu") filteredQuotes = allQuotes.filter(q => q.kurucuSecimi);
+  else filteredQuotes = allQuotes.filter(q => q.kategori === cat);
+  if (!filteredQuotes.length) filteredQuotes = [...allQuotes];
+  showRandomQuote();
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => applyFilter(btn.dataset.cat));
+});
+
+function toggleSongFields() {
+  const isSong = $("inputCategory")?.value === "Şarkı";
+  if ($("songExtraFields")) $("songExtraFields").style.display = isSong ? "block" : "none";
+}
+$("inputCategory")?.addEventListener("change", toggleSongFields);
+
+function detectMusicPlatform(url) {
+  if (!url) return null;
+  const clean = url.trim();
+  if (!/^https?:\/\//i.test(clean)) return null;
+  const lower = clean.toLowerCase();
+  if (lower.includes("spotify.com") || lower.includes("spotify:")) {
+    return { platform: "Spotify", url: clean };
+  }
+  if (lower.includes("youtube.com") || lower.includes("youtu.be") || lower.includes("music.youtube.com")) {
+    return { platform: "YouTube", url: clean };
+  }
+  return { platform: "Şarkı Linki", url: clean };
+}
+
+function renderSongLink(q) {
+  if (!els.songLinkWrap) return;
+  const music = detectMusicPlatform(q.sarkiUrl);
+  if (!music) {
+    els.songLinkWrap.style.display = "none";
+    return;
+  }
+  if (!els.songLinkBtn || !document.body.contains(els.songLinkBtn)) {
+    els.songLinkWrap.innerHTML = `<a id="songLinkBtn" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:7px 13px;font-size:0.82rem;"></a>`;
+    els.songLinkBtn = $("songLinkBtn");
+  }
+  const titlePart = q.sarkiAdi ? `${q.sarkiAdi} · ` : "";
+  els.songLinkBtn.href = music.url;
+  els.songLinkBtn.textContent = `♪ ${titlePart}${music.platform}'da Dinle`;
+  els.songLinkWrap.style.display = "block";
+}
+
+function renderQuote(q, pushHistory = true) {
+  if (!q) return;
+  if (pushHistory && currentQuote && currentQuote.id !== q.id) {
+    historyStack.push(currentQuote);
+    els.prevQuoteBtn.disabled = false;
+  }
+  currentQuote = q;
+
+  stats.readCount = (stats.readCount || 0) + 1;
+  stats.catCounts[q.kategori] = (stats.catCounts[q.kategori] || 0) + 1;
+  ls.set("sa_stats", stats);
+
+  els.quoteWrapper.classList.add("fade-out");
+  setTimeout(() => {
+    els.category.textContent = q.kategori;
+    els.quoteText.textContent = `“${q.metin}”`;
+    const authorLabel = q.kaynak || "Anonim";
+    els.quoteAuthor.textContent = q.sarkiAdi ? `— ${authorLabel} · ${q.sarkiAdi}` : `— ${authorLabel}`;
+    renderSongLink(q);
+
+    els.dailyBadge.classList.toggle("show", q.id === getDailyQuoteId());
+    els.featuredBadge.classList.toggle("show", !!q.kurucuSecimi);
+    els.adminBar.classList.toggle("show", isAdmin);
+    els.adminFeaturedBtn.classList.toggle("active", !!q.kurucuSecimi);
+
+    const isFav = favIds.includes(q.id);
+    els.likeBtn.classList.toggle("liked", isFav);
+    els.heartIcon.textContent = isFav ? "♥" : "♡";
+    els.likeCount.textContent = q.begeni || 0;
+    els.commentCount.textContent = q.yorumSayisi || 0;
+
+    renderReactions(q);
+    els.quoteWrapper.classList.remove("fade-out");
+    els.footerCounter.textContent = `Satır Arası · ${allQuotes.length} satır birikti`;
+    if (els.commentsDrawer.classList.contains("open")) loadComments(q.id);
+  }, 160);
+}
+
+function showRandomQuote() {
+  playPaperSound();
+  const pool = filteredQuotes.length > 1 ? filteredQuotes.filter(q => q.id !== currentQuote?.id) : filteredQuotes;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  renderQuote(pick, true);
+}
+
+els.newQuoteBtn.addEventListener("click", showRandomQuote);
+els.prevQuoteBtn.addEventListener("click", () => {
+  if (!historyStack.length) return;
+  const prev = historyStack.pop();
+  els.prevQuoteBtn.disabled = historyStack.length === 0;
+  playPaperSound();
+  renderQuote(prev, false);
+});
+
+// Kaydırmalı (Swipe) Kart Geçişi (Mobil + Masaüstü)
+let swipeStartX = 0;
+let swipeDeltaX = 0;
+let swipeActive = false;
+
+function startSwipe(x, target) {
+  if (document.body.dataset.navMode !== "swipe") return;
+  if (target && target.closest("button, input, textarea, select, a")) return;
+  swipeActive = true;
+  swipeStartX = x;
+  swipeDeltaX = 0;
+  els.mainCard.classList.add("swiping");
+}
+
+function moveSwipe(x) {
+  if (!swipeActive) return;
+  swipeDeltaX = x - swipeStartX;
+  els.mainCard.style.transform = `translateX(${swipeDeltaX * 0.45}px) rotate(${swipeDeltaX * 0.02}deg)`;
+}
+
+function endSwipe() {
+  if (!swipeActive) return;
+  swipeActive = false;
+  els.mainCard.classList.remove("swiping");
+  els.mainCard.style.transform = "";
+
+  if (swipeDeltaX < -70) {
+    showRandomQuote();
+  } else if (swipeDeltaX > 70) {
+    if (historyStack.length > 0) {
+      els.prevQuoteBtn.click();
+    } else {
+      showRandomQuote();
+    }
+  }
+  swipeDeltaX = 0;
+}
+
+els.mainCard.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1) startSwipe(e.touches[0].clientX, e.target);
+}, { passive: true });
+
+els.mainCard.addEventListener("touchmove", (e) => {
+  if (e.touches.length === 1) moveSwipe(e.touches[0].clientX);
+}, { passive: true });
+
+els.mainCard.addEventListener("touchend", endSwipe);
+
+els.mainCard.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "mouse") startSwipe(e.clientX, e.target);
+});
+window.addEventListener("pointermove", (e) => {
+  if (e.pointerType === "mouse" && swipeActive) moveSwipe(e.clientX);
+});
+window.addEventListener("pointerup", (e) => {
+  if (e.pointerType === "mouse" && swipeActive) endSwipe();
+});
+
+// ======================================================
+// 6. BEĞENİ, TEPKİLER VE YORUMLAR
+// ======================================================
+function renderReactions(q) {
+  els.dynamicReactions.innerHTML = "";
+  const tepkiler = q.tepkiler || {};
+  Object.entries(tepkiler).forEach(([emoji, count]) => {
+    if (count <= 0) return;
+    const btn = document.createElement("button");
+    btn.className = "react-btn";
+    btn.textContent = `${emoji} ${count}`;
+    btn.addEventListener("click", () => addReaction(emoji));
+    els.dynamicReactions.appendChild(btn);
+  });
+}
+
+async function addReaction(emoji) {
+  if (!currentQuote || !emoji) return;
+  currentQuote.tepkiler = currentQuote.tepkiler || {};
+  currentQuote.tepkiler[emoji] = (currentQuote.tepkiler[emoji] || 0) + 1;
+  renderReactions(currentQuote);
+  els.emojiPopover.classList.remove("open");
+  try {
+    if (!currentQuote.id.startsWith("def-")) {
+      await updateDoc(doc(db, "alintilar", currentQuote.id), { [`tepkiler.${emoji}`]: increment(1) });
+    }
+  } catch {}
+}
+
+els.likeBtn.addEventListener("click", async () => {
+  if (!currentQuote) return;
+  const idx = favIds.indexOf(currentQuote.id);
+  const adding = idx === -1;
+  if (adding) { favIds.push(currentQuote.id); currentQuote.begeni = (currentQuote.begeni || 0) + 1; }
+  else { favIds.splice(idx, 1); currentQuote.begeni = Math.max(0, (currentQuote.begeni || 1) - 1); }
+  ls.set("sa_favs", favIds);
+  els.likeBtn.classList.toggle("liked", adding);
+  els.heartIcon.textContent = adding ? "♥" : "♡";
+  els.likeCount.textContent = currentQuote.begeni;
+  try {
+    if (!currentQuote.id.startsWith("def-")) {
+      await updateDoc(doc(db, "alintilar", currentQuote.id), { begeni: increment(adding ? 1 : -1) });
+    }
+  } catch {}
+});
+
+els.addEmojiBtn.addEventListener("click", (e) => { e.stopPropagation(); els.emojiPopover.classList.toggle("open"); });
+document.addEventListener("click", (e) => { if (!e.target.closest(".reactions-wrap")) els.emojiPopover.classList.remove("open"); });
+document.querySelectorAll(".emoji-opt").forEach(b => b.addEventListener("click", () => addReaction(b.dataset.emoji)));
+els.customEmojiSubmit.addEventListener("click", () => {
+  const val = els.customEmojiInput.value.trim();
+  if (val) { addReaction(val); els.customEmojiInput.value = ""; }
+});
+
+// Yorumlar
+els.toggleCommentsBtn.addEventListener("click", () => {
+  els.commentsDrawer.classList.toggle("open");
+  if (els.commentsDrawer.classList.contains("open") && currentQuote) loadComments(currentQuote.id);
+});
+els.closeCommentsBtn.addEventListener("click", () => els.commentsDrawer.classList.remove("open"));
+els.cancelReplyBtn.addEventListener("click", () => { replyingTo = null; els.replyingBar.classList.remove("show"); });
+
+async function loadComments(quoteId) {
+  els.commentsList.innerHTML = `<p class="empty-msg">Yorumlar yükleniyor...</p>`;
+  try {
+    const q = query(collection(db, "yorumlar"), where("quoteId", "==", quoteId), orderBy("tarih", "asc"));
+    const snap = await getDocs(q);
+    if (snap.empty) { els.commentsList.innerHTML = `<p class="empty-msg">İlk yorumu sen bırak.</p>`; return; }
+    els.commentsList.innerHTML = "";
+    snap.forEach(d => {
+      const c = d.data();
+      const div = document.createElement("div");
+      div.className = "comment-item";
+      div.innerHTML = `
+        ${c.yanitlanan ? `<div class="comment-reply-tag">↳ ${c.yanitlanan} yanıtlandı</div>` : ""}
+        <div class="comment-head">
+          <strong>${c.yazar || "Anonim"}</strong>
+          <div class="comment-actions">
+            <button type="button" class="text-link-btn reply-btn">Yanıtla</button>
           </div>
-          <div class="emoji-custom-row">
-            <input type="text" id="customEmojiInput" placeholder="İstediğin emoji..." maxlength="4">
-            <button type="button" class="btn-primary" id="customEmojiSubmit" style="padding:5px 10px;font-size:0.78rem;">Ekle</button>
-          </div>
         </div>
-      </div>
+        <div class="comment-body"></div>`;
+      div.querySelector(".comment-body").textContent = c.metin;
+      div.querySelector(".reply-btn").addEventListener("click", () => {
+        replyingTo = c.yazar || "Anonim";
+        els.replyingText.textContent = `${replyingTo} kişisine yanıt veriliyor`;
+        els.replyingBar.classList.add("show");
+        els.commentTextInput.focus();
+      });
+      els.commentsList.appendChild(div);
+    });
+  } catch {
+    els.commentsList.innerHTML = `<p class="empty-msg">Henüz yorum yok.</p>`;
+  }
+}
 
-      <div class="actions">
-        <button class="btn-secondary" id="prevQuoteBtn" title="Önceki Karta Dön" disabled>←</button>
-        <button class="btn-primary" id="newQuoteBtn">Yeni Kart Çek</button>
-        <button class="btn-secondary" id="shareBtn">
-          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          Paylaş
-        </button>
-        <button class="btn-secondary" id="giftBtn">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          İthaf Et
-        </button>
-        <button class="btn-secondary" id="copyBtn">Kopyala</button>
-        <button class="btn-secondary" id="openModalBtn">+ Ekle</button>
-      </div>
-      <div class="swipe-hint">← Yeni kart için sağa veya sola kaydır →</div>
-    </main>
+els.commentForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!currentQuote) return;
+  const metin = els.commentTextInput.value.trim();
+  if (!metin) return;
+  const yazar = userProfile.nickname || currentUser?.displayName || "Anonim";
+  els.commentTextInput.value = "";
+  try {
+    await addDoc(collection(db, "yorumlar"), {
+      quoteId: currentQuote.id,
+      yazar,
+      metin,
+      yanitlanan: replyingTo || "",
+      tarih: serverTimestamp()
+    });
+    stats.commentCount = (stats.commentCount || 0) + 1;
+    ls.set("sa_stats", stats);
+    replyingTo = null;
+    els.replyingBar.classList.remove("show");
+    currentQuote.yorumSayisi = (currentQuote.yorumSayisi || 0) + 1;
+    els.commentCount.textContent = currentQuote.yorumSayisi;
+    loadComments(currentQuote.id);
+  } catch {
+    alert("Yorum gönderilemedi.");
+  }
+});
 
-    <!-- Kart Altı Yorum Bölümü -->
-    <section class="comments-drawer" id="commentsDrawer">
-      <div class="comments-header">
-        <span>Satır Altı Yorumlar</span>
-        <button class="text-link-btn" id="closeCommentsBtn">Kapat</button>
-      </div>
-      <div id="commentsList"></div>
-      <div class="replying-bar" id="replyingBar">
-        <span id="replyingText"></span>
-        <button type="button" class="text-link-btn" id="cancelReplyBtn">İptal</button>
-      </div>
-      <form id="commentForm" class="comment-form-row">
-        <input type="text" id="commentTextInput" placeholder="Bu satır sana ne hissettirdi?" required>
-        <button type="submit" class="btn-primary" id="commentSubmitBtn" style="padding:9px 14px;">Gönder</button>
-      </form>
-    </section>
-  </div>
+// ======================================================
+// 7. PROFİL, AVATAR, SEVİYELİ ROZETLER & ANONİM KUTU
+// ======================================================
+function updateNavProfileUI() {
+  els.profileBtnLabel.textContent = userProfile.nickname || "Profil";
+  if (userProfile.avatar) {
+    els.navAvatar.src = userProfile.avatar;
+    els.navAvatar.classList.add("show");
+    els.navAvatarIcon.style.display = "none";
+  } else {
+    els.navAvatar.classList.remove("show");
+    els.navAvatarIcon.style.display = "block";
+  }
+  updateGreetingAndStreak();
+}
 
-  <footer>
-    <span id="footerCounter">Satır Arası</span>
-    <span id="streakCounter"></span>
-  </footer>
+// Profil fotoğrafı küçültme (Firestore'a rahat sığması için 160x160)
+$("avatarFileInput").addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = 160; c.height = 160;
+      const ctx = c.getContext("2d");
+      const min = Math.min(img.width, img.height);
+      ctx.drawImage(img, (img.width - min) / 2, (img.height - min) / 2, min, min, 0, 0, 160, 160);
+      userProfile.avatar = c.toDataURL("image/jpeg", 0.78);
+      renderAvatarPreview();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
 
-  <!-- Alıntı Ekle / Düzenle Modalı -->
-  <div class="modal-overlay" id="addModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="formModalTitle">Yeni Satır Ekle</h2>
-        <button class="close-x" data-close="addModalOverlay">&times;</button>
+function renderAvatarPreview() {
+  const box = $("avatarPreview");
+  const initial = (userProfile.nickname || "?").slice(0, 1).toUpperCase();
+  const input = $("avatarFileInput");
+  box.innerHTML = userProfile.avatar ? `<img src="${userProfile.avatar}" alt="">` : `<span>${initial}</span>`;
+  box.appendChild(input);
+}
+
+function computeBadges(myQuotesCount, totalLikes, commentCount) {
+  return [
+    {
+      title: myQuotesCount >= 25 ? "Altın Kalem" : myQuotesCount >= 10 ? "Gümüş Kalem" : "Bronz Kalem",
+      cur: myQuotesCount,
+      target: myQuotesCount >= 10 ? 25 : myQuotesCount >= 3 ? 10 : 3,
+      unit: "paylaşım",
+      unlocked: myQuotesCount >= 3
+    },
+    {
+      title: totalLikes >= 50 ? "İlham Kaynağı" : "Ufak Kıvılcım",
+      cur: totalLikes,
+      target: totalLikes >= 5 ? 50 : 5,
+      unit: "beğeni",
+      unlocked: totalLikes >= 5
+    },
+    {
+      title: "Söz Dostu",
+      cur: commentCount,
+      target: 15,
+      unit: "yorum",
+      unlocked: commentCount >= 15
+    }
+  ];
+}
+
+function renderBadgesGrid(container, myQuotesCount, totalLikes, commentCount) {
+  const list = computeBadges(myQuotesCount, totalLikes, commentCount);
+  container.innerHTML = list.map(b => {
+    const pct = Math.min(100, Math.round((b.cur / b.target) * 100));
+    return `
+      <div class="badge-card ${b.unlocked ? "unlocked" : ""}">
+        <div class="badge-title">${b.unlocked ? "✦ " : ""}${b.title}</div>
+        <div class="badge-sub">${b.cur}/${b.target} ${b.unit}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join("");
+}
+
+$("saveProfileBtn").addEventListener("click", async () => {
+  const nick = $("nicknameInput").value.trim().replace(/\s+/g, "").slice(0, 24);
+  const bio = $("bioInput").value.trim().slice(0, 120);
+  if (!nick) { alert("Lütfen bir takma ad yaz."); return; }
+  userProfile.nickname = nick;
+  userProfile.bio = bio;
+  ls.set("sa_profile", userProfile);
+  updateNavProfileUI();
+  renderAvatarPreview();
+  try {
+    await setDoc(doc(db, "okurlar", nick.toLowerCase()), {
+      nickname: nick,
+      bio,
+      avatar: userProfile.avatar || "",
+      anonOpen: userProfile.anonOpen !== false,
+      uid: currentUser?.uid || "",
+      guncelleme: serverTimestamp()
+    }, { merge: true });
+    alert("Profilin kaydedildi!");
+  } catch {
+    alert("Profilin bu cihaza kaydedildi.");
+  }
+});
+
+$("copyProfileLinkBtn").addEventListener("click", () => {
+  if (!userProfile.nickname) { alert("Önce bir takma ad belirleyip Profili Kaydet'e bas."); return; }
+  const url = `${location.origin}${location.pathname}?profil=${encodeURIComponent(userProfile.nickname)}`;
+  navigator.clipboard.writeText(url);
+  alert("Paylaşılabilir profil linkin kopyalandı!");
+});
+
+$("profileBtn").addEventListener("click", () => {
+  $("nicknameInput").value = userProfile.nickname || "";
+  $("bioInput").value = userProfile.bio || "";
+  renderAvatarPreview();
+  checkWrappedBanner();
+
+  const myQuotes = allQuotes.filter(q => q.ekleyen && userProfile.nickname && q.ekleyen.toLowerCase() === userProfile.nickname.toLowerCase());
+  const totalLikes = myQuotes.reduce((s, q) => s + (q.begeni || 0), 0);
+  renderBadgesGrid($("badgesGrid"), myQuotes.length, totalLikes, stats.commentCount || 0);
+
+  $("profileFavCount").textContent = favIds.length;
+  $("profileMineCount").textContent = myQuotes.length;
+  $("profileColCount").textContent = myCollections.length;
+
+  renderAuthArea();
+  renderProfileTab(activeProfileTab);
+  openModal("profileModalOverlay");
+});
+
+function renderAuthArea() {
+  const area = $("profileAuthArea");
+  if (currentUser) {
+    area.innerHTML = `<div class="switch-row"><span>Giriş yapıldı: <strong>${currentUser.email}</strong></span><button type="button" class="text-link-btn" id="logoutBtn">Çıkış</button></div>`;
+    $("logoutBtn").addEventListener("click", () => signOut(auth));
+  } else {
+    area.innerHTML = `<button type="button" class="btn-secondary" id="googleLoginBtn" style="width:100%;justify-content:center;">Google ile Giriş Yap</button>`;
+    $("googleLoginBtn").addEventListener("click", () => signInWithPopup(auth, provider).catch(() => {}));
+  }
+}
+
+["Favs", "Mine", "Cols", "Inbox"].forEach(t => {
+  $(`tab${t}`).addEventListener("click", () => {
+    activeProfileTab = t.toLowerCase();
+    ["Favs", "Mine", "Cols", "Inbox"].forEach(x => $(`tab${x}`).classList.toggle("active", x === t));
+    renderProfileTab(activeProfileTab);
+  });
+});
+
+async function renderProfileTab(tab) {
+  const box = $("profileListContent");
+  if (tab === "favs") {
+    const list = allQuotes.filter(q => favIds.includes(q.id));
+    box.innerHTML = list.length ? "" : `<p class="empty-msg">Henüz beğendiğin bir satır yok.</p>`;
+    list.forEach(q => box.appendChild(createQuoteListItem(q, "profileModalOverlay")));
+  } else if (tab === "mine") {
+    const list = allQuotes.filter(q => q.ekleyen && userProfile.nickname && q.ekleyen.toLowerCase() === userProfile.nickname.toLowerCase());
+    box.innerHTML = list.length ? "" : `<p class="empty-msg">Henüz eklediğin bir satır yok.</p>`;
+    list.forEach(q => box.appendChild(createQuoteListItem(q, "profileModalOverlay")));
+  } else if (tab === "cols") {
+    box.innerHTML = "";
+    myCollections.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "list-item";
+      div.innerHTML = `<div class="list-item-text">${c.name}</div><div class="list-item-meta"><span>${c.items.length} satır</span></div>`;
+      box.appendChild(div);
+    });
+  } else if (tab === "inbox") {
+    box.innerHTML = `
+      <div class="switch-row">
+        <span>Anonim satır alımı: <strong>${userProfile.anonOpen !== false ? "Açık" : "Kapalı"}</strong></span>
+        <button type="button" class="btn-secondary" id="toggleAnonBtn" style="padding:4px 10px;font-size:0.76rem;">${userProfile.anonOpen !== false ? "Kapat" : "Aç"}</button>
       </div>
-      <form id="quoteForm">
-        <input type="hidden" id="editId">
-        <div class="form-group">
-          <label for="inputCategory">Kategori</label>
-          <select id="inputCategory">
-            <option value="Kitap">Kitap</option>
-            <option value="Film">Film</option>
-            <option value="Şarkı">Şarkı</option>
-            <option value="İlham">İlham</option>
-            <option value="Senin Sözün">Senin Sözün (Kendi cümleni yaz)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="inputText">Alıntı veya Kendi Sözün</label>
-          <textarea id="inputText" rows="3" placeholder="Aklında kalan o cümleyi yaz..." required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="inputAuthor">Kaynak / Yazar / Sanatçı</label>
-          <input type="text" id="inputAuthor" placeholder="Boş bırakılırsa takma adın veya Anonim yazılır">
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn-secondary" data-close="addModalOverlay">İptal</button>
-          <button type="submit" class="btn-primary" id="submitBtn">Ekle</button>
-        </div>
-      </form>
+      <div id="inboxItems"><p class="empty-msg">Gelen kutusu yükleniyor...</p></div>`;
+    $("toggleAnonBtn").addEventListener("click", async () => {
+      userProfile.anonOpen = userProfile.anonOpen === false;
+      ls.set("sa_profile", userProfile);
+      if (userProfile.nickname) {
+        try { await setDoc(doc(db, "okurlar", userProfile.nickname.toLowerCase()), { anonOpen: userProfile.anonOpen }, { merge: true }); } catch {}
+      }
+      renderProfileTab("inbox");
+    });
+    if (!userProfile.nickname) { $("inboxItems").innerHTML = `<p class="empty-msg">Gelen kutusu için önce bir takma ad kaydet.</p>`; return; }
+    try {
+      const q = query(collection(db, "anonimMesajlar"), where("hedef", "==", userProfile.nickname.toLowerCase()));
+      const snap = await getDocs(q);
+      $("profileInboxCount").textContent = snap.size;
+      if (snap.empty) { $("inboxItems").innerHTML = `<p class="empty-msg">Henüz anonim bir satır gelmedi. Profil linkini arkadaşlarınla paylaş!</p>`; return; }
+      $("inboxItems").innerHTML = "";
+      snap.forEach(d => {
+        const m = d.data();
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.style.cursor = "default";
+        div.innerHTML = `<div class="list-item-text"></div><div class="list-item-meta"><span>Anonim</span><button type="button" class="text-link-btn del-anon">Sil</button></div>`;
+        div.querySelector(".list-item-text").textContent = `“${m.metin}”`;
+        div.querySelector(".del-anon").addEventListener("click", async () => {
+          try { await deleteDoc(doc(db, "anonimMesajlar", d.id)); div.remove(); } catch {}
+        });
+        $("inboxItems").appendChild(div);
+      });
+    } catch {
+      $("inboxItems").innerHTML = `<p class="empty-msg">Gelen kutusu şu an yüklenemedi.</p>`;
+    }
+  }
+}
+
+// Başkasının Profili & Anonim Satır Gönderme
+async function openPublicProfile(nickname) {
+  const key = nickname.toLowerCase();
+  activePublicProfile = { nickname, bio: "", avatar: "", anonOpen: true };
+  try {
+    const snap = await getDoc(doc(db, "okurlar", key));
+    if (snap.exists()) activePublicProfile = { ...activePublicProfile, ...snap.data() };
+  } catch {}
+
+  $("pubProfileTitle").textContent = `@${activePublicProfile.nickname}`;
+  $("pubName").textContent = activePublicProfile.nickname;
+  $("pubBio").textContent = activePublicProfile.bio || "Satır Arası okuru";
+  $("pubAvatar").innerHTML = activePublicProfile.avatar
+    ? `<img src="${activePublicProfile.avatar}" alt="">`
+    : `<span>${activePublicProfile.nickname.slice(0, 1).toUpperCase()}</span>`;
+
+  const theirQuotes = allQuotes.filter(q => q.ekleyen && q.ekleyen.toLowerCase() === key);
+  const totalLikes = theirQuotes.reduce((s, q) => s + (q.begeni || 0), 0);
+  renderBadgesGrid($("pubBadgesGrid"), theirQuotes.length, totalLikes, 0);
+
+  $("pubAnonBox").style.display = activePublicProfile.anonOpen === false ? "none" : "block";
+  const listEl = $("pubQuotesList");
+  listEl.innerHTML = theirQuotes.length ? "" : `<p class="empty-msg">Henüz paylaştığı bir satır yok.</p>`;
+  theirQuotes.forEach(q => listEl.appendChild(createQuoteListItem(q, "publicProfileModalOverlay")));
+
+  openModal("publicProfileModalOverlay");
+}
+
+$("sendAnonForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!activePublicProfile) return;
+  const lastSent = ls.get("sa_last_anon", 0);
+  if (Date.now() - lastSent < 30000) { alert("Spam koruması: Yeni bir not bırakmak için 30 saniye bekle."); return; }
+  const metin = $("anonMsgInput").value.trim();
+  if (!metin) return;
+  if (containsProfanity(metin)) { alert("Lütfen saygılı ve temiz bir dil kullan."); return; }
+  try {
+    await addDoc(collection(db, "anonimMesajlar"), {
+      hedef: activePublicProfile.nickname.toLowerCase(),
+      metin,
+      tarih: serverTimestamp()
+    });
+    ls.set("sa_last_anon", Date.now());
+    $("anonMsgInput").value = "";
+    alert("Anonim satırın gizlice iletildi!");
+  } catch {
+    alert("Gönderilemedi, lütfen tekrar dene.");
+  }
+});
+
+// ======================================================
+// 8. GELİŞMİŞ ARAMA (ALINTILAR + OKURLAR)
+// ======================================================
+function createQuoteListItem(q, modalToClose) {
+  const div = document.createElement("div");
+  div.className = "list-item";
+  const sourceLabel = q.sarkiAdi ? `${q.kaynak || "Anonim"} · ♪ ${q.sarkiAdi}` : (q.kaynak || "Anonim");
+  div.innerHTML = `<div class="list-item-text">“${q.metin}”</div><div class="list-item-meta"><span>${sourceLabel}</span><span>${q.kategori}</span></div>`;
+  div.addEventListener("click", () => { renderQuote(q, true); closeModal(modalToClose); });
+  return div;
+}
+
+$("archiveBtn").addEventListener("click", () => {
+  $("archiveSearchInput").value = "";
+  renderSearchResults();
+  openModal("archiveModalOverlay");
+});
+$("searchTabQuotes").addEventListener("click", () => {
+  activeSearchTab = "quotes";
+  $("searchTabQuotes").classList.add("active");
+  $("searchTabReaders").classList.remove("active");
+  renderSearchResults();
+});
+$("searchTabReaders").addEventListener("click", () => {
+  activeSearchTab = "readers";
+  $("searchTabReaders").classList.add("active");
+  $("searchTabQuotes").classList.remove("active");
+  renderSearchResults();
+});
+$("archiveSearchInput").addEventListener("input", renderSearchResults);
+
+async function renderSearchResults() {
+  const term = $("archiveSearchInput").value.trim().toLowerCase();
+  const list = $("archiveList");
+  if (activeSearchTab === "quotes") {
+    const matches = allQuotes.filter(q =>
+      q.metin.toLowerCase().includes(term) ||
+      (q.kaynak || "").toLowerCase().includes(term) ||
+      (q.sarkiAdi || "").toLowerCase().includes(term) ||
+      q.kategori.toLowerCase().includes(term)
+    ).slice(0, 40);
+    list.innerHTML = matches.length ? "" : `<p class="empty-msg">Eşleşen satır bulunamadı.</p>`;
+    matches.forEach(q => list.appendChild(createQuoteListItem(q, "archiveModalOverlay")));
+  } else {
+    list.innerHTML = `<p class="empty-msg">Okurlar aranıyor...</p>`;
+    try {
+      const snap = await getDocs(collection(db, "okurlar"));
+      const readers = [];
+      snap.forEach(d => readers.push(d.data()));
+      const filtered = readers.filter(r => (r.nickname || "").toLowerCase().includes(term) || (r.bio || "").toLowerCase().includes(term));
+      list.innerHTML = filtered.length ? "" : `<p class="empty-msg">Eşleşen okur profili bulunamadı.</p>`;
+      filtered.forEach(r => {
+        const row = document.createElement("div");
+        row.className = "reader-row";
+        row.innerHTML = `
+          <div class="avatar-circle">${r.avatar ? `<img src="${r.avatar}" alt="">` : `<span>${(r.nickname || "?")[0].toUpperCase()}</span>`}</div>
+          <div><div style="font-weight:600;font-size:0.9rem;">@${r.nickname}</div><div style="font-size:0.78rem;color:var(--text-muted);">${r.bio || "Satır Arası okuru"}</div></div>`;
+        row.addEventListener("click", () => { closeModal("archiveModalOverlay"); openPublicProfile(r.nickname); });
+        list.appendChild(row);
+      });
+    } catch {
+      list.innerHTML = `<p class="empty-msg">Okur listesi şu an alınamadı.</p>`;
+    }
+  }
+}
+
+// ======================================================
+// 9. GÜNÜN DÜELLOSU & 13 ARALIK WRAPPED
+// ======================================================
+$("duelBtn").addEventListener("click", () => {
+  const today = new Date().toISOString().slice(0, 10);
+  const seed = parseInt(today.replace(/-/g, ""), 10);
+  const qA = allQuotes[seed % allQuotes.length];
+  const qB = allQuotes[(seed + 17) % allQuotes.length];
+  const voted = ls.get(`sa_duel_${today}`, null);
+  const votes = ls.get(`sa_duel_counts_${today}`, { a: 12 + (seed % 9), b: 10 + (seed % 7) });
+
+  const renderDuel = (choice) => {
+    const total = votes.a + votes.b;
+    const pctA = Math.round((votes.a / total) * 100);
+    const pctB = 100 - pctA;
+    const box = $("duelContainer");
+    box.className = choice ? "duel-voted" : "";
+    box.innerHTML = `
+      <button type="button" class="duel-option ${choice === "a" ? "voted" : ""}" id="duelA">
+        <div class="list-item-text">“${qA.metin}”</div>
+        <div class="list-item-meta"><span>${qA.kaynak}</span></div>
+        <div class="duel-bar-bg"><div class="duel-bar-fill" style="width:${pctA}%"></div></div>
+        <div class="duel-pct">%${pctA} tercih etti</div>
+      </button>
+      <button type="button" class="duel-option ${choice === "b" ? "voted" : ""}" id="duelB">
+        <div class="list-item-text">“${qB.metin}”</div>
+        <div class="list-item-meta"><span>${qB.kaynak}</span></div>
+        <div class="duel-bar-bg"><div class="duel-bar-fill" style="width:${pctB}%"></div></div>
+        <div class="duel-pct">%${pctB} tercih etti</div>
+      </button>`;
+    if (!choice) {
+      $("duelA").addEventListener("click", () => { votes.a++; ls.set(`sa_duel_${today}`, "a"); ls.set(`sa_duel_counts_${today}`, votes); renderDuel("a"); });
+      $("duelB").addEventListener("click", () => { votes.b++; ls.set(`sa_duel_${today}`, "b"); ls.set(`sa_duel_counts_${today}`, votes); renderDuel("b"); });
+    }
+  };
+  renderDuel(voted);
+  openModal("duelModalOverlay");
+});
+
+function checkWrappedBanner() {
+  const now = new Date();
+  const isDec13 = (now.getMonth() === 11 && now.getDate() >= 13);
+  $("wrappedBanner").classList.toggle("show", isDec13 || isAdmin);
+}
+
+$("openWrappedBtn").addEventListener("click", () => {
+  const topCat = Object.entries(stats.catCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || "Kitap";
+  $("wrappedContent").innerHTML = `
+    <div style="font-size:0.78rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">✦ Satır Arası ${new Date().getFullYear()}</div>
+    <h3 style="font-family:'Lora',serif;font-size:1.3rem;margin-bottom:6px;">${userProfile.nickname || "Okur"} · Yılın Özeti</h3>
+    <div class="wrapped-stat-grid">
+      <div class="wrapped-stat"><span>Okunan Satır</span><strong>${stats.readCount || 0}</strong></div>
+      <div class="wrapped-stat"><span>En Uzun Seri</span><strong>${stats.streak || 1} Gün</strong></div>
+      <div class="wrapped-stat"><span>Favori Kategori</span><strong>${topCat}</strong></div>
+      <div class="wrapped-stat"><span>Beğenilenler</span><strong>${favIds.length}</strong></div>
     </div>
-  </div>
+    <p style="font-size:0.82rem;color:var(--text-muted);">Bu yıl kelimelerin arasında güzel izler bıraktın.</p>`;
+  openModal("wrappedModalOverlay");
+});
 
-  <!-- Kendi Profilim Modalı -->
-  <div class="modal-overlay" id="profileModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Profilim</h2>
-        <button class="close-x" data-close="profileModalOverlay">&times;</button>
-      </div>
+$("shareWrappedBtn").addEventListener("click", () => {
+  if (!currentQuote) return;
+  downloadStoryCard({
+    kategori: `13 ARALIK ÖZETİ`,
+    metin: `${stats.readCount || 0} satır okudum, ${stats.streak || 1} gün seri yaptım.`,
+    kaynak: `${userProfile.nickname || "Satır Arası"} · ${new Date().getFullYear()}`
+  });
+});
 
-      <!-- 13 Aralık Yıl Sonu Özeti Banner'ı -->
-      <div class="wrapped-banner" id="wrappedBanner">
-        <span>✦ 13 Aralık Yıl Sonu Özetin Hazır!</span>
-        <button type="button" class="btn-secondary" id="openWrappedBtn" style="background:#fff;color:#2b2927;border:none !important;padding:6px 12px;font-size:0.78rem;">Görüntüle</button>
-      </div>
+// ======================================================
+// 10. ALINTI EKLEME, PAYLAŞMA, İTHAF, POPÜLER, HAFTANIN SORUSU
+// ======================================================
+$("openModalBtn").addEventListener("click", () => {
+  $("editId").value = "";
+  $("formModalTitle").textContent = "Yeni Satır Ekle";
+  $("quoteForm").reset();
+  if ($("inputSongTitle")) $("inputSongTitle").value = "";
+  if ($("inputSongUrl")) $("inputSongUrl").value = "";
+  toggleSongFields();
+  openModal("addModalOverlay");
+});
 
-      <div class="profile-top-box">
-        <label class="avatar-circle" id="avatarPreview" title="Profil fotoğrafı seç">
-          <span id="avatarInitial">?</span>
-          <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
-        </label>
-        <div style="flex:1;">
-          <input type="text" id="nicknameInput" placeholder="Takma adın (Örn: geceokuru)" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:9px;background:var(--input-bg);color:var(--text-main);font-size:0.88rem;margin-bottom:6px;">
-          <input type="text" id="bioInput" placeholder="Kısa hakkımda notu..." maxlength="120" style="width:100%;padding:7px 10px;border:1px solid var(--border-color);border-radius:9px;background:var(--input-bg);color:var(--text-main);font-size:0.8rem;">
-        </div>
-      </div>
+$("quoteForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const metin = $("inputText").value.trim();
+  const kategori = $("inputCategory").value;
+  const kaynak = $("inputAuthor").value.trim() || userProfile.nickname || "Anonim";
+  const sarkiAdi = $("inputSongTitle")?.value.trim() || "";
+  const sarkiUrl = $("inputSongUrl")?.value.trim() || "";
+  const editId = $("editId").value;
+  if (!metin) return;
 
-      <div class="profile-share-row">
-        <button type="button" class="btn-primary" id="saveProfileBtn" style="padding:7px 13px;font-size:0.8rem;">Profili Kaydet</button>
-        <button type="button" class="btn-secondary" id="copyProfileLinkBtn" style="padding:7px 13px;font-size:0.8rem;">Profil Linkini Kopyala</button>
-      </div>
+  try {
+    if (editId && !editId.startsWith("def-")) {
+      await updateDoc(doc(db, "alintilar", editId), { metin, kategori, kaynak, sarkiAdi, sarkiUrl });
+      const target = allQuotes.find(q => q.id === editId);
+      if (target) {
+        target.metin = metin;
+        target.kategori = kategori;
+        target.kaynak = kaynak;
+        target.sarkiAdi = sarkiAdi;
+        target.sarkiUrl = sarkiUrl;
+        renderQuote(target, false);
+      }
+    } else {
+      const ref = await addDoc(collection(db, "alintilar"), {
+        metin, kategori, kaynak, sarkiAdi, sarkiUrl, begeni: 0, tepkiler: {}, yorumSayisi: 0,
+        kurucuSecimi: false, ekleyen: userProfile.nickname || "", tarih: serverTimestamp()
+      });
+      const yeni = {
+        id: ref.id, metin, kategori, kaynak, sarkiAdi, sarkiUrl,
+        begeni: 0, tepkiler: {}, yorumSayisi: 0, ekleyen: userProfile.nickname || ""
+      };
+      allQuotes.unshift(yeni);
+      filteredQuotes.unshift(yeni);
+      renderQuote(yeni, true);
+    }
+    closeModal("addModalOverlay");
+  } catch {
+    alert("Kaydedilemedi.");
+  }
+});
 
-      <div id="profileAuthArea" style="margin-bottom:14px;"></div>
+// Story İndir
+function downloadStoryCard(q) {
+  const c = $("storyCanvas");
+  const ctx = c.getContext("2d");
+  const style = getComputedStyle(document.body);
+  ctx.fillStyle = style.getPropertyValue("--bg-color").trim() || "#f6f4f0";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = style.getPropertyValue("--accent").trim() || "#8c5e58";
+  ctx.font = "500 34px Inter, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`✦  ${q.kategori.toUpperCase()}  ✦`, 540, 620);
 
-      <div class="form-group">
-        <label>Seviyeli Okur Rozetlerin</label>
-        <div class="badges-grid" id="badgesGrid"></div>
-      </div>
+  ctx.fillStyle = style.getPropertyValue("--text-main").trim() || "#2b2927";
+  ctx.font = "52px Lora, Georgia, serif";
+  const words = `“${q.metin}”`.split(" ");
+  let line = "", y = 780;
+  for (const w of words) {
+    const test = line + w + " ";
+    if (ctx.measureText(test).width > 840 && line) { ctx.fillText(line.trim(), 540, y); line = w + " "; y += 78; }
+    else line = test;
+  }
+  ctx.fillText(line.trim(), 540, y);
 
-      <div class="tab-row">
-        <button type="button" class="tab-btn active" id="tabFavs">Beğendiklerim (<span id="profileFavCount">0</span>)</button>
-        <button type="button" class="tab-btn" id="tabMine">Eklediklerim (<span id="profileMineCount">0</span>)</button>
-        <button type="button" class="tab-btn" id="tabCols">Koleksiyon (<span id="profileColCount">0</span>)</button>
-        <button type="button" class="tab-btn" id="tabInbox">Gelen Kutusu (<span id="profileInboxCount">0</span>)</button>
-      </div>
-      <div id="profileListContent"></div>
-    </div>
-  </div>
+  ctx.fillStyle = style.getPropertyValue("--text-muted").trim() || "#78736e";
+  ctx.font = "italic 36px Lora, Georgia, serif";
+  ctx.fillText(`— ${q.kaynak || "Anonim"}`, 540, y + 110);
+  ctx.font = "500 28px Inter, sans-serif";
+  ctx.fillText("✦ Satır Arası", 540, 1740);
 
-  <!-- Başkasının Paylaşılabilir Okur Profili Modalı -->
-  <div class="modal-overlay" id="publicProfileModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="pubProfileTitle">Okur Profili</h2>
-        <button class="close-x" data-close="publicProfileModalOverlay">&times;</button>
-      </div>
-      <div class="profile-top-box">
-        <div class="avatar-circle" id="pubAvatar" style="cursor:default;"></div>
-        <div style="flex:1;">
-          <div id="pubName" style="font-weight:600;font-size:1.02rem;margin-bottom:4px;"></div>
-          <div id="pubBio" style="font-size:0.84rem;color:var(--text-muted);line-height:1.4;"></div>
-        </div>
-      </div>
+  const a = document.createElement("a");
+  a.download = "satir-arasi.png";
+  a.href = c.toDataURL("image/png");
+  a.click();
+}
 
-      <div class="badges-grid" id="pubBadgesGrid"></div>
+els.shareBtn.addEventListener("click", () => currentQuote && downloadStoryCard(currentQuote));
+els.copyBtn.addEventListener("click", () => {
+  if (!currentQuote) return;
+  navigator.clipboard.writeText(`“${currentQuote.metin}” — ${currentQuote.kaynak || "Anonim"}`);
+  els.copyBtn.textContent = "Kopyalandı";
+  setTimeout(() => (els.copyBtn.textContent = "Kopyala"), 1500);
+});
 
-      <!-- Anonim Satır Bırakma Kutusu -->
-      <div id="pubAnonBox" style="margin-bottom:16px;padding:14px;border-radius:14px;border:1px solid var(--border-color);background:var(--accent-soft);">
-        <div style="font-size:0.84rem;font-weight:600;margin-bottom:8px;">✦ Ona Anonim Bir Satır Bırak</div>
-        <form id="sendAnonForm">
-          <textarea id="anonMsgInput" rows="2" maxlength="280" placeholder="Bir şarkı sözü, film repliği veya kısa bir not bırak..." style="width:100%;padding:9px 11px;border:1px solid var(--border-color);border-radius:10px;background:var(--card-bg);color:var(--text-main);font-size:0.86rem;margin-bottom:8px;" required></textarea>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span class="safety-note" style="margin:0;">Saygılı ol; mesaj sadece profil sahibine görünür.</span>
-            <button type="submit" class="btn-primary" id="sendAnonBtn" style="padding:7px 14px;font-size:0.8rem;">Gönder</button>
-          </div>
-        </form>
-      </div>
+// Popüler
+$("popularBtn").addEventListener("click", () => {
+  const top = [...allQuotes].sort((a, b) => (b.begeni || 0) - (a.begeni || 0)).slice(0, 20);
+  const list = $("popList");
+  list.innerHTML = "";
+  top.forEach(q => list.appendChild(createQuoteListItem(q, "popModalOverlay")));
+  openModal("popModalOverlay");
+});
 
-      <div class="form-group">
-        <label>Paylaştığı Satırlar</label>
-        <div id="pubQuotesList"></div>
-      </div>
-    </div>
-  </div>
+// İthaf (Zarf)
+els.giftBtn.addEventListener("click", () => openModal("giftModalOverlay"));
+$("copyGiftLinkBtn").addEventListener("click", () => {
+  if (!currentQuote) return;
+  const from = $("giftFromInput").value.trim();
+  const note = $("giftNoteInput").value.trim();
+  const params = new URLSearchParams({ id: currentQuote.id });
+  if (from) params.set("kimden", from);
+  if (note) params.set("not", note);
+  navigator.clipboard.writeText(`${location.origin}${location.pathname}?${params.toString()}`);
+  alert("Zarf linki kopyalandı!");
+  closeModal("giftModalOverlay");
+});
 
-  <!-- Gelişmiş Arama Modalı (Alıntılar + Okurlar) -->
-  <div class="modal-overlay" id="archiveModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Arşiv ve Okur Ara</h2>
-        <button class="close-x" data-close="archiveModalOverlay">&times;</button>
-      </div>
-      <div class="tab-row">
-        <button type="button" class="tab-btn active" id="searchTabQuotes">Alıntılar</button>
-        <button type="button" class="tab-btn" id="searchTabReaders">Okurlar</button>
-      </div>
-      <div class="form-group">
-        <input type="text" id="archiveSearchInput" placeholder="Kelime, yazar, şarkı veya okur adı ara...">
-      </div>
-      <div id="archiveList"></div>
-    </div>
-  </div>
+// Koleksiyona Kaydet
+$("saveToColBtn").addEventListener("click", () => {
+  if (!currentQuote) return;
+  const list = $("colSelectList");
+  list.innerHTML = "";
+  myCollections.forEach(c => {
+    const has = c.items.includes(currentQuote.id);
+    const btn = document.createElement("button");
+    btn.className = `col-chip ${has ? "active" : ""}`;
+    btn.style.margin = "0 6px 6px 0";
+    btn.textContent = `${has ? "✓ " : "+ "}${c.name}`;
+    btn.addEventListener("click", () => {
+      if (has) c.items = c.items.filter(id => id !== currentQuote.id);
+      else c.items.push(currentQuote.id);
+      ls.set("sa_cols", myCollections);
+      closeModal("collectionModalOverlay");
+    });
+    list.appendChild(btn);
+  });
+  openModal("collectionModalOverlay");
+});
+$("createColBtn").addEventListener("click", () => {
+  const name = $("newColNameInput").value.trim();
+  if (!name) return;
+  myCollections.push({ id: `col-${Date.now()}`, name, items: currentQuote ? [currentQuote.id] : [] });
+  ls.set("sa_cols", myCollections);
+  $("newColNameInput").value = "";
+  closeModal("collectionModalOverlay");
+});
 
-  <!-- Günün Düellosu Modalı -->
-  <div class="modal-overlay" id="duelModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Günün Düellosu</h2>
-        <button class="close-x" data-close="duelModalOverlay">&times;</button>
-      </div>
-      <p class="info-note">Bugünün ruh halini en çok hangi satır anlatıyor? Oyunu ver, sonuçları gör.</p>
-      <div id="duelContainer"></div>
-    </div>
-  </div>
+// Haftanın Sorusu
+$("weeklyBtn").addEventListener("click", () => {
+  $("weeklyQuestionText").textContent = ls.get("sa_weekly_q", "Seni en çok etkileyen tek bir kitap veya şarkı cümlesi hangisi?");
+  $("adminWeeklyEdit").style.display = isAdmin ? "block" : "none";
+  openModal("weeklyModalOverlay");
+});
+$("saveWeeklyQBtn").addEventListener("click", () => {
+  const q = $("weeklyQuestionInput").value.trim();
+  if (q) { ls.set("sa_weekly_q", q); $("weeklyQuestionText").textContent = q; $("weeklyQuestionInput").value = ""; }
+});
 
-  <!-- 13 Aralık Yıl Sonu Özeti Modalı -->
-  <div class="modal-overlay" id="wrappedModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>13 Aralık · Yıl Sonu Özeti</h2>
-        <button class="close-x" data-close="wrappedModalOverlay">&times;</button>
-      </div>
-      <div class="wrapped-card" id="wrappedContent"></div>
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" data-close="wrappedModalOverlay">Kapat</button>
-        <button type="button" class="btn-primary" id="shareWrappedBtn">Özet Kartını İndir</button>
-      </div>
-    </div>
-  </div>
+// Yönetici & Bildir
+$("reportCardBtn").addEventListener("click", async () => {
+  if (!currentQuote) return;
+  if (!confirm("Bu içeriği yöneticiye bildirmek istiyor musun?")) return;
+  try {
+    await addDoc(collection(db, "bildirimler"), { quoteId: currentQuote.id, metin: currentQuote.metin, tarih: serverTimestamp() });
+    alert("Bildirimin iletildi.");
+  } catch {}
+});
 
-  <!-- Koleksiyona Kaydet Modalı -->
-  <div class="modal-overlay" id="collectionModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Koleksiyona Kaydet</h2>
-        <button class="close-x" data-close="collectionModalOverlay">&times;</button>
-      </div>
-      <div id="colSelectList" style="margin-bottom:14px;"></div>
-      <div style="display:flex;gap:8px;">
-        <input type="text" id="newColNameInput" placeholder="Yeni koleksiyon adı (Örn: Gece Okumaları)" style="flex:1;padding:9px 12px;border:1px solid var(--border-color);border-radius:10px;background:var(--input-bg);color:var(--text-main);">
-        <button type="button" class="btn-primary" id="createColBtn">Oluştur</button>
-      </div>
-    </div>
-  </div>
+els.adminFeaturedBtn.addEventListener("click", async () => {
+  if (!isAdmin || !currentQuote) return;
+  currentQuote.kurucuSecimi = !currentQuote.kurucuSecimi;
+  els.featuredBadge.classList.toggle("show", currentQuote.kurucuSecimi);
+  els.adminFeaturedBtn.classList.toggle("active", currentQuote.kurucuSecimi);
+  if (!currentQuote.id.startsWith("def-")) {
+    try { await updateDoc(doc(db, "alintilar", currentQuote.id), { kurucuSecimi: currentQuote.kurucuSecimi }); } catch {}
+  }
+});
 
-  <!-- Haftanın Sorusu Modalı -->
-  <div class="modal-overlay" id="weeklyModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Haftanın Sorusu</h2>
-        <button class="close-x" data-close="weeklyModalOverlay">&times;</button>
-      </div>
-      <div class="weekly-q-box" id="weeklyQuestionText">Yükleniyor...</div>
-      <div id="adminWeeklyEdit" style="display:none;margin-bottom:14px;">
-        <div style="display:flex;gap:8px;">
-          <input type="text" id="weeklyQuestionInput" placeholder="Yeni haftanın sorusunu yaz..." style="flex:1;padding:8px 11px;border:1px solid var(--border-color);border-radius:10px;background:var(--input-bg);color:var(--text-main);font-size:0.85rem;">
-          <button type="button" class="btn-primary" id="saveWeeklyQBtn" style="padding:8px 12px;font-size:0.8rem;">Güncelle</button>
-        </div>
-      </div>
-      <form id="weeklyAnswerForm" class="comment-form-row" style="margin-bottom:16px;">
-        <input type="text" id="weeklyAnswerInput" placeholder="Tek satırlık cevabını bırak..." required>
-        <button type="submit" class="btn-primary" style="padding:9px 14px;">Gönder</button>
-      </form>
-      <div id="weeklyAnswersList"></div>
-    </div>
-  </div>
+els.adminEditBtn.addEventListener("click", () => {
+  if (!isAdmin || !currentQuote) return;
+  $("editId").value = currentQuote.id;
+  $("formModalTitle").textContent = "Satırı Düzenle";
+  $("inputCategory").value = currentQuote.kategori;
+  $("inputText").value = currentQuote.metin;
+  $("inputAuthor").value = currentQuote.kaynak || "";
+  if ($("inputSongTitle")) $("inputSongTitle").value = currentQuote.sarkiAdi || "";
+  if ($("inputSongUrl")) $("inputSongUrl").value = currentQuote.sarkiUrl || "";
+  toggleSongFields();
+  openModal("addModalOverlay");
+});
 
-  <!-- Yönetici Bildirimleri Modalı -->
-  <div class="modal-overlay" id="reportsModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Bildirilen İçerikler</h2>
-        <button class="close-x" data-close="reportsModalOverlay">&times;</button>
-      </div>
-      <div id="reportsList"></div>
-    </div>
-  </div>
+els.adminDeleteBtn.addEventListener("click", async () => {
+  if (!isAdmin || !currentQuote || currentQuote.id.startsWith("def-")) return;
+  if (!confirm("Bu satırı kalıcı olarak silmek istiyor musun?")) return;
+  try {
+    await deleteDoc(doc(db, "alintilar", currentQuote.id));
+    allQuotes = allQuotes.filter(q => q.id !== currentQuote.id);
+    applyFilter(activeCategory);
+  } catch {}
+});
 
-  <!-- Popüler Satırlar Modalı -->
-  <div class="modal-overlay" id="popModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>En Çok Beğenilenler</h2>
-        <button class="close-x" data-close="popModalOverlay">&times;</button>
-      </div>
-      <div id="popList"></div>
-    </div>
-  </div>
+// ======================================================
+// 11. BAŞLATMA VE FIREBASE VERİ ÇEKME
+// ======================================================
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  isAdmin = !!(user && user.email === ADMIN_EMAIL);
+  if (els.adminBar) els.adminBar.classList.toggle("show", isAdmin);
+  checkWrappedBanner();
+});
 
-  <!-- Görünüm & Geçiş Ayarları Modalı -->
-  <div class="modal-overlay" id="appearanceModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Görünüm ve Ayarlar</h2>
-        <button class="close-x" data-close="appearanceModalOverlay">&times;</button>
-      </div>
-      <div class="form-group">
-        <label>Renk Teması</label>
-        <div class="picker-grid">
-          <button type="button" class="picker-chip" data-set-theme="light">Klasik Krem</button>
-          <button type="button" class="picker-chip" data-set-theme="pink">Toz Pembe</button>
-          <button type="button" class="picker-chip" data-set-theme="dark">Gece</button>
-          <button type="button" class="picker-chip" data-set-theme="sepia">Eski Kâğıt</button>
-          <button type="button" class="picker-chip" data-set-theme="sage">Adaçayı</button>
-          <button type="button" class="picker-chip" data-set-theme="midnight">Gece Mavisi</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Yazı Tipi</label>
-        <div class="picker-grid">
-          <button type="button" class="picker-chip" data-set-font="lora" style="font-family:'Lora',serif;">Klasik Kitap</button>
-          <button type="button" class="picker-chip" data-set-font="typewriter" style="font-family:'Courier Prime',monospace;">Daktilo</button>
-          <button type="button" class="picker-chip" data-set-font="modern" style="font-family:'Inter',sans-serif;">Modern Sade</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Kart Geçiş Tarzı</label>
-        <div class="picker-grid">
-          <button type="button" class="picker-chip" data-set-nav="classic">Klasik (Butonla)</button>
-          <button type="button" class="picker-chip" data-set-nav="swipe">Kaydırmalı (Swipe)</button>
-        </div>
-      </div>
-    </div>
-  </div>
+async function init() {
+  applyAppearance();
+  updateSoundIcon();
+  updateNavProfileUI();
 
-  <!-- İthaf Et Modalı -->
-  <div class="modal-overlay" id="giftModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Bu Satırı İthaf Et</h2>
-        <button class="close-x" data-close="giftModalOverlay">&times;</button>
-      </div>
-      <p class="info-note">Kısa bir not eklersen linke tıklayan kişi önce kapalı bir zarf görecek. Not bırakmazsan doğrudan bu kart açılır.</p>
-      <div class="form-group">
-        <label for="giftFromInput">Gönderen (İsteğe bağlı)</label>
-        <input type="text" id="giftFromInput" placeholder="Takma adın veya ismin">
-      </div>
-      <div class="form-group">
-        <label for="giftNoteInput">Kısa Notun (İsteğe bağlı)</label>
-        <textarea id="giftNoteInput" rows="2" placeholder="Bunu okuyunca aklıma sen geldin..."></textarea>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" data-close="giftModalOverlay">Kapat</button>
-        <button type="button" class="btn-primary" id="copyGiftLinkBtn">Zarf Linkini Kopyala</button>
-      </div>
-    </div>
-  </div>
+  try {
+    const snap = await getDocs(collection(db, "alintilar"));
+    const fbQuotes = [];
+    snap.forEach(d => fbQuotes.push({ id: d.id, ...d.data() }));
+    allQuotes = [...fbQuotes, ...varsayilanAlintilar];
+    filteredQuotes = [...allQuotes];
+  } catch {}
 
-  <!-- Hediye Zarfı Açılış Modalı -->
-  <div class="modal-overlay" id="envelopeModalOverlay">
-    <div class="modal">
-      <div class="envelope-box">
-        <svg class="envelope-svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        <h2 id="envelopeTitle">Sana bir satır bırakıldı</h2>
-        <p class="envelope-note" id="envelopeNotePreview"></p>
-        <button class="btn-primary" id="openEnvelopeBtn">Zarfı Aç</button>
-      </div>
-    </div>
-  </div>
+  const params = new URLSearchParams(location.search);
+  const profilParam = params.get("profil");
+  const idParam = params.get("id");
+  const notParam = params.get("not");
+  const kimdenParam = params.get("kimden");
 
-  <canvas id="storyCanvas" width="1080" height="1920" style="display:none;"></canvas>
-  <script type="module" src="app.js?v=4"></script>
-</body>
-</html>
+  if (idParam) {
+    const found = allQuotes.find(q => q.id === idParam);
+    if (found) {
+      renderQuote(found, false);
+      if (notParam) {
+        $("envelopeTitle").textContent = kimdenParam ? `${kimdenParam} sana bir satır bıraktı` : "Sana bir satır bırakıldı";
+        $("envelopeNotePreview").textContent = `“${notParam}”`;
+        openModal("envelopeModalOverlay");
+        $("openEnvelopeBtn").onclick = () => {
+          closeModal("envelopeModalOverlay");
+          els.dedicationBanner.textContent = `${kimdenParam ? kimdenParam + ": " : ""}“${notParam}”`;
+          els.dedicationBanner.classList.add("show");
+        };
+      }
+    } else {
+      showRandomQuote();
+    }
+  } else {
+    showRandomQuote();
+  }
+
+  if (profilParam) openPublicProfile(profilParam);
+}
+
+init();
