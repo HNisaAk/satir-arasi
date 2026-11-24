@@ -193,7 +193,7 @@ function updateGreetingAndStreak() {
 }
 
 // ======================================================
-// 5. KART GÖSTERİMİ, FİLTRE VE SWIPE (KAYDIRMA)
+// 5. KART GÖSTERİMİ, FİLTRE, ŞARKI LİNKİ VE SWIPE
 // ======================================================
 function getDailyQuoteId() {
   const d = new Date();
@@ -215,6 +215,20 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => applyFilter(btn.dataset.cat));
 });
 
+function extractMusicLink(text) {
+  if (!text) return null;
+  const match = text.match(/https?:\/\/[^\s]+/i);
+  if (!match) return null;
+  const url = match[0];
+  const lower = url.toLowerCase();
+  if (lower.includes("spotify.com") || lower.includes("youtube.com") || lower.includes("youtu.be")) {
+    const cleanText = text.replace(url, "").trim();
+    const label = lower.includes("spotify.com") ? "♪ Spotify'da Dinle" : "♪ YouTube'da Dinle";
+    return { url, cleanText, label };
+  }
+  return null;
+}
+
 function renderQuote(q, pushHistory = true) {
   if (!q) return;
   if (pushHistory && currentQuote && currentQuote.id !== q.id) {
@@ -229,9 +243,28 @@ function renderQuote(q, pushHistory = true) {
 
   els.quoteWrapper?.classList.add("fade-out");
   setTimeout(() => {
+    const musicInfo = extractMusicLink(q.metin) || extractMusicLink(q.kaynak);
+
     if (els.category) els.category.textContent = q.kategori;
-    if (els.quoteText) els.quoteText.textContent = `“${q.metin}”`;
-    if (els.quoteAuthor) els.quoteAuthor.textContent = `— ${q.kaynak || "Anonim"}`;
+    if (els.quoteText) {
+      const displayText = (extractMusicLink(q.metin)?.cleanText) || q.metin;
+      els.quoteText.textContent = `“${displayText}”`;
+    }
+    if (els.quoteAuthor) {
+      const cleanAuthor = (extractMusicLink(q.kaynak)?.cleanText) || (q.kaynak || "Anonim");
+      els.quoteAuthor.innerHTML = "";
+      els.quoteAuthor.append(`— ${cleanAuthor}`);
+      if (musicInfo) {
+        const link = document.createElement("a");
+        link.href = musicInfo.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = ` · ${musicInfo.label}`;
+        link.style.marginLeft = "6px";
+        els.quoteAuthor.appendChild(link);
+      }
+    }
+
     els.dailyBadge?.classList.toggle("show", q.id === getDailyQuoteId());
     els.featuredBadge?.classList.toggle("show", !!q.kurucuSecimi);
     els.adminBar?.classList.toggle("show", isAdmin);
@@ -724,7 +757,9 @@ $("sendAnonForm")?.addEventListener("submit", async (e) => {
 function createQuoteListItem(q, modalToClose) {
   const div = document.createElement("div");
   div.className = "list-item";
-  div.innerHTML = `<div class="list-item-text">“${q.metin}”</div><div class="list-item-meta"><span>${q.kaynak || "Anonim"}</span><span>${q.kategori}</span></div>`;
+  const cleanText = (extractMusicLink(q.metin)?.cleanText) || q.metin;
+  const cleanAuthor = (extractMusicLink(q.kaynak)?.cleanText) || (q.kaynak || "Anonim");
+  div.innerHTML = `<div class="list-item-text">“${cleanText}”</div><div class="list-item-meta"><span>${cleanAuthor}</span><span>${q.kategori}</span></div>`;
   div.addEventListener("click", () => { renderQuote(q, true); closeModal(modalToClose); });
   return div;
 }
