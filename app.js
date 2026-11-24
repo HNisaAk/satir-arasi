@@ -55,7 +55,6 @@ let myCollections = ls.get("sa_cols", [{ id: "col-1", name: "Favori Satırlarım
 let stats = ls.get("sa_stats", { readCount: 0, catCounts: {}, streak: 1, lastDay: "", commentCount: 0, giftCount: 0 });
 let soundEnabled = ls.get("sa_sound", true);
 
-// Basit güvenlik filtresi (Anonim kutu için)
 const BAD_WORDS = ["salak", "aptal", "gerizekalı", "mal", "orospu", "piç", "siktir", "amk", "aq", "yavşak", "şerefsiz"];
 const containsProfanity = (txt) => BAD_WORDS.some(w => txt.toLowerCase().includes(w));
 
@@ -145,11 +144,12 @@ function playPaperSound() {
 }
 
 function updateSoundIcon() {
+  if (!els.soundBtn) return;
   els.soundBtn.innerHTML = soundEnabled
     ? `<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
     : `<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
 }
-els.soundBtn.addEventListener("click", () => {
+els.soundBtn?.addEventListener("click", () => {
   soundEnabled = !soundEnabled;
   ls.set("sa_sound", soundEnabled);
   updateSoundIcon();
@@ -168,7 +168,7 @@ function applyAppearance() {
   document.querySelectorAll("[data-set-nav]").forEach(b => b.classList.toggle("active", b.dataset.setNav === navMode));
 }
 
-$("appearanceBtn").addEventListener("click", () => openModal("appearanceModalOverlay"));
+$("appearanceBtn")?.addEventListener("click", () => openModal("appearanceModalOverlay"));
 document.querySelectorAll("[data-set-theme]").forEach(b => b.addEventListener("click", () => { ls.set("sa_theme", b.dataset.setTheme); applyAppearance(); }));
 document.querySelectorAll("[data-set-font]").forEach(b => b.addEventListener("click", () => { ls.set("sa_font", b.dataset.setFont); applyAppearance(); }));
 document.querySelectorAll("[data-set-nav]").forEach(b => b.addEventListener("click", () => { ls.set("sa_nav_mode", b.dataset.setNav); applyAppearance(); }));
@@ -176,7 +176,9 @@ document.querySelectorAll("[data-set-nav]").forEach(b => b.addEventListener("cli
 function updateGreetingAndStreak() {
   const h = new Date().getHours();
   const greet = h < 6 ? "Gece okuru hoş geldin" : h < 12 ? "Günaydın" : h < 18 ? "İyi günler" : "İyi akşamlar";
-  els.greetingLine.textContent = userProfile.nickname ? `${greet}, ${userProfile.nickname}` : greet;
+  if (els.greetingLine) {
+    els.greetingLine.textContent = userProfile.nickname ? `${greet}, ${userProfile.nickname}` : greet;
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   if (stats.lastDay !== today) {
@@ -185,7 +187,9 @@ function updateGreetingAndStreak() {
     stats.lastDay = today;
     ls.set("sa_stats", stats);
   }
-  els.streakCounter.textContent = `${stats.streak} günlük okuma serisi`;
+  if (els.streakCounter) {
+    els.streakCounter.textContent = `${stats.streak} günlük okuma serisi`;
+  }
 }
 
 // ======================================================
@@ -215,7 +219,7 @@ function renderQuote(q, pushHistory = true) {
   if (!q) return;
   if (pushHistory && currentQuote && currentQuote.id !== q.id) {
     historyStack.push(currentQuote);
-    els.prevQuoteBtn.disabled = false;
+    if (els.prevQuoteBtn) els.prevQuoteBtn.disabled = false;
   }
   currentQuote = q;
 
@@ -223,26 +227,26 @@ function renderQuote(q, pushHistory = true) {
   stats.catCounts[q.kategori] = (stats.catCounts[q.kategori] || 0) + 1;
   ls.set("sa_stats", stats);
 
-  els.quoteWrapper.classList.add("fade-out");
+  els.quoteWrapper?.classList.add("fade-out");
   setTimeout(() => {
-    els.category.textContent = q.kategori;
-    els.quoteText.textContent = `“${q.metin}”`;
-    els.quoteAuthor.textContent = `— ${q.kaynak || "Anonim"}`;
-    els.dailyBadge.classList.toggle("show", q.id === getDailyQuoteId());
-    els.featuredBadge.classList.toggle("show", !!q.kurucuSecimi);
-    els.adminBar.classList.toggle("show", isAdmin);
-    els.adminFeaturedBtn.classList.toggle("active", !!q.kurucuSecimi);
+    if (els.category) els.category.textContent = q.kategori;
+    if (els.quoteText) els.quoteText.textContent = `“${q.metin}”`;
+    if (els.quoteAuthor) els.quoteAuthor.textContent = `— ${q.kaynak || "Anonim"}`;
+    els.dailyBadge?.classList.toggle("show", q.id === getDailyQuoteId());
+    els.featuredBadge?.classList.toggle("show", !!q.kurucuSecimi);
+    els.adminBar?.classList.toggle("show", isAdmin);
+    els.adminFeaturedBtn?.classList.toggle("active", !!q.kurucuSecimi);
 
     const isFav = favIds.includes(q.id);
-    els.likeBtn.classList.toggle("liked", isFav);
-    els.heartIcon.textContent = isFav ? "♥" : "♡";
-    els.likeCount.textContent = q.begeni || 0;
-    els.commentCount.textContent = q.yorumSayisi || 0;
+    els.likeBtn?.classList.toggle("liked", isFav);
+    if (els.heartIcon) els.heartIcon.textContent = isFav ? "♥" : "♡";
+    if (els.likeCount) els.likeCount.textContent = q.begeni || 0;
+    if (els.commentCount) els.commentCount.textContent = q.yorumSayisi || 0;
 
     renderReactions(q);
-    els.quoteWrapper.classList.remove("fade-out");
-    els.footerCounter.textContent = `Satır Arası · ${allQuotes.length} satır birikti`;
-    if (els.commentsDrawer.classList.contains("open")) loadComments(q.id);
+    els.quoteWrapper?.classList.remove("fade-out");
+    if (els.footerCounter) els.footerCounter.textContent = `Satır Arası · ${allQuotes.length} satır birikti`;
+    if (els.commentsDrawer?.classList.contains("open")) loadComments(q.id);
   }, 160);
 }
 
@@ -253,8 +257,8 @@ function showRandomQuote() {
   renderQuote(pick, true);
 }
 
-els.newQuoteBtn.addEventListener("click", showRandomQuote);
-els.prevQuoteBtn.addEventListener("click", () => {
+els.newQuoteBtn?.addEventListener("click", showRandomQuote);
+els.prevQuoteBtn?.addEventListener("click", () => {
   if (!historyStack.length) return;
   const prev = historyStack.pop();
   els.prevQuoteBtn.disabled = historyStack.length === 0;
@@ -273,11 +277,11 @@ function startSwipe(x, target) {
   swipeActive = true;
   swipeStartX = x;
   swipeDeltaX = 0;
-  els.mainCard.classList.add("swiping");
+  els.mainCard?.classList.add("swiping");
 }
 
 function moveSwipe(x) {
-  if (!swipeActive) return;
+  if (!swipeActive || !els.mainCard) return;
   swipeDeltaX = x - swipeStartX;
   els.mainCard.style.transform = `translateX(${swipeDeltaX * 0.45}px) rotate(${swipeDeltaX * 0.02}deg)`;
 }
@@ -285,14 +289,16 @@ function moveSwipe(x) {
 function endSwipe() {
   if (!swipeActive) return;
   swipeActive = false;
-  els.mainCard.classList.remove("swiping");
-  els.mainCard.style.transform = "";
+  if (els.mainCard) {
+    els.mainCard.classList.remove("swiping");
+    els.mainCard.style.transform = "";
+  }
 
   if (swipeDeltaX < -70) {
     showRandomQuote();
   } else if (swipeDeltaX > 70) {
     if (historyStack.length > 0) {
-      els.prevQuoteBtn.click();
+      els.prevQuoteBtn?.click();
     } else {
       showRandomQuote();
     }
@@ -300,17 +306,17 @@ function endSwipe() {
   swipeDeltaX = 0;
 }
 
-els.mainCard.addEventListener("touchstart", (e) => {
+els.mainCard?.addEventListener("touchstart", (e) => {
   if (e.touches.length === 1) startSwipe(e.touches[0].clientX, e.target);
 }, { passive: true });
 
-els.mainCard.addEventListener("touchmove", (e) => {
+els.mainCard?.addEventListener("touchmove", (e) => {
   if (e.touches.length === 1) moveSwipe(e.touches[0].clientX);
 }, { passive: true });
 
-els.mainCard.addEventListener("touchend", endSwipe);
+els.mainCard?.addEventListener("touchend", endSwipe);
 
-els.mainCard.addEventListener("pointerdown", (e) => {
+els.mainCard?.addEventListener("pointerdown", (e) => {
   if (e.pointerType === "mouse") startSwipe(e.clientX, e.target);
 });
 window.addEventListener("pointermove", (e) => {
@@ -324,6 +330,7 @@ window.addEventListener("pointerup", (e) => {
 // 6. BEĞENİ, TEPKİLER VE YORUMLAR
 // ======================================================
 function renderReactions(q) {
+  if (!els.dynamicReactions) return;
   els.dynamicReactions.innerHTML = "";
   const tepkiler = q.tepkiler || {};
   Object.entries(tepkiler).forEach(([emoji, count]) => {
@@ -341,7 +348,7 @@ async function addReaction(emoji) {
   currentQuote.tepkiler = currentQuote.tepkiler || {};
   currentQuote.tepkiler[emoji] = (currentQuote.tepkiler[emoji] || 0) + 1;
   renderReactions(currentQuote);
-  els.emojiPopover.classList.remove("open");
+  els.emojiPopover?.classList.remove("open");
   try {
     if (!currentQuote.id.startsWith("def-")) {
       await updateDoc(doc(db, "alintilar", currentQuote.id), { [`tepkiler.${emoji}`]: increment(1) });
@@ -349,7 +356,7 @@ async function addReaction(emoji) {
   } catch {}
 }
 
-els.likeBtn.addEventListener("click", async () => {
+els.likeBtn?.addEventListener("click", async () => {
   if (!currentQuote) return;
   const idx = favIds.indexOf(currentQuote.id);
   const adding = idx === -1;
@@ -357,8 +364,8 @@ els.likeBtn.addEventListener("click", async () => {
   else { favIds.splice(idx, 1); currentQuote.begeni = Math.max(0, (currentQuote.begeni || 1) - 1); }
   ls.set("sa_favs", favIds);
   els.likeBtn.classList.toggle("liked", adding);
-  els.heartIcon.textContent = adding ? "♥" : "♡";
-  els.likeCount.textContent = currentQuote.begeni;
+  if (els.heartIcon) els.heartIcon.textContent = adding ? "♥" : "♡";
+  if (els.likeCount) els.likeCount.textContent = currentQuote.begeni;
   try {
     if (!currentQuote.id.startsWith("def-")) {
       await updateDoc(doc(db, "alintilar", currentQuote.id), { begeni: increment(adding ? 1 : -1) });
@@ -366,23 +373,24 @@ els.likeBtn.addEventListener("click", async () => {
   } catch {}
 });
 
-els.addEmojiBtn.addEventListener("click", (e) => { e.stopPropagation(); els.emojiPopover.classList.toggle("open"); });
-document.addEventListener("click", (e) => { if (!e.target.closest(".reactions-wrap")) els.emojiPopover.classList.remove("open"); });
+els.addEmojiBtn?.addEventListener("click", (e) => { e.stopPropagation(); els.emojiPopover?.classList.toggle("open"); });
+document.addEventListener("click", (e) => { if (!e.target.closest(".reactions-wrap")) els.emojiPopover?.classList.remove("open"); });
 document.querySelectorAll(".emoji-opt").forEach(b => b.addEventListener("click", () => addReaction(b.dataset.emoji)));
-els.customEmojiSubmit.addEventListener("click", () => {
-  const val = els.customEmojiInput.value.trim();
+els.customEmojiSubmit?.addEventListener("click", () => {
+  const val = els.customEmojiInput?.value.trim();
   if (val) { addReaction(val); els.customEmojiInput.value = ""; }
 });
 
 // Yorumlar
-els.toggleCommentsBtn.addEventListener("click", () => {
-  els.commentsDrawer.classList.toggle("open");
-  if (els.commentsDrawer.classList.contains("open") && currentQuote) loadComments(currentQuote.id);
+els.toggleCommentsBtn?.addEventListener("click", () => {
+  els.commentsDrawer?.classList.toggle("open");
+  if (els.commentsDrawer?.classList.contains("open") && currentQuote) loadComments(currentQuote.id);
 });
-els.closeCommentsBtn.addEventListener("click", () => els.commentsDrawer.classList.remove("open"));
-els.cancelReplyBtn.addEventListener("click", () => { replyingTo = null; els.replyingBar.classList.remove("show"); });
+els.closeCommentsBtn?.addEventListener("click", () => els.commentsDrawer?.classList.remove("open"));
+els.cancelReplyBtn?.addEventListener("click", () => { replyingTo = null; els.replyingBar?.classList.remove("show"); });
 
 async function loadComments(quoteId) {
+  if (!els.commentsList) return;
   els.commentsList.innerHTML = `<p class="empty-msg">Yorumlar yükleniyor...</p>`;
   try {
     const q = query(collection(db, "yorumlar"), where("quoteId", "==", quoteId), orderBy("tarih", "asc"));
@@ -405,9 +413,9 @@ async function loadComments(quoteId) {
       div.querySelector(".comment-body").textContent = c.metin;
       div.querySelector(".reply-btn").addEventListener("click", () => {
         replyingTo = c.yazar || "Anonim";
-        els.replyingText.textContent = `${replyingTo} kişisine yanıt veriliyor`;
-        els.replyingBar.classList.add("show");
-        els.commentTextInput.focus();
+        if (els.replyingText) els.replyingText.textContent = `${replyingTo} kişisine yanıt veriliyor`;
+        els.replyingBar?.classList.add("show");
+        els.commentTextInput?.focus();
       });
       els.commentsList.appendChild(div);
     });
@@ -416,9 +424,9 @@ async function loadComments(quoteId) {
   }
 }
 
-els.commentForm.addEventListener("submit", async (e) => {
+els.commentForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!currentQuote) return;
+  if (!currentQuote || !els.commentTextInput) return;
   const metin = els.commentTextInput.value.trim();
   if (!metin) return;
   const yazar = userProfile.nickname || currentUser?.displayName || "Anonim";
@@ -434,9 +442,9 @@ els.commentForm.addEventListener("submit", async (e) => {
     stats.commentCount = (stats.commentCount || 0) + 1;
     ls.set("sa_stats", stats);
     replyingTo = null;
-    els.replyingBar.classList.remove("show");
+    els.replyingBar?.classList.remove("show");
     currentQuote.yorumSayisi = (currentQuote.yorumSayisi || 0) + 1;
-    els.commentCount.textContent = currentQuote.yorumSayisi;
+    if (els.commentCount) els.commentCount.textContent = currentQuote.yorumSayisi;
     loadComments(currentQuote.id);
   } catch {
     alert("Yorum gönderilemedi.");
@@ -447,20 +455,19 @@ els.commentForm.addEventListener("submit", async (e) => {
 // 7. PROFİL, AVATAR, SEVİYELİ ROZETLER & ANONİM KUTU
 // ======================================================
 function updateNavProfileUI() {
-  els.profileBtnLabel.textContent = userProfile.nickname || "Profil";
-  if (userProfile.avatar) {
+  if (els.profileBtnLabel) els.profileBtnLabel.textContent = userProfile.nickname || "Profil";
+  if (userProfile.avatar && els.navAvatar) {
     els.navAvatar.src = userProfile.avatar;
     els.navAvatar.classList.add("show");
-    els.navAvatarIcon.style.display = "none";
+    if (els.navAvatarIcon) els.navAvatarIcon.style.display = "none";
   } else {
-    els.navAvatar.classList.remove("show");
-    els.navAvatarIcon.style.display = "block";
+    els.navAvatar?.classList.remove("show");
+    if (els.navAvatarIcon) els.navAvatarIcon.style.display = "block";
   }
   updateGreetingAndStreak();
 }
 
-// Profil fotoğrafı küçültme (Firestore'a rahat sığması için 160x160)
-$("avatarFileInput").addEventListener("change", (e) => {
+$("avatarFileInput")?.addEventListener("change", (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
   const reader = new FileReader();
@@ -482,10 +489,11 @@ $("avatarFileInput").addEventListener("change", (e) => {
 
 function renderAvatarPreview() {
   const box = $("avatarPreview");
+  if (!box) return;
   const initial = (userProfile.nickname || "?").slice(0, 1).toUpperCase();
   const input = $("avatarFileInput");
   box.innerHTML = userProfile.avatar ? `<img src="${userProfile.avatar}" alt="">` : `<span>${initial}</span>`;
-  box.appendChild(input);
+  if (input) box.appendChild(input);
 }
 
 function computeBadges(myQuotesCount, totalLikes, commentCount) {
@@ -515,6 +523,7 @@ function computeBadges(myQuotesCount, totalLikes, commentCount) {
 }
 
 function renderBadgesGrid(container, myQuotesCount, totalLikes, commentCount) {
+  if (!container) return;
   const list = computeBadges(myQuotesCount, totalLikes, commentCount);
   container.innerHTML = list.map(b => {
     const pct = Math.min(100, Math.round((b.cur / b.target) * 100));
@@ -527,9 +536,9 @@ function renderBadgesGrid(container, myQuotesCount, totalLikes, commentCount) {
   }).join("");
 }
 
-$("saveProfileBtn").addEventListener("click", async () => {
-  const nick = $("nicknameInput").value.trim().replace(/\s+/g, "").slice(0, 24);
-  const bio = $("bioInput").value.trim().slice(0, 120);
+$("saveProfileBtn")?.addEventListener("click", async () => {
+  const nick = $("nicknameInput")?.value.trim().replace(/\s+/g, "").slice(0, 24);
+  const bio = $("bioInput")?.value.trim().slice(0, 120) || "";
   if (!nick) { alert("Lütfen bir takma ad yaz."); return; }
   userProfile.nickname = nick;
   userProfile.bio = bio;
@@ -551,16 +560,16 @@ $("saveProfileBtn").addEventListener("click", async () => {
   }
 });
 
-$("copyProfileLinkBtn").addEventListener("click", () => {
+$("copyProfileLinkBtn")?.addEventListener("click", () => {
   if (!userProfile.nickname) { alert("Önce bir takma ad belirleyip Profili Kaydet'e bas."); return; }
   const url = `${location.origin}${location.pathname}?profil=${encodeURIComponent(userProfile.nickname)}`;
   navigator.clipboard.writeText(url);
   alert("Paylaşılabilir profil linkin kopyalandı!");
 });
 
-$("profileBtn").addEventListener("click", () => {
-  $("nicknameInput").value = userProfile.nickname || "";
-  $("bioInput").value = userProfile.bio || "";
+$("profileBtn")?.addEventListener("click", () => {
+  if ($("nicknameInput")) $("nicknameInput").value = userProfile.nickname || "";
+  if ($("bioInput")) $("bioInput").value = userProfile.bio || "";
   renderAvatarPreview();
   checkWrappedBanner();
 
@@ -568,9 +577,9 @@ $("profileBtn").addEventListener("click", () => {
   const totalLikes = myQuotes.reduce((s, q) => s + (q.begeni || 0), 0);
   renderBadgesGrid($("badgesGrid"), myQuotes.length, totalLikes, stats.commentCount || 0);
 
-  $("profileFavCount").textContent = favIds.length;
-  $("profileMineCount").textContent = myQuotes.length;
-  $("profileColCount").textContent = myCollections.length;
+  if ($("profileFavCount")) $("profileFavCount").textContent = favIds.length;
+  if ($("profileMineCount")) $("profileMineCount").textContent = myQuotes.length;
+  if ($("profileColCount")) $("profileColCount").textContent = myCollections.length;
 
   renderAuthArea();
   renderProfileTab(activeProfileTab);
@@ -579,25 +588,27 @@ $("profileBtn").addEventListener("click", () => {
 
 function renderAuthArea() {
   const area = $("profileAuthArea");
+  if (!area) return;
   if (currentUser) {
     area.innerHTML = `<div class="switch-row"><span>Giriş yapıldı: <strong>${currentUser.email}</strong></span><button type="button" class="text-link-btn" id="logoutBtn">Çıkış</button></div>`;
-    $("logoutBtn").addEventListener("click", () => signOut(auth));
+    $("logoutBtn")?.addEventListener("click", () => signOut(auth));
   } else {
     area.innerHTML = `<button type="button" class="btn-secondary" id="googleLoginBtn" style="width:100%;justify-content:center;">Google ile Giriş Yap</button>`;
-    $("googleLoginBtn").addEventListener("click", () => signInWithPopup(auth, provider).catch(() => {}));
+    $("googleLoginBtn")?.addEventListener("click", () => signInWithPopup(auth, provider).catch(() => {}));
   }
 }
 
 ["Favs", "Mine", "Cols", "Inbox"].forEach(t => {
-  $(`tab${t}`).addEventListener("click", () => {
+  $(`tab${t}`)?.addEventListener("click", () => {
     activeProfileTab = t.toLowerCase();
-    ["Favs", "Mine", "Cols", "Inbox"].forEach(x => $(`tab${x}`).classList.toggle("active", x === t));
+    ["Favs", "Mine", "Cols", "Inbox"].forEach(x => $(`tab${x}`)?.classList.toggle("active", x === t));
     renderProfileTab(activeProfileTab);
   });
 });
 
 async function renderProfileTab(tab) {
   const box = $("profileListContent");
+  if (!box) return;
   if (tab === "favs") {
     const list = allQuotes.filter(q => favIds.includes(q.id));
     box.innerHTML = list.length ? "" : `<p class="empty-msg">Henüz beğendiğin bir satır yok.</p>`;
@@ -621,7 +632,7 @@ async function renderProfileTab(tab) {
         <button type="button" class="btn-secondary" id="toggleAnonBtn" style="padding:4px 10px;font-size:0.76rem;">${userProfile.anonOpen !== false ? "Kapat" : "Aç"}</button>
       </div>
       <div id="inboxItems"><p class="empty-msg">Gelen kutusu yükleniyor...</p></div>`;
-    $("toggleAnonBtn").addEventListener("click", async () => {
+    $("toggleAnonBtn")?.addEventListener("click", async () => {
       userProfile.anonOpen = userProfile.anonOpen === false;
       ls.set("sa_profile", userProfile);
       if (userProfile.nickname) {
@@ -629,13 +640,13 @@ async function renderProfileTab(tab) {
       }
       renderProfileTab("inbox");
     });
-    if (!userProfile.nickname) { $("inboxItems").innerHTML = `<p class="empty-msg">Gelen kutusu için önce bir takma ad kaydet.</p>`; return; }
+    if (!userProfile.nickname) { if ($("inboxItems")) $("inboxItems").innerHTML = `<p class="empty-msg">Gelen kutusu için önce bir takma ad kaydet.</p>`; return; }
     try {
       const q = query(collection(db, "anonimMesajlar"), where("hedef", "==", userProfile.nickname.toLowerCase()));
       const snap = await getDocs(q);
-      $("profileInboxCount").textContent = snap.size;
-      if (snap.empty) { $("inboxItems").innerHTML = `<p class="empty-msg">Henüz anonim bir satır gelmedi. Profil linkini arkadaşlarınla paylaş!</p>`; return; }
-      $("inboxItems").innerHTML = "";
+      if ($("profileInboxCount")) $("profileInboxCount").textContent = snap.size;
+      if (snap.empty) { if ($("inboxItems")) $("inboxItems").innerHTML = `<p class="empty-msg">Henüz anonim bir satır gelmedi. Profil linkini arkadaşlarınla paylaş!</p>`; return; }
+      if ($("inboxItems")) $("inboxItems").innerHTML = "";
       snap.forEach(d => {
         const m = d.data();
         const div = document.createElement("div");
@@ -646,15 +657,14 @@ async function renderProfileTab(tab) {
         div.querySelector(".del-anon").addEventListener("click", async () => {
           try { await deleteDoc(doc(db, "anonimMesajlar", d.id)); div.remove(); } catch {}
         });
-        $("inboxItems").appendChild(div);
+        $("inboxItems")?.appendChild(div);
       });
     } catch {
-      $("inboxItems").innerHTML = `<p class="empty-msg">Gelen kutusu şu an yüklenemedi.</p>`;
+      if ($("inboxItems")) $("inboxItems").innerHTML = `<p class="empty-msg">Gelen kutusu şu an yüklenemedi.</p>`;
     }
   }
 }
 
-// Başkasının Profili & Anonim Satır Gönderme
 async function openPublicProfile(nickname) {
   const key = nickname.toLowerCase();
   activePublicProfile = { nickname, bio: "", avatar: "", anonOpen: true };
@@ -663,28 +673,32 @@ async function openPublicProfile(nickname) {
     if (snap.exists()) activePublicProfile = { ...activePublicProfile, ...snap.data() };
   } catch {}
 
-  $("pubProfileTitle").textContent = `@${activePublicProfile.nickname}`;
-  $("pubName").textContent = activePublicProfile.nickname;
-  $("pubBio").textContent = activePublicProfile.bio || "Satır Arası okuru";
-  $("pubAvatar").innerHTML = activePublicProfile.avatar
-    ? `<img src="${activePublicProfile.avatar}" alt="">`
-    : `<span>${activePublicProfile.nickname.slice(0, 1).toUpperCase()}</span>`;
+  if ($("pubProfileTitle")) $("pubProfileTitle").textContent = `@${activePublicProfile.nickname}`;
+  if ($("pubName")) $("pubName").textContent = activePublicProfile.nickname;
+  if ($("pubBio")) $("pubBio").textContent = activePublicProfile.bio || "Satır Arası okuru";
+  if ($("pubAvatar")) {
+    $("pubAvatar").innerHTML = activePublicProfile.avatar
+      ? `<img src="${activePublicProfile.avatar}" alt="">`
+      : `<span>${activePublicProfile.nickname.slice(0, 1).toUpperCase()}</span>`;
+  }
 
   const theirQuotes = allQuotes.filter(q => q.ekleyen && q.ekleyen.toLowerCase() === key);
   const totalLikes = theirQuotes.reduce((s, q) => s + (q.begeni || 0), 0);
   renderBadgesGrid($("pubBadgesGrid"), theirQuotes.length, totalLikes, 0);
 
-  $("pubAnonBox").style.display = activePublicProfile.anonOpen === false ? "none" : "block";
+  if ($("pubAnonBox")) $("pubAnonBox").style.display = activePublicProfile.anonOpen === false ? "none" : "block";
   const listEl = $("pubQuotesList");
-  listEl.innerHTML = theirQuotes.length ? "" : `<p class="empty-msg">Henüz paylaştığı bir satır yok.</p>`;
-  theirQuotes.forEach(q => listEl.appendChild(createQuoteListItem(q, "publicProfileModalOverlay")));
+  if (listEl) {
+    listEl.innerHTML = theirQuotes.length ? "" : `<p class="empty-msg">Henüz paylaştığı bir satır yok.</p>`;
+    theirQuotes.forEach(q => listEl.appendChild(createQuoteListItem(q, "publicProfileModalOverlay")));
+  }
 
   openModal("publicProfileModalOverlay");
 }
 
-$("sendAnonForm").addEventListener("submit", async (e) => {
+$("sendAnonForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!activePublicProfile) return;
+  if (!activePublicProfile || !$("anonMsgInput")) return;
   const lastSent = ls.get("sa_last_anon", 0);
   if (Date.now() - lastSent < 30000) { alert("Spam koruması: Yeni bir not bırakmak için 30 saniye bekle."); return; }
   const metin = $("anonMsgInput").value.trim();
@@ -715,28 +729,29 @@ function createQuoteListItem(q, modalToClose) {
   return div;
 }
 
-$("archiveBtn").addEventListener("click", () => {
-  $("archiveSearchInput").value = "";
+$("archiveBtn")?.addEventListener("click", () => {
+  if ($("archiveSearchInput")) $("archiveSearchInput").value = "";
   renderSearchResults();
   openModal("archiveModalOverlay");
 });
-$("searchTabQuotes").addEventListener("click", () => {
+$("searchTabQuotes")?.addEventListener("click", () => {
   activeSearchTab = "quotes";
-  $("searchTabQuotes").classList.add("active");
-  $("searchTabReaders").classList.remove("active");
+  $("searchTabQuotes")?.classList.add("active");
+  $("searchTabReaders")?.classList.remove("active");
   renderSearchResults();
 });
-$("searchTabReaders").addEventListener("click", () => {
+$("searchTabReaders")?.addEventListener("click", () => {
   activeSearchTab = "readers";
-  $("searchTabReaders").classList.add("active");
-  $("searchTabQuotes").classList.remove("active");
+  $("searchTabReaders")?.classList.add("active");
+  $("searchTabQuotes")?.classList.remove("active");
   renderSearchResults();
 });
-$("archiveSearchInput").addEventListener("input", renderSearchResults);
+$("archiveSearchInput")?.addEventListener("input", renderSearchResults);
 
 async function renderSearchResults() {
-  const term = $("archiveSearchInput").value.trim().toLowerCase();
+  const term = $("archiveSearchInput")?.value.trim().toLowerCase() || "";
   const list = $("archiveList");
+  if (!list) return;
   if (activeSearchTab === "quotes") {
     const matches = allQuotes.filter(q =>
       q.metin.toLowerCase().includes(term) || (q.kaynak || "").toLowerCase().includes(term) || q.kategori.toLowerCase().includes(term)
@@ -769,7 +784,7 @@ async function renderSearchResults() {
 // ======================================================
 // 9. GÜNÜN DÜELLOSU & 13 ARALIK WRAPPED
 // ======================================================
-$("duelBtn").addEventListener("click", () => {
+$("duelBtn")?.addEventListener("click", () => {
   const today = new Date().toISOString().slice(0, 10);
   const seed = parseInt(today.replace(/-/g, ""), 10);
   const qA = allQuotes[seed % allQuotes.length];
@@ -782,6 +797,7 @@ $("duelBtn").addEventListener("click", () => {
     const pctA = Math.round((votes.a / total) * 100);
     const pctB = 100 - pctA;
     const box = $("duelContainer");
+    if (!box) return;
     box.className = choice ? "duel-voted" : "";
     box.innerHTML = `
       <button type="button" class="duel-option ${choice === "a" ? "voted" : ""}" id="duelA">
@@ -797,8 +813,8 @@ $("duelBtn").addEventListener("click", () => {
         <div class="duel-pct">%${pctB} tercih etti</div>
       </button>`;
     if (!choice) {
-      $("duelA").addEventListener("click", () => { votes.a++; ls.set(`sa_duel_${today}`, "a"); ls.set(`sa_duel_counts_${today}`, votes); renderDuel("a"); });
-      $("duelB").addEventListener("click", () => { votes.b++; ls.set(`sa_duel_${today}`, "b"); ls.set(`sa_duel_counts_${today}`, votes); renderDuel("b"); });
+      $("duelA")?.addEventListener("click", () => { votes.a++; ls.set(`sa_duel_${today}`, "a"); ls.set(`sa_duel_counts_${today}`, votes); renderDuel("a"); });
+      $("duelB")?.addEventListener("click", () => { votes.b++; ls.set(`sa_duel_${today}`, "b"); ls.set(`sa_duel_counts_${today}`, votes); renderDuel("b"); });
     }
   };
   renderDuel(voted);
@@ -808,28 +824,30 @@ $("duelBtn").addEventListener("click", () => {
 function checkWrappedBanner() {
   const now = new Date();
   const isDec13 = (now.getMonth() === 11 && now.getDate() >= 13);
-  $("wrappedBanner").classList.toggle("show", isDec13 || isAdmin);
+  $("wrappedBanner")?.classList.toggle("show", isDec13 || isAdmin);
 }
 
-$("openWrappedBtn").addEventListener("click", () => {
+$("openWrappedBtn")?.addEventListener("click", () => {
   const topCat = Object.entries(stats.catCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || "Kitap";
-  $("wrappedContent").innerHTML = `
-    <div style="font-size:0.78rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">✦ Satır Arası ${new Date().getFullYear()}</div>
-    <h3 style="font-family:'Lora',serif;font-size:1.3rem;margin-bottom:6px;">${userProfile.nickname || "Okur"} · Yılın Özeti</h3>
-    <div class="wrapped-stat-grid">
-      <div class="wrapped-stat"><span>Okunan Satır</span><strong>${stats.readCount || 0}</strong></div>
-      <div class="wrapped-stat"><span>En Uzun Seri</span><strong>${stats.streak || 1} Gün</strong></div>
-      <div class="wrapped-stat"><span>Favori Kategori</span><strong>${topCat}</strong></div>
-      <div class="wrapped-stat"><span>Beğenilenler</span><strong>${favIds.length}</strong></div>
-    </div>
-    <p style="font-size:0.82rem;color:var(--text-muted);">Bu yıl kelimelerin arasında güzel izler bıraktın.</p>`;
+  if ($("wrappedContent")) {
+    $("wrappedContent").innerHTML = `
+      <div style="font-size:0.78rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">✦ Satır Arası ${new Date().getFullYear()}</div>
+      <h3 style="font-family:'Lora',serif;font-size:1.3rem;margin-bottom:6px;">${userProfile.nickname || "Okur"} · Yılın Özeti</h3>
+      <div class="wrapped-stat-grid">
+        <div class="wrapped-stat"><span>Okunan Satır</span><strong>${stats.readCount || 0}</strong></div>
+        <div class="wrapped-stat"><span>En Uzun Seri</span><strong>${stats.streak || 1} Gün</strong></div>
+        <div class="wrapped-stat"><span>Favori Kategori</span><strong>${topCat}</strong></div>
+        <div class="wrapped-stat"><span>Beğenilenler</span><strong>${favIds.length}</strong></div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-muted);">Bu yıl kelimelerin arasında güzel izler bıraktın.</p>`;
+  }
   openModal("wrappedModalOverlay");
 });
 
-$("shareWrappedBtn").addEventListener("click", () => {
+$("shareWrappedBtn")?.addEventListener("click", () => {
   if (!currentQuote) return;
   downloadStoryCard({
-    kategori: `13 ARALIK ÖZETİ`,
+    kategori: "13 ARALIK ÖZETİ",
     metin: `${stats.readCount || 0} satır okudum, ${stats.streak || 1} gün seri yaptım.`,
     kaynak: `${userProfile.nickname || "Satır Arası"} · ${new Date().getFullYear()}`
   });
@@ -838,19 +856,19 @@ $("shareWrappedBtn").addEventListener("click", () => {
 // ======================================================
 // 10. ALINTI EKLEME, PAYLAŞMA, İTHAF, POPÜLER, HAFTANIN SORUSU
 // ======================================================
-$("openModalBtn").addEventListener("click", () => {
-  $("editId").value = "";
-  $("formModalTitle").textContent = "Yeni Satır Ekle";
-  $("quoteForm").reset();
+$("openModalBtn")?.addEventListener("click", () => {
+  if ($("editId")) $("editId").value = "";
+  if ($("formModalTitle")) $("formModalTitle").textContent = "Yeni Satır Ekle";
+  $("quoteForm")?.reset();
   openModal("addModalOverlay");
 });
 
-$("quoteForm").addEventListener("submit", async (e) => {
+$("quoteForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const metin = $("inputText").value.trim();
-  const kategori = $("inputCategory").value;
-  const kaynak = $("inputAuthor").value.trim() || userProfile.nickname || "Anonim";
-  const editId = $("editId").value;
+  const metin = $("inputText")?.value.trim();
+  const kategori = $("inputCategory")?.value || "Kitap";
+  const kaynak = $("inputAuthor")?.value.trim() || userProfile.nickname || "Anonim";
+  const editId = $("editId")?.value || "";
   if (!metin) return;
 
   try {
@@ -874,9 +892,9 @@ $("quoteForm").addEventListener("submit", async (e) => {
   }
 });
 
-// Story İndir
 function downloadStoryCard(q) {
   const c = $("storyCanvas");
+  if (!c) return;
   const ctx = c.getContext("2d");
   const style = getComputedStyle(document.body);
   ctx.fillStyle = style.getPropertyValue("--bg-color").trim() || "#f6f4f0";
@@ -909,29 +927,28 @@ function downloadStoryCard(q) {
   a.click();
 }
 
-els.shareBtn.addEventListener("click", () => currentQuote && downloadStoryCard(currentQuote));
-els.copyBtn.addEventListener("click", () => {
-  if (!currentQuote) return;
+els.shareBtn?.addEventListener("click", () => currentQuote && downloadStoryCard(currentQuote));
+els.copyBtn?.addEventListener("click", () => {
+  if (!currentQuote || !els.copyBtn) return;
   navigator.clipboard.writeText(`“${currentQuote.metin}” — ${currentQuote.kaynak || "Anonim"}`);
   els.copyBtn.textContent = "Kopyalandı";
   setTimeout(() => (els.copyBtn.textContent = "Kopyala"), 1500);
 });
 
-// Popüler
-$("popularBtn").addEventListener("click", () => {
+$("popularBtn")?.addEventListener("click", () => {
   const top = [...allQuotes].sort((a, b) => (b.begeni || 0) - (a.begeni || 0)).slice(0, 20);
   const list = $("popList");
+  if (!list) return;
   list.innerHTML = "";
   top.forEach(q => list.appendChild(createQuoteListItem(q, "popModalOverlay")));
   openModal("popModalOverlay");
 });
 
-// İthaf (Zarf)
-els.giftBtn.addEventListener("click", () => openModal("giftModalOverlay"));
-$("copyGiftLinkBtn").addEventListener("click", () => {
+els.giftBtn?.addEventListener("click", () => openModal("giftModalOverlay"));
+$("copyGiftLinkBtn")?.addEventListener("click", () => {
   if (!currentQuote) return;
-  const from = $("giftFromInput").value.trim();
-  const note = $("giftNoteInput").value.trim();
+  const from = $("giftFromInput")?.value.trim() || "";
+  const note = $("giftNoteInput")?.value.trim() || "";
   const params = new URLSearchParams({ id: currentQuote.id });
   if (from) params.set("kimden", from);
   if (note) params.set("not", note);
@@ -940,10 +957,10 @@ $("copyGiftLinkBtn").addEventListener("click", () => {
   closeModal("giftModalOverlay");
 });
 
-// Koleksiyona Kaydet
-$("saveToColBtn").addEventListener("click", () => {
+$("saveToColBtn")?.addEventListener("click", () => {
   if (!currentQuote) return;
   const list = $("colSelectList");
+  if (!list) return;
   list.innerHTML = "";
   myCollections.forEach(c => {
     const has = c.items.includes(currentQuote.id);
@@ -961,28 +978,32 @@ $("saveToColBtn").addEventListener("click", () => {
   });
   openModal("collectionModalOverlay");
 });
-$("createColBtn").addEventListener("click", () => {
-  const name = $("newColNameInput").value.trim();
+$("createColBtn")?.addEventListener("click", () => {
+  const name = $("newColNameInput")?.value.trim();
   if (!name) return;
   myCollections.push({ id: `col-${Date.now()}`, name, items: currentQuote ? [currentQuote.id] : [] });
   ls.set("sa_cols", myCollections);
-  $("newColNameInput").value = "";
+  if ($("newColNameInput")) $("newColNameInput").value = "";
   closeModal("collectionModalOverlay");
 });
 
-// Haftanın Sorusu
-$("weeklyBtn").addEventListener("click", () => {
-  $("weeklyQuestionText").textContent = ls.get("sa_weekly_q", "Seni en çok etkileyen tek bir kitap veya şarkı cümlesi hangisi?");
-  $("adminWeeklyEdit").style.display = isAdmin ? "block" : "none";
+$("weeklyBtn")?.addEventListener("click", () => {
+  if ($("weeklyQuestionText")) {
+    $("weeklyQuestionText").textContent = ls.get("sa_weekly_q", "Seni en çok etkileyen tek bir kitap veya şarkı cümlesi hangisi?");
+  }
+  if ($("adminWeeklyEdit")) $("adminWeeklyEdit").style.display = isAdmin ? "block" : "none";
   openModal("weeklyModalOverlay");
 });
-$("saveWeeklyQBtn").addEventListener("click", () => {
-  const q = $("weeklyQuestionInput").value.trim();
-  if (q) { ls.set("sa_weekly_q", q); $("weeklyQuestionText").textContent = q; $("weeklyQuestionInput").value = ""; }
+$("saveWeeklyQBtn")?.addEventListener("click", () => {
+  const q = $("weeklyQuestionInput")?.value.trim();
+  if (q && $("weeklyQuestionInput")) {
+    ls.set("sa_weekly_q", q);
+    if ($("weeklyQuestionText")) $("weeklyQuestionText").textContent = q;
+    $("weeklyQuestionInput").value = "";
+  }
 });
 
-// Yönetici & Bildir
-$("reportCardBtn").addEventListener("click", async () => {
+$("reportCardBtn")?.addEventListener("click", async () => {
   if (!currentQuote) return;
   if (!confirm("Bu içeriği yöneticiye bildirmek istiyor musun?")) return;
   try {
@@ -991,27 +1012,27 @@ $("reportCardBtn").addEventListener("click", async () => {
   } catch {}
 });
 
-els.adminFeaturedBtn.addEventListener("click", async () => {
+els.adminFeaturedBtn?.addEventListener("click", async () => {
   if (!isAdmin || !currentQuote) return;
   currentQuote.kurucuSecimi = !currentQuote.kurucuSecimi;
-  els.featuredBadge.classList.toggle("show", currentQuote.kurucuSecimi);
+  els.featuredBadge?.classList.toggle("show", currentQuote.kurucuSecimi);
   els.adminFeaturedBtn.classList.toggle("active", currentQuote.kurucuSecimi);
   if (!currentQuote.id.startsWith("def-")) {
     try { await updateDoc(doc(db, "alintilar", currentQuote.id), { kurucuSecimi: currentQuote.kurucuSecimi }); } catch {}
   }
 });
 
-els.adminEditBtn.addEventListener("click", () => {
+els.adminEditBtn?.addEventListener("click", () => {
   if (!isAdmin || !currentQuote) return;
-  $("editId").value = currentQuote.id;
-  $("formModalTitle").textContent = "Satırı Düzenle";
-  $("inputCategory").value = currentQuote.kategori;
-  $("inputText").value = currentQuote.metin;
-  $("inputAuthor").value = currentQuote.kaynak || "";
+  if ($("editId")) $("editId").value = currentQuote.id;
+  if ($("formModalTitle")) $("formModalTitle").textContent = "Satırı Düzenle";
+  if ($("inputCategory")) $("inputCategory").value = currentQuote.kategori;
+  if ($("inputText")) $("inputText").value = currentQuote.metin;
+  if ($("inputAuthor")) $("inputAuthor").value = currentQuote.kaynak || "";
   openModal("addModalOverlay");
 });
 
-els.adminDeleteBtn.addEventListener("click", async () => {
+els.adminDeleteBtn?.addEventListener("click", async () => {
   if (!isAdmin || !currentQuote || currentQuote.id.startsWith("def-")) return;
   if (!confirm("Bu satırı kalıcı olarak silmek istiyor musun?")) return;
   try {
@@ -1055,14 +1076,18 @@ async function init() {
     if (found) {
       renderQuote(found, false);
       if (notParam) {
-        $("envelopeTitle").textContent = kimdenParam ? `${kimdenParam} sana bir satır bıraktı` : "Sana bir satır bırakıldı";
-        $("envelopeNotePreview").textContent = `“${notParam}”`;
+        if ($("envelopeTitle")) $("envelopeTitle").textContent = kimdenParam ? `${kimdenParam} sana bir satır bıraktı` : "Sana bir satır bırakıldı";
+        if ($("envelopeNotePreview")) $("envelopeNotePreview").textContent = `“${notParam}”`;
         openModal("envelopeModalOverlay");
-        $("openEnvelopeBtn").onclick = () => {
-          closeModal("envelopeModalOverlay");
-          els.dedicationBanner.textContent = `${kimdenParam ? kimdenParam + ": " : ""}“${notParam}”`;
-          els.dedicationBanner.classList.add("show");
-        };
+        if ($("openEnvelopeBtn")) {
+          $("openEnvelopeBtn").onclick = () => {
+            closeModal("envelopeModalOverlay");
+            if (els.dedicationBanner) {
+              els.dedicationBanner.textContent = `${kimdenParam ? kimdenParam + ": " : ""}“${notParam}”`;
+              els.dedicationBanner.classList.add("show");
+            }
+          };
+        }
       }
     } else {
       showRandomQuote();
